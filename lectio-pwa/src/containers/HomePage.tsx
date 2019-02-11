@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Toolbar, Typography, AppBar, Fab, IconButton } from '@material-ui/core';
+import { Toolbar, Typography, AppBar, Fab, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
@@ -24,6 +24,13 @@ const styles = {
 	}
 }
 
+const memos = [
+	{ name: 'Distributed Computing intro' },
+	{ name: 'Calculating NPV' },
+	{ name: 'How to train ur dragon' },
+	{ name: 'Cooking without food' },
+];
+
 class HomePage extends Component {
   render() {
 		return (
@@ -31,6 +38,13 @@ class HomePage extends Component {
 				<Header>
 					<Typography variant="h5">Recordings</Typography>
 				</Header>
+				<List>
+					{ memos.map((m) =>
+						<ListItem button>
+							<ListItemText primary={m.name} secondary="These are categories" />
+						</ListItem>
+					) }
+				</List>
 				<AppBar position="fixed" color="primary" style={styles.appBar}>
 					<Toolbar style={styles.toolbar}>
 						<IconButton color="inherit" aria-label="Open Settings">
