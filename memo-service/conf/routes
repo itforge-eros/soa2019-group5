@@ -4,4 +4,7 @@
 # ~~~~
 
 # An example controller showing a sample home page
-->         /v1/memos               v1.memo.MemoRouter
+GET         /v1/memos/:id               v1.memo.MemoController.get(id: java.util.UUID)
+POST        /v1/memos               v1.memo.MemoController.post
+PUT         /v1/memos/:id               v1.memo.MemoController.put(id: java.util.UUID)
+DELETE      /v1/memos/:id               v1.memo.MemoController.delete(id: java.util.UUID)
