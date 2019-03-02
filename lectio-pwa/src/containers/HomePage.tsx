@@ -4,10 +4,10 @@ import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
-import './HomePage.sass';
+import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 
-const styles = {
+const inlineStyles = {
 	appBar: {
 		top: 'auto',
 		bottom: '0'
@@ -40,19 +40,19 @@ class HomePage extends Component {
 		return (
 			<Fragment>
 				<Header>
-					<Typography variant="h4" style={styles.title}>Recordings</Typography>
+					<Typography variant="h4" style={inlineStyles.title}>Recordings</Typography>
 				</Header>
 				<List>
 					{ memos.map((m) =>
 						<MemoListItem title={m.name} categories={m.categories} />
 					) }
 				</List>
-				<AppBar position="fixed" color="primary" style={styles.appBar}>
-					<Toolbar style={styles.toolbar}>
+				<AppBar position="fixed" color="primary" style={inlineStyles.appBar}>
+					<Toolbar style={inlineStyles.toolbar}>
 						<IconButton color="inherit" aria-label="Open Settings">
 							<SettingsIcon />
 						</IconButton>
-						<Fab color="secondary" aria-label="Add" style={styles.fab}>
+						<Fab color="secondary" aria-label="Add" style={inlineStyles.fab}>
 							<AddIcon />
 						</Fab>
 						<IconButton color="inherit" aria-label="Open Settings">
