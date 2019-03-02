@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { ListItem, ListItemText } from "@material-ui/core";
+import { listWithCommas } from '../utils/fmt';
 
 class MemoListItem extends Component<any, any> {
 	constructor(props: any) {
@@ -9,7 +10,9 @@ class MemoListItem extends Component<any, any> {
   render() {
 		return (
 			<ListItem button>
-				<ListItemText primary={this.props.title} secondary={this.props.secondary} />
+				<ListItemText
+					primary={this.props.title}
+					secondary={listWithCommas(this.props.categories)} />
 			</ListItem>
 		)
 	}
