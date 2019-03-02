@@ -24,7 +24,7 @@ const styles = {
 		margin: '0 auto'
 	},
 	title: {
-		fontWeight: 600
+		fontWeight: 600,
 	}
 }
 
