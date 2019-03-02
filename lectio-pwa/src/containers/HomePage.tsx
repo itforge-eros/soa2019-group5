@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import { Toolbar, Typography, AppBar, Fab, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
+import { Toolbar, Typography, AppBar, Fab, IconButton, List } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
 import './HomePage.sass';
+import MemoListItem from '../components/MemoListItem';
 
 const styles = {
 	appBar: {
@@ -21,14 +22,17 @@ const styles = {
 		left: 0,
 		right: 0,
 		margin: '0 auto'
+	},
+	title: {
+		fontWeight: 600
 	}
 }
 
 const memos = [
-	{ name: 'Distributed Computing intro' },
-	{ name: 'Calculating NPV' },
-	{ name: 'How to train ur dragon' },
-	{ name: 'Cooking without food' },
+	{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
+	{ name: 'Calculating NPV', categories: ['ITPM', 'Y3S2'] },
+	{ name: 'How to train ur dragon', categories: ['Movie'] },
+	{ name: 'Cooking without food', categories: ['Cooking'] },
 ];
 
 class HomePage extends Component {
@@ -36,13 +40,11 @@ class HomePage extends Component {
 		return (
 			<Fragment>
 				<Header>
-					<Typography variant="h5">Recordings</Typography>
+					<Typography variant="h4" style={styles.title}>Recordings</Typography>
 				</Header>
 				<List>
 					{ memos.map((m) =>
-						<ListItem button>
-							<ListItemText primary={m.name} secondary="These are categories" />
-						</ListItem>
+						<MemoListItem title={m.name} categories={m.categories} />
 					) }
 				</List>
 				<AppBar position="fixed" color="primary" style={styles.appBar}>
