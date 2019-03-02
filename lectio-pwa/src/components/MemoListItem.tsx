@@ -9,7 +9,7 @@ class MemoListItem extends Component<any, any> {
 
   render() {
 		return (
-			<ListItem button divider>
+			<ListItem button divider selected={this.props.selected}>
 				<ListItemText
 					primary={this.props.title}
 					secondary={listWithCommas(this.props.categories)} />
