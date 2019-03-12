@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { AppBar, IconButton, Toolbar } from '@material-ui/core';
-import ArrowBack from '@material-ui/icons/ArrowBack';
+import { ArrowBack, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 
@@ -20,6 +20,10 @@ class MemoPage extends Component<any, any> {
 					<Toolbar>
 						<IconButton onClick={() => this.handleBackBtn()}>
 							<ArrowBack />
+						</IconButton>
+						<div className={styles.grow}></div>
+						<IconButton>
+							<ScatterPlot />
 						</IconButton>
 					</Toolbar>
 				</AppBar>
