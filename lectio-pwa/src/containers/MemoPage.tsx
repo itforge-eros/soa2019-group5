@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
-import { ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
+import { AppBar, Button, Chip, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 
@@ -44,6 +44,12 @@ class MemoPage extends Component<any, any> {
 							Memo name here
 						</Typography>
 						<p>lorem ipsum</p>
+						<div className={styles.chipWrap}>
+							<Chip label="Demo tag" className={styles.chip} />
+							<Button>
+								<AddIcon fontSize="small" />
+							</Button>
+						</div>
 					</div>
 					<div className={styles.audioArea}></div>
 				</div>
