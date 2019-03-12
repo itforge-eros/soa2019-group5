@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { AppBar, IconButton, Toolbar } from '@material-ui/core';
-import { ArrowBack, ScatterPlot } from '@material-ui/icons';
+import { ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 
@@ -22,6 +22,9 @@ class MemoPage extends Component<any, any> {
 							<ArrowBack />
 						</IconButton>
 						<div className={styles.grow}></div>
+						<IconButton>
+							<Delete />
+						</IconButton>
 						<IconButton>
 							<ScatterPlot />
 						</IconButton>
