@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { AppBar, IconButton, Toolbar } from '@material-ui/core';
+import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
 import { ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
@@ -32,6 +32,9 @@ class MemoPage extends Component<any, any> {
 				</AppBar>
 				<div className={styles.contentArea}>
 					<div className={styles.textArea}>
+						<Typography variant="h6">
+							Memo name here
+						</Typography>
 						<p>lorem ipsum</p>
 					</div>
 					<div className={styles.audioArea}></div>
