@@ -4,6 +4,14 @@ import { ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 
+const inlineStyles = {
+	toolbar: {
+		paddingLeft: '8px',
+		paddingRight: '8px',
+		backgroundColor: '#fff'
+	}
+}
+
 class MemoPage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
@@ -16,8 +24,8 @@ class MemoPage extends Component<any, any> {
 	render() {
 		return (
 			<Fragment>
-				<AppBar position="fixed" color="default">
-					<Toolbar>
+				<AppBar position="fixed" color="default" elevation={0}>
+					<Toolbar style={inlineStyles.toolbar}>
 						<IconButton onClick={() => this.handleBackBtn()}>
 							<ArrowBack />
 						</IconButton>
