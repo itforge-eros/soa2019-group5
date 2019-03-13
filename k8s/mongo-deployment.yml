@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lectio-mongo
+  labels:
+    app: lectio
+spec:
+  ports:
+    - port: 27017
+  selector:
+    app: lectio
+    tier: mongo
+  clusterIP: None
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-pv-claim
+  labels:
+    app: lectio
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: lectio-mongo
+  labels:
+    app: lectio
+spec:
+  selector:
+    matchLabels:
+      app: lectio
+      tier: mongo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lectio
+        tier: mongo
+    spec:
+      containers:
+      - image: mongo:3.6
+        name: mongo
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+        - name: mongo-persistent-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongo-pv-claim
