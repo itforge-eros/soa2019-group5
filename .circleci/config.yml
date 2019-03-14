@@ -113,16 +113,16 @@ workflows:
           filters:
             branches:
               only:
-                - ci
+                - master
       - frontend-build:
           filters:
             branches:
               only:
-                - ci
+                - master
       - frontend-deploy:
           requires:
             - frontend-build
           filters:
             branches:
               only:
-                - ci
+                - master
