@@ -21,7 +21,9 @@ const inlineStyles = {
 		top: -30,
 		left: 0,
 		right: 0,
-		margin: '0 auto'
+		margin: '0 auto',
+		backgroundColor: '#0062F5',
+		color: '#f4f4f4'
 	},
 	title: {
 		fontWeight: 600,
@@ -47,12 +49,12 @@ class HomePage extends Component {
 						<MemoListItem title={m.name} categories={m.categories} />
 					) }
 				</List>
-				<AppBar position="fixed" color="primary" style={inlineStyles.appBar}>
+				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
 					<Toolbar style={inlineStyles.toolbar}>
 						<IconButton color="inherit" aria-label="Open Settings">
 							<SettingsIcon />
 						</IconButton>
-						<Fab color="secondary" aria-label="Add" style={inlineStyles.fab}>
+						<Fab color="primary" aria-label="Add" style={inlineStyles.fab}>
 							<AddIcon />
 						</Fab>
 						<IconButton color="inherit" aria-label="Open Settings">
