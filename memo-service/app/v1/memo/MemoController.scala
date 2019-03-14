@@ -12,19 +12,10 @@ import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMo
 import reactivemongo.play.json.collection.JSONCollection
 import reactivemongo.play.json._
 import collection._
+import models.Memo
 import reactivemongo.bson.BSONDocument
 
 import scala.concurrent.{ExecutionContext, Future}
-
-case class Memo(
-                 id: UUID = UUID.randomUUID,
-                 title: String = "",
-                 content: String = "",
-                 summary: String = "",
-                 tags: Set[String] = Set.empty,
-                 created_time: LocalDateTime = LocalDateTime.now(),
-                 updated_time: LocalDateTime = LocalDateTime.now()
-               )
 
 @Singleton
 class MemoController @Inject()(cc: ControllerComponents,
