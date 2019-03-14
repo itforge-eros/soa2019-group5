@@ -3,6 +3,7 @@ import {AppBar, Button, Chip, Fab, IconButton, Toolbar, Typography} from '@mater
 import { Add as AddIcon, ArrowBack, Delete, ScatterPlot, PlayArrow } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
+import PlaybackControl from "../components/PlaybackControl";
 
 const inlineStyles = {
 	toolbar: {
@@ -10,13 +11,6 @@ const inlineStyles = {
 		paddingRight: '8px',
 		backgroundColor: '#fff'
 	},
-    fab: {
-        position: 'absolute' as 'absolute',
-        top: -30,
-        left: 0,
-        right: 0,
-        margin: '0 auto'
-    },
 };
 
 class MemoPage extends Component<any, any> {
@@ -58,11 +52,7 @@ class MemoPage extends Component<any, any> {
 							</Button>
 						</div>
 					</div>
-					<div className={styles.audioArea}>
-                        <Fab color="primary" aria-label="Add" style={inlineStyles.fab}>
-                            <PlayArrow />
-                        </Fab>
-					</div>
+					<PlaybackControl />
 				</div>
 			</Fragment>
 		);

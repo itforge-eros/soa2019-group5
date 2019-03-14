@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { ListItem, ListItemText } from "@material-ui/core";
 import { withRouter } from 'react-router-dom';
 import { listWithCommas } from '../utils/fmt';
