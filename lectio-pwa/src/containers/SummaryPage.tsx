@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from "react";
-import { AppBar, IconButton, Toolbar } from "@material-ui/core";
+import {AppBar, IconButton, Toolbar, Typography} from "@material-ui/core";
 import { ArrowBack } from "@material-ui/icons";
 
 const inlineStyles = {
@@ -30,6 +30,7 @@ class SummaryPage extends Component<any, any> {
             <IconButton onClick={() => this.handleBackBtn()}>
               <ArrowBack />
             </IconButton>
+            <Typography variant="h6">Summary</Typography>
           </Toolbar>
         </AppBar>
         <div style={inlineStyles.contentArea}>
