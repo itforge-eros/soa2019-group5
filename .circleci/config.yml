@@ -12,9 +12,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: Get sbt binary and setup gcloud sdk
+          name: Get sbt binary and openjdk8
           command: |
-            apt update && apt install -y curl openjdk-8-jdk unzip
+            apt update && apt install -y curl openjdk-8-jdk
             curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb
             dpkg -i sbt-$SBT_VERSION.deb
             rm sbt-$SBT_VERSION.deb
@@ -50,24 +50,58 @@ jobs:
           command: |
             docker build -t asia.gcr.io/kavinvin-211411/memo-service:latest .
             docker push asia.gcr.io/kavinvin-211411/memo-service:latest
-  frontend:
+  frontend-build:
     working_directory: ~/soa2019-group5/lectio-pwa
     docker:
-      - image: google/cloud-sdk
+      - image: circleci/node:10
     steps:
       - checkout:
           path: ~/soa2019-group5
       - setup_remote_docker:
           docker_layer_caching: true
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
+      - run: mkdir workspace
+      - run: npm install
+      - run: npm run build
+      - run: mv build workspace/
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is 
+          # taken to be the root directory of the workspace.
+          root: workspace
+          # Must be relative path from root
+          paths:
+            - build
+  frontend-deploy:
+    working_directory: ~/soa2019-group5/lectio-pwa
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - checkout:
+          path: ~/soa2019-group5
       - run:
           name: Config gcloud credentials
           command: |
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
             gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
             gcloud auth configure-docker
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: ./workspace
       - run:
           name: Build and Push docker image to asia.gcr.io
           command: |
+            mv workspace/build .
             docker build -t asia.gcr.io/kavinvin-211411/lectio-pwa:latest .
             docker push asia.gcr.io/kavinvin-211411/lectio-pwa:latest
 
@@ -80,7 +114,14 @@ workflows:
             branches:
               only:
                 - ci
-      - frontend:
+      - frontend-build:
+          filters:
+            branches:
+              only:
+                - ci
+      - frontend-deploy:
+          requires:
+            - frontend-build
           filters:
             branches:
               only:
