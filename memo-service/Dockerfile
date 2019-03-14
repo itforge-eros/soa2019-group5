@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
-COPY dist /dist
+FROM openjdk:8-jre-alpine
+COPY ./app.jar ./app.jar
 EXPOSE 9000
-CMD /dist/bin/start -Dhttp.port=9000 -Dplay.secret.key=secretsecret121232121 -Dpidfile.path=/dev/null
+CMD ["java", "-Xms128M", "-Xmx512m", "-server", "-jar", "app.jar"]
