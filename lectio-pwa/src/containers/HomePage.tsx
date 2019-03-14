@@ -26,7 +26,7 @@ const inlineStyles = {
 	title: {
 		fontWeight: 600,
 	}
-}
+};
 
 const memos = [
 	{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
