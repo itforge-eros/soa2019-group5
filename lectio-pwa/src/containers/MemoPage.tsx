@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import {AppBar, Button, Chip, Fab, IconButton, Toolbar, Typography} from '@material-ui/core';
-import { Add as AddIcon, ArrowBack, Delete, ScatterPlot, PlayArrow } from '@material-ui/icons';
+import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
@@ -18,8 +18,13 @@ class MemoPage extends Component<any, any> {
 		super(props);
 	}
 
-	handleBackBtn() {
-		setTimeout(() => this.props.history.push('/'), 200);
+	private handleBackBtn() {
+		setTimeout(() => this.props.history.push('/'), 180);
+	}
+
+	private handleSummaryBtn() {
+        const currentPath = this.props.location.pathname;
+        setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
 	}
 
 	render() {
@@ -34,7 +39,7 @@ class MemoPage extends Component<any, any> {
 						<IconButton>
 							<Delete />
 						</IconButton>
-						<IconButton>
+						<IconButton onClick={() => this.handleSummaryBtn()}>
 							<ScatterPlot />
 						</IconButton>
 					</Toolbar>
@@ -44,7 +49,7 @@ class MemoPage extends Component<any, any> {
 						<Typography variant="h6">
 							Memo name here
 						</Typography>
-						<p>lorem ipsum</p>
+						<p className="bodyText">lorem ipsum</p>
 						<div className={styles.chipWrap}>
 							<Chip label="Demo tag" className={styles.chip} />
 							<Button>
