@@ -9,9 +9,22 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.12.8"
 
+scalacOptions += "-Ypartial-unification"
+
+val circeVersion = "0.10.0"
+
+
 libraryDependencies += guice
 libraryDependencies += "org.reactivemongo" %% "play2-reactivemongo" % "0.16.2-play27"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
+libraryDependencies += "org.typelevel" %% "cats-core" % "1.6.0"
+libraryDependencies += "org.typelevel" %% "cats-effect" % "1.2.0"
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
+libraryDependencies += "com.dripower" %% "play-circe" % "2711.0"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "io.itforge.controllers._"
