@@ -17,6 +17,7 @@ val circeVersion = "0.10.0"
 libraryDependencies += guice
 libraryDependencies += "org.reactivemongo" %% "play2-reactivemongo" % "0.16.2-play27"
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
+libraryDependencies += "org.mockito" % "mockito-core" % "2.25.0"
 libraryDependencies += "org.typelevel" %% "cats-core" % "1.6.0"
 libraryDependencies += "org.typelevel" %% "cats-effect" % "1.2.0"
 libraryDependencies ++= Seq(
