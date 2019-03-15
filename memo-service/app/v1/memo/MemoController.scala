@@ -2,12 +2,14 @@ package v1.memo
 
 import java.util.UUID
 
+import cats.effect.IO
 import javax.inject.{Inject, Singleton}
-import models.Memo
+import models.{Memo, MemoForm}
 import play.api.mvc._
 import repositories.MemoRepository
 import io.circe.generic.auto._
 import io.circe.syntax._
+import play.api.data.Form
 import play.api.libs.circe.Circe
 
 import scala.concurrent.ExecutionContext
@@ -38,7 +40,27 @@ class MemoController @Inject()(cc: ControllerComponents,
     io.unsafeToFuture()
   }
 
-  def put(id: UUID): Action[AnyContent] = ???
+  private val form: Form[MemoForm] = {
+    import play.api.data.Forms._
+
+    Form(
+      mapping(
+        "title" -> text,
+        "content" -> text,
+        "summary" -> text,
+        "tags" -> set(text)
+      )(MemoForm.apply)(MemoForm.unapply)
+    )
+  }
+
+  def put(id: UUID): Action[MemoForm] = Action.async(parse.form(form)) {
+    implicit request =>
+      val io = memoRepository.updateMemo(id, request.body) map {
+        case true => Ok
+        case false => InternalServerError
+      }
+      io.unsafeToFuture()
+  }
 
   def delete(id: UUID): Action[AnyContent] = ???
 
