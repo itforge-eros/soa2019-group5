@@ -17,7 +17,7 @@ class MemoControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting
       val id = UUID.fromString("40d9894d-f25c-4594-bc6d-1aaad973f55d")
 
       val controller = new MemoController(stubControllerComponents(), mockMemoRepository)
-      val response = controller.get(UUID.randomUUID()).apply(FakeRequest())
+      val response = controller.get(id).apply(FakeRequest())
       status(response) mustBe OK
     }
   }
