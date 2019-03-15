@@ -3,22 +3,21 @@ package repositories.mongo
 import java.util.UUID
 
 import cats.effect.IO
-import cats.syntax.writer
+import javax.inject.{Inject, Singleton}
 import models.Memo
 import play.api.libs.json.{JsValue, Json, OFormat}
-import play.modules.reactivemongo.{MongoController, ReactiveMongoApi, ReactiveMongoComponents}
+import play.modules.reactivemongo.{ReactiveMongoApi, ReactiveMongoComponents}
 import reactivemongo.api.DefaultDB
-import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, Macros}
-import reactivemongo.play.json.collection.JSONCollection
+import reactivemongo.bson.BSONDocument
 import reactivemongo.play.json._
+import reactivemongo.play.json.collection.JSONCollection
 import repositories.MemoRepository
-import v1.memo.routes
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MemoMongo(implicit ec: ExecutionContext,
-                val reactiveMongoApi: ReactiveMongoApi,
-                val database: Future[DefaultDB])
+@Singleton
+class MemoMongo @Inject()(implicit ec: ExecutionContext,
+                val reactiveMongoApi: ReactiveMongoApi)
   extends MemoRepository
   with ReactiveMongoComponents {
 
@@ -43,7 +42,7 @@ class MemoMongo(implicit ec: ExecutionContext,
   }
 
 
-  private def collection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("memos"))
+  private def collection: Future[JSONCollection] = reactiveMongoApi.database.map(_.collection[JSONCollection]("memos"))
   private implicit val memoFormat: OFormat[Memo] = Json.format[Memo]
 
 }
