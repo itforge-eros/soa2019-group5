@@ -19,7 +19,7 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleBackBtn() {
-		setTimeout(() => this.props.history.push('/'), 180);
+		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleSummaryBtn() {
@@ -40,7 +40,7 @@ class MemoPage extends Component<any, any> {
 						<IconButton onClick={() => this.handleBackBtn()}>
 							<ArrowBack />
 						</IconButton>
-						<div className={styles.grow}></div>
+						<div className="grow"/>
 						<IconButton>
 							<Delete />
 						</IconButton>

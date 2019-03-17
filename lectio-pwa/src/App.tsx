@@ -5,6 +5,7 @@ import MemoPage from './containers/MemoPage';
 import './App.sass';
 import SummaryPage from "./containers/SummaryPage";
 import TagSelectionPage from "./containers/TagSelectionPage";
+import RecordPage from "./containers/RecordPage";
 
 class App extends Component {
 	render() {
@@ -15,6 +16,7 @@ class App extends Component {
 					<Route exact path="/memo" component={MemoPage} />
 					<Route exact path="/memo/summary" component={SummaryPage} />
 					<Route exact path="/memo/tags" component={TagSelectionPage} />
+					<Route exact path="/record" component={RecordPage} />
 				</div>
 			</HashRouter>
 		);

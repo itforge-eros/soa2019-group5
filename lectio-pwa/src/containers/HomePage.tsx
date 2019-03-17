@@ -37,7 +37,15 @@ const memos = [
 	{ name: 'Cooking without food', categories: ['Cooking'] },
 ];
 
-class HomePage extends Component {
+class HomePage extends Component<any, any> {
+	constructor(props: any) {
+		super(props);
+	}
+
+	private handleFabClick() {
+		setTimeout(() => this.props.history.push('/record/'), 180);
+	}
+
   render() {
 		return (
 			<Fragment>
@@ -54,7 +62,7 @@ class HomePage extends Component {
 						<IconButton color="inherit" aria-label="Open Settings">
 							<SettingsIcon />
 						</IconButton>
-						<Fab color="primary" aria-label="Add" style={inlineStyles.fab}>
+						<Fab color="primary" aria-label="Add" style={inlineStyles.fab} onClick={() => this.handleFabClick()}>
 							<AddIcon />
 						</Fab>
 						<IconButton color="inherit" aria-label="Open Settings">
