@@ -53,8 +53,10 @@ class TagSelectionPage extends Component<any, State> {
     render() {
         let tagsToDisplay: Array<any> = this.availableTags;
         let searchValue: string = this.state.searchValue.trim().toLowerCase();
+        let hasExactMatch: boolean = false;
         if (searchValue.length > 0) {
             tagsToDisplay = tagsToDisplay.filter(t => {
+                if (t.name.toLowerCase() === searchValue) hasExactMatch = true;
                 return t.name.toLowerCase().match(searchValue);
             });
         }
@@ -82,6 +84,11 @@ class TagSelectionPage extends Component<any, State> {
                                 </ListItemSecondaryAction>
                             </ListItem>
                         ))}
+                        {searchValue !== '' && !hasExactMatch &&
+                            <ListItem button>
+                                <ListItemText primary={`Create tag ${searchValue}`} />
+                            </ListItem>
+                        }
                     </List>
                 </div>
             </Fragment>
