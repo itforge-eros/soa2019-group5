@@ -30,7 +30,7 @@ class RecordControl extends Component<any, State> {
 	render() {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
-				<p>Recording 02.39</p>
+				<p>{this.state.recording ? 'Recording' : 'Paused'} 02.39</p>
 				<Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
 					{this.state.recording ? <Pause /> : <FiberManualRecord />}
 				</Fab>
