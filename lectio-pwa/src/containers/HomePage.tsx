@@ -43,7 +43,7 @@ class HomePage extends Component<any, any> {
 	}
 
 	private handleFabClick() {
-		setTimeout(() => this.props.history.push('/record/'), 180);
+		setTimeout(() => this.props.history.push('/record'), 180);
 	}
 
   render() {
