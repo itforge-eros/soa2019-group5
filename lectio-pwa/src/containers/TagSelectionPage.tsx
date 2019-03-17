@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {ChangeEvent, Component, Fragment} from 'react';
 import {
     AppBar, Checkbox,
     IconButton,
@@ -10,6 +10,10 @@ import {
     Toolbar
 } from '@material-ui/core';
 import {ArrowBack} from '@material-ui/icons';
+
+interface State {
+    searchValue: string;
+}
 
 const inlineStyles = {
     toolbar: {
@@ -23,9 +27,13 @@ const inlineStyles = {
     }
 };
 
-export default class TagSelectionPage extends Component<any, any> {
+class TagSelectionPage extends Component<any, State> {
     constructor(props: any) {
         super(props);
+        this.state = {
+            searchValue: ''
+        }
+        this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     }
 
     private availableTags: Array<any> = [
@@ -38,7 +46,18 @@ export default class TagSelectionPage extends Component<any, any> {
         setTimeout(() => this.props.history.goBack(), 180);
     }
 
+    private handleSearchValueChange(e: any): void {
+        this.setState({ searchValue: e.target.value });
+    }
+
     render() {
+        let tagsToDisplay: Array<any> = this.availableTags;
+        let searchValue: string = this.state.searchValue.trim().toLowerCase();
+        if (searchValue.length > 0) {
+            tagsToDisplay = tagsToDisplay.filter(t => {
+                return t.name.toLowerCase().match(searchValue);
+            });
+        }
         return (
             <Fragment>
                 <AppBar position="fixed" color="default" elevation={0}>
@@ -46,12 +65,16 @@ export default class TagSelectionPage extends Component<any, any> {
                         <IconButton onClick={() => this.handleBackBtn()}>
                             <ArrowBack />
                         </IconButton>
-                        <InputBase placeholder="Type to search or create a tag" style={inlineStyles.searchBar} />
+                        <InputBase
+                            placeholder="Type to search or create a tag"
+                            onChange={this.handleSearchValueChange}
+                            value={this.state.searchValue}
+                            style={inlineStyles.searchBar} />
                     </Toolbar>
                 </AppBar>
                 <div className="contentArea">
                     <List>
-                        {this.availableTags.map(tag => (
+                        {tagsToDisplay.map(tag => (
                             <ListItem key={tag.name}>
                                 <ListItemText primary={tag.name} />
                                 <ListItemSecondaryAction>
@@ -65,3 +88,5 @@ export default class TagSelectionPage extends Component<any, any> {
         )
     }
 }
+
+export default TagSelectionPage;
