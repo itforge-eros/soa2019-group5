@@ -1,12 +1,21 @@
 import React, {Component, Fragment} from 'react';
-import {AppBar, IconButton, InputBase, Toolbar} from '@material-ui/core';
-import {ArrowBack} from "@material-ui/icons";
+import {
+    AppBar, Checkbox,
+    IconButton,
+    InputBase,
+    List,
+    ListItem,
+    ListItemSecondaryAction,
+    ListItemText,
+    Toolbar
+} from '@material-ui/core';
+import {ArrowBack} from '@material-ui/icons';
 
 const inlineStyles = {
     toolbar: {
-        paddingLeft: "8px",
-        paddingRight: "16px",
-        backgroundColor: "#fff"
+        paddingLeft: '8px',
+        paddingRight: '16px',
+        backgroundColor: '#fff'
     },
     searchBar: {
         flex: 1,
@@ -18,6 +27,12 @@ export default class TagSelectionPage extends Component<any, any> {
     constructor(props: any) {
         super(props);
     }
+
+    private availableTags: Array<any> = [
+        { name: 'Distributed Computing' },
+        { name: 'Library Usage' },
+        { name: 'Year 3' }
+    ];
 
     private handleBackBtn(): void {
         setTimeout(() => this.props.history.goBack(), 180);
@@ -34,6 +49,18 @@ export default class TagSelectionPage extends Component<any, any> {
                         <InputBase placeholder="Type to search or create a tag" style={inlineStyles.searchBar} />
                     </Toolbar>
                 </AppBar>
+                <div className="contentArea">
+                    <List>
+                        {this.availableTags.map(tag => (
+                            <ListItem key={tag.name}>
+                                <ListItemText primary={tag.name} />
+                                <ListItemSecondaryAction>
+                                    <Checkbox />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                        ))}
+                    </List>
+                </div>
             </Fragment>
         )
     }
