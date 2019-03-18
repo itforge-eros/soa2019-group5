@@ -19,12 +19,17 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleBackBtn() {
-		setTimeout(() => this.props.history.push('/'), 180);
+		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleSummaryBtn() {
-        const currentPath = this.props.location.pathname;
+        const currentPath: string = this.props.location.pathname;
         setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
+	}
+
+	private handleTagBtn() {
+        const currentPath: string = this.props.location.pathname;
+        setTimeout(() => this.props.history.push(`${currentPath}/tags/`), 180);
 	}
 
 	render() {
@@ -35,7 +40,7 @@ class MemoPage extends Component<any, any> {
 						<IconButton onClick={() => this.handleBackBtn()}>
 							<ArrowBack />
 						</IconButton>
-						<div className={styles.grow}></div>
+						<div className="grow"/>
 						<IconButton>
 							<Delete />
 						</IconButton>
@@ -52,7 +57,7 @@ class MemoPage extends Component<any, any> {
 						<p className="bodyText">lorem ipsum</p>
 						<div className={styles.chipWrap}>
 							<Chip label="Demo tag" className={styles.chip} />
-							<Button>
+							<Button onClick={() => this.handleTagBtn()}>
 								<AddIcon fontSize="small" />
 							</Button>
 						</div>
