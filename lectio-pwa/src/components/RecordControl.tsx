@@ -5,7 +5,8 @@ import Recorder from '../vendor/recorder';
 import styles from './RecordControl.module.sass';
 
 interface State {
-	recording: boolean
+	recording: boolean,
+	supportsRecording: boolean
 }
 
 const inlineStyles = {
@@ -21,27 +22,28 @@ class RecordControl extends Component<any, State> {
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			recording: true
+			recording: false,
+			supportsRecording: false
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
 	}
 
 	componentDidMount() {
-		// TODO: Start recording
-		// this.rec.record();
-	}
-
-	componentWillMount() {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false})
 			.then((stream) => {
 				console.log('Initiating recorder');
 				const audioContext: AudioContext = new AudioContext();
 				const input: MediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
 				this.rec = new Recorder(input);
+				this.setState({ supportsRecording: true });
 				console.log('Initiated recorder');
+
+				this.rec.record();
+				this.setState({ recording: true });
 			})
 			.catch((error) => {
 				console.log('Error initiating recorder');
+				this.setState({ supportsRecording: false });
 				// TODO: Display the error to user
 			});
 	}
@@ -58,9 +60,9 @@ class RecordControl extends Component<any, State> {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
 				<p>{this.state.recording ? 'Recording' : 'Paused'} 02.39</p>
-				<Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
+				{this.state.supportsRecording && <Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
 					{this.state.recording ? <Pause /> : <FiberManualRecord />}
-				</Fab>
+				</Fab>}
 			</div>
 		)
 	}
