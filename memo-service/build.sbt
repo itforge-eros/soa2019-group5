@@ -1,51 +1,30 @@
-name := """memo-service"""
-organization := "io.itforge"
+val Http4sVersion = "0.20.0-M6"
+val Specs2Version = "4.1.0"
+val LogbackVersion = "1.2.3"
 
-version := "0.1"
+lazy val root = (project in file("."))
+  .settings(
+    organization := "io.itforge.lectio",
+    name := "memo-service",
+    version := "0.0.1-SNAPSHOT",
+    scalaVersion := "2.12.8",
+    libraryDependencies ++= Seq(
+      "org.http4s"      %% "http4s-blaze-server" % Http4sVersion,
+      "org.http4s"      %% "http4s-circe"        % Http4sVersion,
+      "org.http4s"      %% "http4s-dsl"          % Http4sVersion,
+      "org.specs2"     %% "specs2-core"          % Specs2Version % "test",
+      "ch.qos.logback"  %  "logback-classic"     % LogbackVersion
+    ),
+    addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
+    addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
+  )
 
-
-
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
-
-scalaVersion := "2.12.8"
-
-scalacOptions += "-Ypartial-unification"
-
-val circeVersion = "0.10.0"
-
-
-libraryDependencies += guice
-libraryDependencies += "org.reactivemongo" %% "play2-reactivemongo" % "0.16.2-play27"
-libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "4.0.1" % Test
-libraryDependencies += "org.mockito" % "mockito-core" % "2.25.0"
-libraryDependencies += "org.typelevel" %% "cats-core" % "1.6.0"
-libraryDependencies += "org.typelevel" %% "cats-effect" % "1.2.0"
-libraryDependencies ++= Seq(
-  "io.circe" %% "circe-core",
-  "io.circe" %% "circe-generic",
-  "io.circe" %% "circe-parser"
-).map(_ % circeVersion)
-libraryDependencies += "com.dripower" %% "play-circe" % "2711.0"
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "io.itforge.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "io.itforge.binders._"
-
-mainClass in assembly := Some("play.core.server.ProdServerStart")
-fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value)
-
-assemblyMergeStrategy in assembly := {
-  case manifest if manifest.contains("MANIFEST.MF") =>
-    // We don't need manifest files since sbt-assembly will create
-    // one with the given settings
-    MergeStrategy.discard
-  case referenceOverrides if referenceOverrides.contains("reference-overrides.conf") =>
-    // Keep the content for all reference-overrides.conf files
-    MergeStrategy.concat
-  case x =>
-    // For all the other files, use the default sbt-assembly merge strategy
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
-    oldStrategy(x)
-}
+scalacOptions ++= Seq(
+  "-deprecation",
+  "-encoding", "UTF-8",
+  "-language:higherKinds",
+  "-language:postfixOps",
+  "-feature",
+  "-Ypartial-unification",
+  "-Xfatal-warnings",
+)
