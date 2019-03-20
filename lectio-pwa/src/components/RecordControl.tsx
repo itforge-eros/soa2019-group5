@@ -6,7 +6,8 @@ import styles from './RecordControl.module.sass';
 
 interface State {
 	recording: boolean,
-	supportsRecording: boolean
+	supportsRecording: boolean,
+	hasError: boolean
 }
 
 const inlineStyles = {
@@ -23,7 +24,8 @@ class RecordControl extends Component<any, State> {
 		super(props);
 		this.state = {
 			recording: false,
-			supportsRecording: false
+			supportsRecording: false,
+			hasError: false
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
 	}
@@ -45,8 +47,7 @@ class RecordControl extends Component<any, State> {
 			})
 			.catch((error) => {
 				console.log('Error initiating recorder');
-				this.setState({ supportsRecording: false });
-				// TODO: Display the error to user
+				this.setState({ supportsRecording: false, hasError: true });
 			});
 	}
 
@@ -68,10 +69,13 @@ class RecordControl extends Component<any, State> {
 	render() {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
-				<p>{this.state.recording ? 'Recording' : 'Paused'} 02.39</p>
-				{this.state.supportsRecording && <Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
-					{this.state.recording ? <Pause /> : <FiberManualRecord />}
-				</Fab>}
+				{ this.state.hasError && <p>Cannot set up recording</p> }
+				{ this.state.supportsRecording && <p>{ this.state.recording ? 'Recording' : 'Paused' } 02.39</p> }
+				{ this.state.supportsRecording &&
+					<Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
+						{ this.state.recording ? <Pause /> : <FiberManualRecord /> }
+					</Fab>
+				}
 			</div>
 		)
 	}
