@@ -53,6 +53,8 @@ class RecordControl extends Component<any, State> {
 	}
 
 	private handleFabClick() {
+		if (this.state.recording) this.rec.stop();
+		else this.rec.record();
 		this.setState(state => ({ recording: !state.recording }));
 	}
 
