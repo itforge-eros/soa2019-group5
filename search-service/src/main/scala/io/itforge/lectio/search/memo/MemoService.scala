@@ -8,3 +8,10 @@ class MemoService(repository: MemoRepositoryAlgebra[IO]) {
     repository.findAll
 
 }
+
+object MemoService {
+
+  def apply(repositoryAlgebra: MemoRepositoryAlgebra[IO]) =
+    new MemoService(repositoryAlgebra)
+
+}

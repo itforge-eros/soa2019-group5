@@ -1,7 +1,5 @@
 package io.itforge.lectio.search.memo
 
-//import cats._
-//import cats.implicits._
 import cats.effect.IO
 import com.sksamuel.elastic4s.cats.effect.instances._
 import com.sksamuel.elastic4s.circe._
@@ -13,7 +11,16 @@ class MemoRepositoryInterpreter(client: ElasticClient)
   extends MemoRepositoryAlgebra[IO] {
 
   override def findAll: IO[List[Memo]] =
-    client.execute(search("memos")).map(_.result.to[Memo].toList)
+    client.execute {
+      search("memos")
+    }.map(_.result.to[Memo].toList)
+
+}
+
+object MemoRepositoryInterpreter {
+
+  def apply(client: ElasticClient): MemoRepositoryInterpreter =
+    new MemoRepositoryInterpreter(client)
 
 }
 

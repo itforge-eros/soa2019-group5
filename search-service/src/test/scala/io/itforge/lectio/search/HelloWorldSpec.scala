@@ -1,7 +1,7 @@
 package io.itforge.lectio.search
 
 import cats.effect.IO
-import io.itforge.lectio.search.memo.MemoRoutes
+import io.itforge.lectio.search.memo.MemoEndpoints
 import org.http4s._
 import org.http4s.implicits._
 import org.specs2.matcher.MatchResult
@@ -19,7 +19,7 @@ class HelloWorldSpec extends org.specs2.mutable.Specification {
 
   private[this] val retHelloWorld: Response[IO] = {
     val getHW = Request[IO](Method.GET, Uri.uri("/hello/world"))
-    new MemoRoutes[IO].routes.orNotFound(getHW).unsafeRunSync()
+    new MemoEndpoints[IO].routes.orNotFound(getHW).unsafeRunSync()
   }
 
   private[this] def uriReturns200(): MatchResult[Status] =

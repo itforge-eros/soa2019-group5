@@ -9,16 +9,25 @@ import org.http4s.dsl.Http4sDsl
 
 import scala.language.higherKinds
 
-class MemoRoutes extends Http4sDsl[IO] {
+class MemoEndpoints extends Http4sDsl[IO] {
 
-  def routes(memoService: MemoService): HttpRoutes[IO] =
+  def getAllMemosEndpoint(memoService: MemoService): HttpRoutes[IO] =
     HttpRoutes.of[IO] {
       case GET -> Root / "all" =>
         for {
           memos <- memoService.findAll
           response <- Ok(memos.asJson)
         } yield response
-
     }
+
+  def endpoints(memoService: MemoService): HttpRoutes[IO] =
+    getAllMemosEndpoint(memoService)
+
+}
+
+object MemoEndpoints {
+
+  def endpoints(memoService: MemoService): HttpRoutes[IO] =
+    new MemoEndpoints().endpoints(memoService)
 
 }
