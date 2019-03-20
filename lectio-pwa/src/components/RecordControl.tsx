@@ -56,7 +56,6 @@ class RecordControl extends Component<any, State> {
 		if (this.rec) {
 			console.log('Stopping recording');
 			this.rec.stop();
-			this.rec.clear();
 		}
 	}
 
