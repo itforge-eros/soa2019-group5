@@ -28,6 +28,7 @@ class RecordControl extends Component<any, State> {
 			hasError: false
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
+		this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 
 	componentDidMount() {
@@ -59,10 +60,20 @@ class RecordControl extends Component<any, State> {
 		}
 	}
 
-	private handleFabClick() {
-		if (this.state.recording) this.rec.stop();
-		else this.rec.record();
+	private handleFabClick(): void {
+		if (this.state.recording) this.rec.stop(); // pause
+		else this.rec.record(); // resume
 		this.setState(state => ({ recording: !state.recording }));
+	}
+
+	/* public handleSaveClick(): void {
+		this.rec.stop();
+		this.rec.exportWav(this.finishRecording);
+	} */
+
+	private finishRecording(blob: Blob): void {
+		const url = URL.createObjectURL(blob);
+		console.log(url);
 	}
 
 	render() {
