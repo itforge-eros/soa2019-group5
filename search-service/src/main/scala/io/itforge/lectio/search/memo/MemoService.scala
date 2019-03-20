@@ -1,6 +1,5 @@
 package io.itforge.lectio.search.memo
 
-import cats._
 import cats.effect.IO
 
 class MemoService(repository: MemoRepositoryAlgebra[IO]) {
