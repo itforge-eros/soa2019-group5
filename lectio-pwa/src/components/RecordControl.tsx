@@ -31,6 +31,7 @@ class RecordControl extends Component<any, State> {
 	componentDidMount() {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false})
 			.then((stream) => {
+				// Set up recorder
 				console.log('Initiating recorder');
 				const audioContext: AudioContext = new AudioContext();
 				const input: MediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
@@ -38,6 +39,7 @@ class RecordControl extends Component<any, State> {
 				this.setState({ supportsRecording: true });
 				console.log('Initiated recorder');
 
+				// Start recording
 				this.rec.record();
 				this.setState({ recording: true });
 			})
@@ -49,7 +51,12 @@ class RecordControl extends Component<any, State> {
 	}
 
 	componentWillUnmount() {
-		// TODO: Stop recording and destroy worker
+		// TODO: Stop only if it's recording
+		if (this.rec) {
+			console.log('Stopping recording');
+			this.rec.stop();
+			this.rec.clear();
+		}
 	}
 
 	private handleFabClick() {
