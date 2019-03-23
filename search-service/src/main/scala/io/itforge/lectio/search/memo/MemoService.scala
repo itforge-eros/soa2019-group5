@@ -1,17 +1,15 @@
 package io.itforge.lectio.search.memo
 
-import cats.effect.IO
+class MemoService[F[_]](repository: MemoRepositoryAlgebra[F]) {
 
-class MemoService(repository: MemoRepositoryAlgebra[IO]) {
-
-  def findAll: IO[List[Memo]] =
+  def findAll: F[List[Memo]] =
     repository.findAll
 
 }
 
 object MemoService {
 
-  def apply(repositoryAlgebra: MemoRepositoryAlgebra[IO]) =
+  def apply[F[_]](repositoryAlgebra: MemoRepositoryAlgebra[F]) =
     new MemoService(repositoryAlgebra)
 
 }

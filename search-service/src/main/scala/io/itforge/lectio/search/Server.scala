@@ -14,13 +14,14 @@ import org.http4s.syntax.kleisli._
 
 object Server extends IOApp {
 
-  def createServer: Resource[IO, Http4sServer[IO]] = {
+  def createServer[F[_]: ContextShift: ConcurrentEffect: Timer]
+    : Resource[F, Http4sServer[F]] = {
     val client = ElasticClient(ElasticProperties("http://localhost:9200"))
-    val memoRepository = MemoRepositoryInterpreter(client)
+    val memoRepository = MemoRepositoryInterpreter[F](client)
     val memoService = MemoService(memoRepository)
     val routes = MemoEndpoints.endpoints(memoService)
 
-    BlazeServerBuilder[IO]
+    BlazeServerBuilder[F]
       .bindHttp(9001, "0.0.0.0")
       .withHttpApp(Router("/" -> routes).orNotFound)
       .resource
