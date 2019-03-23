@@ -1,25 +1,20 @@
 package io.itforge.lectio.search.memo
 
 import cats.Monad
-import cats.effect.LiftIO
-import com.sksamuel.elastic4s.cats.effect.instances._
-import com.sksamuel.elastic4s.circe._
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
-import io.circe.generic.auto._
+import io.itforge.lectio.search.utils.ElasticHelper
 
 import scala.language.higherKinds
 
 class MemoRepositoryInterpreter[F[_]: Monad](client: ElasticClient)
-    extends MemoRepositoryAlgebra[F] {
+    extends MemoRepositoryAlgebra[F]
+    with ElasticHelper {
 
   override def findAll: F[List[Memo]] =
-    client
-      .execute {
-        search("memos")
-      }
-      .map(_.result.to[Memo].toList)
-      .to
+    client.fetch[F, Memo] {
+      search("memo")
+    }
 
 }
 
