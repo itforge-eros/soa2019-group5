@@ -12,13 +12,12 @@ class MemoControllerSpec
     with MemoData {
 
   "find all memos" >> {
+    val request = Request[IO](Method.GET, Uri.uri("/all"))
     "return 200" >> {
-      val request = Request[IO](Method.GET, Uri.uri("/all"))
       val status = send(request).status
       status must beEqualTo(Status.Ok)
     }
     "return correct json" >> {
-      val request = Request[IO](Method.GET, Uri.uri("/all"))
       val json = send(request).as[String].unsafeRunSync()
       json must beEqualTo(memos.asJson.noSpaces)
     }
