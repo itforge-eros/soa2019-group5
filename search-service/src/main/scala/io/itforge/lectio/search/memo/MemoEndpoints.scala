@@ -12,10 +12,13 @@ import io.circe.syntax._
 import org.http4s.HttpRoutes
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
+import io.itforge.lectio.search.utils.Pagination
 
 import scala.language.higherKinds
 
 class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
+
+  import Pagination._
 
   def getAllMemosEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
     HttpRoutes.of[F] {
@@ -28,9 +31,11 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
 
   def getSearchEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
     HttpRoutes.of[F] {
-      case GET -> Root / "search" / query =>
+      case GET -> Root / "search" / query :? Offset(offset) :? Limit(limit) =>
         for {
-          memos <- memoService.query(query)
+          memos <- memoService.query(query,
+                                     offset.getOrElse(0),
+                                     limit.getOrElse(10))
           response <- Ok(memos.asJson)
         } yield response
     }
