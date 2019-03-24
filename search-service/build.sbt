@@ -1,6 +1,7 @@
 val Http4sVersion = "0.20.0-M6"
 val Specs2Version = "4.1.0"
 val LogbackVersion = "1.2.3"
+val elastic4sVersion = "6.5.1"
 
 lazy val root = (project in file("."))
   .settings(
@@ -9,33 +10,23 @@ lazy val root = (project in file("."))
     version := "0.0.1-SNAPSHOT",
     scalaVersion := "2.12.8",
     libraryDependencies ++= Seq(
-      "org.http4s"      %% "http4s-blaze-server" % Http4sVersion,
-      "org.http4s"      %% "http4s-circe"        % Http4sVersion,
-      "org.http4s"      %% "http4s-dsl"          % Http4sVersion,
-      "org.specs2"     %% "specs2-core"          % Specs2Version % "test",
-      "ch.qos.logback"  %  "logback-classic"     % LogbackVersion
+      "org.http4s" %% "http4s-blaze-server" % Http4sVersion,
+      "org.http4s" %% "http4s-circe" % Http4sVersion,
+      "org.http4s" %% "http4s-dsl" % Http4sVersion,
+      "org.specs2" %% "specs2-core" % Specs2Version % "test",
+      "ch.qos.logback" % "logback-classic" % LogbackVersion,
+      "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
+      "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
+      "com.sksamuel.elastic4s" % "elastic4s-circe_2.12" % elastic4sVersion,
+      "com.sksamuel.elastic4s" %% "elastic4s-cats-effect" % elastic4sVersion,
+      "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
+      "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion % "test",
+      "org.mockito" % "mockito-scala_2.12" % "1.2.1"
     ),
     addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6"),
     addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
   )
 
-val elastic4sVersion = "6.5.1"
-libraryDependencies ++= Seq(
-  "com.sksamuel.elastic4s" %% "elastic4s-core" % elastic4sVersion,
-
-  // for the http client
-  "com.sksamuel.elastic4s" %% "elastic4s-http" % elastic4sVersion,
-
-  // if you want to use reactive streams
-  "com.sksamuel.elastic4s" %% "elastic4s-http-streams" % elastic4sVersion,
-
-  "com.sksamuel.elastic4s" % "elastic4s-circe_2.12" % elastic4sVersion,
-  "com.sksamuel.elastic4s" %% "elastic4s-cats-effect" % elastic4sVersion,
-
-  // testing
-  "com.sksamuel.elastic4s" %% "elastic4s-testkit" % elastic4sVersion % "test",
-  "com.sksamuel.elastic4s" %% "elastic4s-embedded" % elastic4sVersion % "test"
-)
 
 scalacOptions ++= Seq(
   "-deprecation",
