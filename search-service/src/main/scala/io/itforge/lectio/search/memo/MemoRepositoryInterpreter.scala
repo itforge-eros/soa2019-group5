@@ -26,6 +26,6 @@ object MemoRepositoryInterpreter {
 
   def apply[F[_]: Monad: LiftIO](
       client: ElasticClient): MemoRepositoryInterpreter[F] =
-    new MemoRepositoryInterpreter(client)
+    new MemoRepositoryInterpreter[F](client)
 
 }

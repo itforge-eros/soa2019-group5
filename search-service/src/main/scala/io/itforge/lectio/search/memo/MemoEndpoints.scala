@@ -1,7 +1,12 @@
 package io.itforge.lectio.search.memo
 
-import cats.effect.Effect
+import java.time.Instant
+
+import cats.effect.{Effect, IO, LiftIO}
+import cats._
 import cats.implicits._
+import cats.SemigroupK
+import org.http4s.implicits._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import org.http4s.HttpRoutes
@@ -21,14 +26,24 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
         } yield response
     }
 
+  def getSearchEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
+    HttpRoutes.of[F] {
+      case GET -> Root / "search" / query =>
+        for {
+          memos <- LiftIO[F].liftIO(IO.pure[List[Memo]](List()))
+          response <- Ok(memos.asJson)
+        } yield response
+    }
+
   def endpoints(memoService: MemoService[F]): HttpRoutes[F] =
-    getAllMemosEndpoint(memoService)
+    getAllMemosEndpoint(memoService) <+>
+      getSearchEndpoint(memoService)
 
 }
 
 object MemoEndpoints {
 
   def endpoints[F[_]: Effect](memoService: MemoService[F]): HttpRoutes[F] =
-    new MemoEndpoints().endpoints(memoService)
+    new MemoEndpoints[F].endpoints(memoService)
 
 }
