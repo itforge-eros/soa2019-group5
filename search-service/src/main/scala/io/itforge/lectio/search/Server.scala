@@ -18,8 +18,8 @@ object Server extends IOApp {
     : Resource[F, Http4sServer[F]] = {
     val client = ElasticClient(ElasticProperties("http://localhost:9200"))
     val memoRepository = MemoRepositoryInterpreter[F](client)
-    val memoService = MemoService(memoRepository)
-    val routes = MemoEndpoints.endpoints(memoService)
+    val memoService = MemoService[F](memoRepository)
+    val routes = MemoEndpoints.endpoints[F](memoService)
 
     BlazeServerBuilder[F]
       .bindHttp(9001, "0.0.0.0")
