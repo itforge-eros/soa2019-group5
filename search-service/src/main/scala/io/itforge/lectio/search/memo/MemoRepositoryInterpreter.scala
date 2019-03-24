@@ -20,6 +20,11 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
       search("memos")
     }
 
+  override def searchQuery(query: String): F[List[Memo]] =
+    client.fetch {
+      search("memos") query query
+    }
+
 }
 
 object MemoRepositoryInterpreter {

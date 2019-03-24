@@ -30,7 +30,7 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
     HttpRoutes.of[F] {
       case GET -> Root / "search" / query =>
         for {
-          memos <- LiftIO[F].liftIO(IO.pure[List[Memo]](List()))
+          memos <- memoService.query(query)
           response <- Ok(memos.asJson)
         } yield response
     }
