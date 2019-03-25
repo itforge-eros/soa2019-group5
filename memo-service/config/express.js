@@ -15,7 +15,6 @@ const helmet = require('helmet');
 
 const mongoStore = require('connect-mongo')(session);
 const flash = require('connect-flash');
-const winston = require('winston');
 const helpers = require('view-helpers');
 const config = require('./');
 const pkg = require('../package.json');
@@ -39,21 +38,9 @@ module.exports = function(app, passport) {
   // Static files middleware
   app.use(express.static(config.root + '/public'));
 
-  // Use winston on production
-  let log;
-  if (env !== 'development') {
-    log = {
-      stream: {
-        write: msg => winston.info(msg)
-      }
-    };
-  } else {
-    log = 'dev';
-  }
-
   // Don't log during tests
   // Logging middleware
-  if (env !== 'test') app.use(morgan(log));
+  if (env !== 'test') app.use(morgan('dev'));
 
   // set views path and default layout
   app.set('views', config.root + '/app/views');
