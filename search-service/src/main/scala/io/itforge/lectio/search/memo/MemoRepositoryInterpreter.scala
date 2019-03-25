@@ -26,7 +26,6 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
                            tags: Set[String]): F[List[Memo]] = {
     client.fetch {
       val filter = combineOptionalQuery(
-        Some(q(_.query(query))),
         offset.map(a => q(_.start(a))),
         limit.map(a => q(_.limit(a))),
         tags.toList.headOption.map(a =>
@@ -35,12 +34,7 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
           }))
       )
 
-      filter(search("memos")) query {
-        boolQuery.must(
-//          termsSetQuery("tags", tags, "1")
-          termQuery("tags", tags.head)
-        )
-      }
+      filter(search("memos") query query)
     }
   }
 

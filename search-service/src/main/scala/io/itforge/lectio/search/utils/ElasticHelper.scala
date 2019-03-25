@@ -1,5 +1,6 @@
 package io.itforge.lectio.search.utils
 
+import cats.Monoid
 import cats.effect.LiftIO
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.cats.effect.instances._
@@ -22,17 +23,19 @@ trait ElasticHelper {
   def q(op: SearchCompose)(a: SearchRequest): SearchRequest =
     op(a)
 
-  def combineQuery(ops: List[SearchCompose]): SearchCompose = ops match {
-    case Nil        => identity
-    case op :: Nil  => op
-    case op :: tail => op.andThen(combineQuery(tail))
-  }
-
-  def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose = {
+  def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose =
     ops.flatten
-      .foldLeft((a: SearchRequest) => a)(_.compose(_))
-  }
+      .foldLeft(identity[SearchRequest])(_ andThen _)
 
   type SearchCompose = SearchRequest => SearchRequest
+
+  case class SearchFilter(filter: SearchRequest => SearchRequest)
+
+  implicit val searchFilterMonoid: Monoid[SearchFilter] =
+    new Monoid[SearchFilter] {
+      def empty: SearchFilter = SearchFilter(identity)
+      def combine(x: SearchFilter, y: SearchFilter): SearchFilter =
+        SearchFilter(x.filter andThen y.filter)
+    }
 
 }
