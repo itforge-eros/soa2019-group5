@@ -12,11 +12,11 @@
 
 # Run
 
-`npm start`
+`npm start` (Require MongoDB)
 
 # Endpoints
 
-`GET /api/memos` Get all of memos  
+`GET /api/memos` Get all of memos, if no memos in a database, it return empty list.  
 
 `200 OK`
 ```json
@@ -48,6 +48,30 @@
 ```  
 ---
 `GET /api/memos/:uuid` Get a memo by uuid  
+
+`200 OK` When found.
+```json
+{
+    "id": "d3195cc1-db5b-415d-8526-fcfed80850dd",
+    "title": "CNN with Python",
+    "content": "Computer Vision has become ubiquitous in our society, with applications in search, image understanding, apps, mapping, ...",
+    "summary": "This course is a deep dive into details of the deep learning architectures with a focus on learning end-to-end models for these tasks, ...",
+    "tags": [
+      "science",
+      "programming"
+    ],
+    "created_time": "2019-02-12T08:22:06.286Z",
+    "updated_time": "2019-02-12T08:22:06.286Z"
+  }
+```
+`404 Not found`
+```json
+{
+  "error": 404,
+  "message": "Not found"
+}
+```
+---
 `POST /api/memos` Create an empty memo  
 `PUT /api/memos/:uuid` Update a memo by uuid  
 `DELETE /api/memos/:uuid` Delete a memo by uuid  
