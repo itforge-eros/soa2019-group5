@@ -25,7 +25,7 @@ trait ElasticHelper {
   def combineQuery(ops: List[SearchCompose]): SearchCompose = ops match {
     case Nil        => identity
     case op :: Nil  => op
-    case op :: tail => op.compose(combineQuery(tail))
+    case op :: tail => op.andThen(combineQuery(tail))
   }
 
   def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose = {

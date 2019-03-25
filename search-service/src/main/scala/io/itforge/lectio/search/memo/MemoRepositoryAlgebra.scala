@@ -6,6 +6,7 @@ trait MemoRepositoryAlgebra[F[_]] {
 
   def searchQuery(query: String,
                   offset: Option[Int],
-                  limit: Option[Int]): F[List[Memo]]
+                  limit: Option[Int],
+                  tags: Set[String]): F[List[Memo]]
 
 }
