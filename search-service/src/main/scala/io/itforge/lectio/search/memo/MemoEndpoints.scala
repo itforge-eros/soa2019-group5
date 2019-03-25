@@ -28,9 +28,7 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
     HttpRoutes.of[F] {
       case GET -> Root / "search" / query :? Offset(offset) :? Limit(limit) =>
         for {
-          memos <- memoService.query(query,
-                                     offset.getOrElse(0),
-                                     limit.getOrElse(10))
+          memos <- memoService.query(query, offset, limit.orElse(Some(10)))
           response <- Ok(memos.asJson)
         } yield response
     }
