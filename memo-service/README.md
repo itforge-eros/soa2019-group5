@@ -72,6 +72,11 @@
 }
 ```
 ---
-`POST /api/memos` Create an empty memo  
+`POST /api/memos` _POST with empty body_ to create an empty memo  
+`201 Created`
+Empty Response
+Header `Location: /api/memos/7c4bf536-1872-4732-b207-3542c5f199f3` is refer to a newly created empty memo.
+
+---
 `PUT /api/memos/:uuid` Update a memo by uuid  
 `DELETE /api/memos/:uuid` Delete a memo by uuid  
