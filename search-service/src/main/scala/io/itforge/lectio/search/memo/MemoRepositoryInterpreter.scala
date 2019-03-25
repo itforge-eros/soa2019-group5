@@ -2,10 +2,10 @@ package io.itforge.lectio.search.memo
 
 import cats._
 import cats.effect._
-import com.sksamuel.elastic4s.cats.effect.instances._
 import com.sksamuel.elastic4s.circe._
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.searches.SearchRequest
 import io.circe.generic.auto._
 import io.itforge.lectio.search.utils.ElasticHelper
 
@@ -21,11 +21,17 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
     }
 
   override def searchQuery(query: String,
-                           offset: Int,
-                           limit: Int): F[List[Memo]] =
+                           offset: Option[Int],
+                           limit: Option[Int]): F[List[Memo]] = {
     client.fetch {
-      search("memos") query query start offset limit limit
+      val filter = combineOptionalQuery(
+        offset.map(a => q(_.limit(a))),
+        limit.map(a => q(_.start(a)))
+      )
+
+      filter(search("memos"))
     }
+  }
 
 }
 
