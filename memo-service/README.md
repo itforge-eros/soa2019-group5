@@ -72,11 +72,29 @@
 }
 ```
 ---
-`POST /api/memos` _POST with empty body_ to create an empty memo  
-`201 Created`
-Empty Response
+`POST /api/memos` _POST with empty body_ to create an empty memo.  
+Then, it will return `201 Created` Empty Response with  
 Header `Location: /api/memos/7c4bf536-1872-4732-b207-3542c5f199f3` is refer to a newly created empty memo.
 
 ---
 `PUT /api/memos/:uuid` Update a memo by uuid  
+Example request body to change `title` and `content` value.  
+```json
+{
+  "title": "New Title",
+  "content": "New Content"
+}
+```
+Reponse `200 OK` with an updated memo object
+```json
+{
+    "id": "<uuid>",
+    "title": "New Title",
+    "content": "New Content",
+    "tags": [],
+    "created_time": "2019-02-12T08:22:06.286Z",
+    "updated_time": "2019-02-12T08:22:06.286Z"
+  }
+```
+---
 `DELETE /api/memos/:uuid` Delete a memo by uuid  
