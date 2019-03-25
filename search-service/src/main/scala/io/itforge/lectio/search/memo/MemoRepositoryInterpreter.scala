@@ -20,36 +20,18 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
       search("memos")
     }
 
-  def combineQuery(ops: List[SearchCompose]): SearchCompose = ops match {
-    case Nil        => (a => a)
-    case op :: Nil  => op
-    case op :: tail => op.compose(combineQuery(tail))
-  }
-
-  def q(op: SearchRequest => SearchRequest)(a: SearchRequest): SearchRequest =
-    op(a)
-
   override def searchQuery(query: String,
                            offset: Option[Int],
                            limit: Option[Int]): F[List[Memo]] = {
-
     client.fetch {
-      val ops = List[Option[SearchCompose]](
+      val filter = combineOptionalQuery(
         offset.map(a => q(_.limit(a))),
         limit.map(a => q(_.start(a)))
       )
 
-      search("memos") limit 3 start 10
-      val a: SearchRequest => SearchRequest =
-        ops.flatten.foldLeft((a: SearchRequest) => a)(_.compose(_))
-      a(search("memos"))
+      filter(search("memos"))
     }
   }
-
-  def composeQuery(request: SearchRequest, f: SearchCompose): SearchRequest =
-    f(request)
-
-  type SearchCompose = SearchRequest => SearchRequest
 
 }
 
