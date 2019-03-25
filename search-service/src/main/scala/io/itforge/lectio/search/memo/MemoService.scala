@@ -5,8 +5,11 @@ class MemoService[F[_]](repository: MemoRepositoryAlgebra[F]) {
   def findAll: F[List[Memo]] =
     repository.findAll
 
-  def query(query: String, offset: Int, limit: Int): F[List[Memo]] =
-    repository.searchQuery(query, offset, limit)
+  def query(query: String,
+            offset: Option[Int],
+            limit: Option[Int],
+            tags: Set[String]): F[List[Memo]] =
+    repository.searchQuery(query, offset, limit, tags)
 
 }
 

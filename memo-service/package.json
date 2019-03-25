@@ -16,7 +16,7 @@
     "start": "cross-env NODE_ENV=development nodemon server.js",
     "test": "NODE_ENV=test jest __test__ --forceExit --detectOpenHandles --runInBand",
     "pretest": "eslint .",
-    "prod": "pm2-runtime start ecosystem.config.js --env production"
+    "prod": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "body-parser": "~1.18.3",

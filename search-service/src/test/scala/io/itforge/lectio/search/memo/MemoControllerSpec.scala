@@ -44,7 +44,8 @@ class MemoControllerSpec
   private val memoService: MemoService[IO] = {
     val service = mock[MemoService[IO]]
     when(service.findAll) thenReturn IO.pure(memos)
-    when(service.query("keyword", 0, 10)) thenReturn IO.pure(memos)
+    when(service.query("keyword", None, Some(10), Set())) thenReturn IO.pure(
+      memos)
 
     service
   }

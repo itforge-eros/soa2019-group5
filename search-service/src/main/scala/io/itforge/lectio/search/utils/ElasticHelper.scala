@@ -19,4 +19,20 @@ trait ElasticHelper {
 
   }
 
+  def q(op: SearchCompose)(a: SearchRequest): SearchRequest =
+    op(a)
+
+  def combineQuery(ops: List[SearchCompose]): SearchCompose = ops match {
+    case Nil        => identity
+    case op :: Nil  => op
+    case op :: tail => op.andThen(combineQuery(tail))
+  }
+
+  def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose = {
+    ops.flatten
+      .foldLeft((a: SearchRequest) => a)(_.compose(_))
+  }
+
+  type SearchCompose = SearchRequest => SearchRequest
+
 }
