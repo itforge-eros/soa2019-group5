@@ -67,7 +67,7 @@
 `404 Not found` When not found. All of below endpoints will show this error message when no resourse matched with uuid has founded.
 ```json
 {
-  "error": 404,
+  "error_code": 404,
   "message": "Not found"
 }
 ```
