@@ -64,7 +64,7 @@
     "updated_time": "2019-02-12T08:22:06.286Z"
   }
 ```
-`404 Not found`
+`404 Not found` When not found. All of below endpoints will show this error message when no resourse matched with uuid has founded.
 ```json
 {
   "error": 404,
@@ -98,3 +98,4 @@ Reponse `200 OK` with an updated memo object
 ```
 ---
 `DELETE /api/memos/:uuid` Delete a memo by uuid  
+Return `200 OK` with empty response when success.
