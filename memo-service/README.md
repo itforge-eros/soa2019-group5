@@ -9,3 +9,7 @@
 # Test
 
 npm test (Require MongoDB)
+
+# Run
+
+npm start
