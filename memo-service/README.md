@@ -8,8 +8,16 @@
 
 # Test
 
-npm test (Require MongoDB)
+`npm test` (Require MongoDB)
 
 # Run
 
-npm start
+`npm start`
+
+# Endpoints
+
+`GET /api/memos` Get all of memos  
+`GET /api/memos/:uuid` Get a memo by uuid  
+`POST /api/memos` Create an empty memo  
+`PUT /api/memos/:uuid` Update a memo by uuid  
+`DELETE /api/memos/:uuid` Delete a memo by uuid  
