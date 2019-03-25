@@ -27,7 +27,6 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
     client.fetch {
       val filter = combineOptionalQuery(
         Some(q(_.query(query))),
-//        tags.toList.headOption.map(a => q(_.query(a))),
         offset.map(a => q(_.start(a))),
         limit.map(a => q(_.limit(a))),
         tags.toList.headOption.map(a =>
