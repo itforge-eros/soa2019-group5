@@ -21,7 +21,7 @@ Build to JAR
 ## Endpoints
 
 Search
-`GET /search/:keyword?tags=:tag?limit=:limit?offset:offset`
+`GET /search/:keyword?tags=:tag&limit=:limit&offset:offset`
 
 List All (For testing)
 `GET /all`
