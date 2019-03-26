@@ -25,7 +25,7 @@ trait ElasticHelper {
 
   def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose =
     ops.flatten
-      .foldLeft(identity[SearchRequest])(_ andThen _)
+      .foldLeft((a: SearchRequest) => a)(_ andThen _)
 
   type SearchCompose = SearchRequest => SearchRequest
 
