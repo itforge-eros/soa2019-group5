@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { AppBar, Toolbar, IconButton, InputBase, List } from '@material-ui/core';
 import { ArrowBack, Tune } from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
+import {Memo} from "../types";
 
 const inlineStyles = {
   toolbar: {
@@ -25,7 +26,7 @@ class SearchPage extends Component<any, any> {
 				{ name: 'How to train ur dragon', categories: ['Movie'] },
 				{ name: 'Cooking without food', categories: ['Cooking'] },
 			]
-		}
+		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
 	}
 
@@ -54,11 +55,13 @@ class SearchPage extends Component<any, any> {
             </IconButton>
           </Toolbar>
       	</AppBar>
-      	<List>
-					{ this.state.memos.map((m) =>
-						<MemoListItem title={m.name} categories={m.categories} key={m.name} />
-					) }
-				</List>
+				<div className="contentArea">
+	        <List>
+						{ this.state.memos.map((m: Memo) =>
+							<MemoListItem title={m.name} categories={m.categories} key={m.name} />
+						) }
+					</List>
+				</div>
 			</Fragment>
 		)
 	}
