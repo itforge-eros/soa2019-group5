@@ -9,8 +9,6 @@ trait MemoData {
     "content",
     "summary",
     Set("tag1", "tag2"),
-    Instant.EPOCH,
-    Instant.EPOCH
   )
 
   val memo2: Memo = Memo(
@@ -18,8 +16,6 @@ trait MemoData {
     "content",
     "summary",
     Set("tag1", "tag2"),
-    Instant.EPOCH,
-    Instant.EPOCH
   )
 
   val memos: List[Memo] = List(memo1, memo2)
