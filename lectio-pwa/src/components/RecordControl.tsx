@@ -28,7 +28,7 @@ class RecordControl extends Component<any, State> {
 			hasError: false
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
-		this.handleSaveClick = this.handleSaveClick.bind(this);
+		// this.handleSaveClick = this.handleSaveClick.bind(this);
 	}
 
 	componentDidMount() {

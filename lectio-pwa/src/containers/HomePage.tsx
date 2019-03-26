@@ -54,7 +54,7 @@ class HomePage extends Component<any, any> {
 				</Header>
 				<List>
 					{ memos.map((m) =>
-						<MemoListItem title={m.name} categories={m.categories} />
+						<MemoListItem title={m.name} categories={m.categories} key={m.name} />
 					) }
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
