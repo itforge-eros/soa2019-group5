@@ -17,3 +17,11 @@ Build to JAR
 ## Run
 
 `sbt run`
+
+## Endpoints
+
+Search
+`GET /search/:keyword?tags=:tag?limit=:limit?offset:offset`
+
+List All (For testing)
+`GET /all`
