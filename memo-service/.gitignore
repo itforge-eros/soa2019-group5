@@ -1,9 +1,6 @@
-logs
-target
-/.idea
-/.idea_modules
-/.classpath
-/.project
-/.settings
-/RUNNING_PID
-app.jar
+node_modules
+coverage
+npm-debug.log
+.env
+data
+.vscode
