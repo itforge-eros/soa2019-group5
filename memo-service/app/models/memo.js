@@ -15,7 +15,7 @@ const MemoSchema = new Schema({
   title: { type: String, default: '' },
   content: { type: String, default: '' },
   summary: { type: String, default: '' },
-  tags: { type: String, default: '' },
+  tags: { type: [String], default: '' },
   createdTime: { type: Date }
 });
 
