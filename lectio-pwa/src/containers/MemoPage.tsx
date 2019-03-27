@@ -54,7 +54,12 @@ class MemoPage extends Component<any, any> {
 						<Typography variant="h6">
 							Memo name here
 						</Typography>
-						<p className="bodyText">lorem ipsum</p>
+						<p className="bodyText">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+							sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+							Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+							nisi ut aliquip ex ea commodo consequat.
+						</p>
 						<div className={styles.chipWrap}>
 							<Chip label="Demo tag" className={styles.chip} />
 							<Button onClick={() => this.handleTagBtn()}>
