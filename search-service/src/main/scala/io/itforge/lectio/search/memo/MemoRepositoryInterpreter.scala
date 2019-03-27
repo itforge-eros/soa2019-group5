@@ -25,16 +25,17 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
                            limit: Option[Int],
                            tags: Set[String]): F[List[Memo]] = {
     client.fetch {
-      val filter = combineOptionalQuery(
-        offset.map(a => q(_.start(a))),
-        limit.map(a => q(_.limit(a))),
-        tags.toList.headOption.map(a =>
-          q(_ query {
-            boolQuery.must(termQuery("tags", a))
-          }))
-      )
-
-      filter(search(index) query query)
+      search(index)
+        .query {
+          matchQuery("title", query)
+        }
+        .postFilter {
+          boolQuery.filter {
+            tags.map(termQuery("tags", _))
+          }
+        }
+        .start(offset)
+        .limit(limit)
     }
   }
 

@@ -20,6 +20,16 @@ trait ElasticHelper {
 
   }
 
+  implicit class ElasticRequest(request: SearchRequest) {
+
+    def start(i: Option[Int]): SearchRequest =
+      i.map(request.start).getOrElse(request)
+
+    def limit(i: Option[Int]): SearchRequest =
+      i.map(request.limit).getOrElse(request)
+
+  }
+
   def q(op: SearchCompose)(a: SearchRequest): SearchRequest =
     op(a)
 
