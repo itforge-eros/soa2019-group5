@@ -56,7 +56,7 @@ class RecordControl extends Component<any, State> {
 		// TODO: Stop only if it's recording
 		if (this.rec) {
 			console.log('Stopping recording');
-			this.rec.stop();
+			this.handleSaveClick();
 		}
 	}
 
@@ -66,10 +66,10 @@ class RecordControl extends Component<any, State> {
 		this.setState(state => ({ recording: !state.recording }));
 	}
 
-	/* public handleSaveClick(): void {
+	public handleSaveClick(): void {
 		this.rec.stop();
-		this.rec.exportWav(this.finishRecording);
-	} */
+		this.rec.exportWAV(this.finishRecording);
+	}
 
 	private finishRecording(blob: Blob): void {
 		const url = URL.createObjectURL(blob);
