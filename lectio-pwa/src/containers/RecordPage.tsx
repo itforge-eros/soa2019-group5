@@ -4,7 +4,7 @@ import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
 
-interface State {
+type State = {
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<any>
@@ -19,14 +19,25 @@ const inlineStyles = {
 };
 
 class RecordPage extends Component<any, State> {
+	recordControl: React.RefObject<RecordControl>;
+
 	constructor(props: any) {
 		super(props);
+		this.recordControl = React.createRef();
 		this.state = {
 			memoName: `Memo ${new Date().toLocaleString()}`,
 			memoBody: 'lorem ipsum',
 			memoTags: [
 				{ name: 'Demo tag' }
 			]
+		};
+	}
+
+	componentWillUnmount() {
+		let rc = this.recordControl.current;
+		if (rc) {
+			console.log('rc exists');
+			rc.getRecording();
 		}
 	}
 
@@ -66,7 +77,7 @@ class RecordPage extends Component<any, State> {
 							</Button>
 						</div>
 					</div>
-					<RecordControl />
+					<RecordControl ref={this.recordControl} />
 				</div>
 			</Fragment>
 		)

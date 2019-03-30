@@ -7,7 +7,8 @@ import styles from './RecordControl.module.sass';
 interface State {
 	recording: boolean,
 	supportsRecording: boolean,
-	hasError: boolean
+	hasError: boolean,
+	blobUrl: string
 }
 
 const inlineStyles = {
@@ -25,10 +26,12 @@ class RecordControl extends Component<any, State> {
 		this.state = {
 			recording: false,
 			supportsRecording: false,
-			hasError: false
+			hasError: false,
+			blobUrl: ''
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
-		this.handleSaveClick = this.handleSaveClick.bind(this);
+		this.getRecording = this.getRecording.bind(this);
+		this.finishRecording = this.finishRecording.bind(this);
 	}
 
 	componentDidMount() {
@@ -56,7 +59,8 @@ class RecordControl extends Component<any, State> {
 		// TODO: Stop only if it's recording
 		if (this.rec) {
 			console.log('Stopping recording');
-			this.handleSaveClick();
+			this.rec.stop();
+			// this.getRecording();
 		}
 	}
 
@@ -66,14 +70,17 @@ class RecordControl extends Component<any, State> {
 		this.setState(state => ({ recording: !state.recording }));
 	}
 
-	public handleSaveClick(): void {
+	public getRecording(): string {
+		console.log('getRecording');
 		this.rec.stop();
 		this.rec.exportWAV(this.finishRecording);
+		console.log(this.state.blobUrl);
+		return this.state.blobUrl;
 	}
 
 	private finishRecording(blob: Blob): void {
-		const url = URL.createObjectURL(blob);
-		console.log(url);
+		// TODO: Wait for setState to complete
+		this.setState({ blobUrl: URL.createObjectURL(blob) });
 	}
 
 	render() {
