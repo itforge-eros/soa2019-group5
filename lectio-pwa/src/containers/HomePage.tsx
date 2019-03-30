@@ -6,6 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
+import {Memo} from "../types";
 
 const inlineStyles = {
 	appBar: {
@@ -30,7 +31,7 @@ const inlineStyles = {
 	}
 };
 
-const memos = [
+const memos: Array<Memo> = [
 	{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
 	{ name: 'Calculating NPV', categories: ['ITPM', 'Y3S2'] },
 	{ name: 'How to train ur dragon', categories: ['Movie'] },
@@ -42,8 +43,12 @@ class HomePage extends Component<any, any> {
 		super(props);
 	}
 
-	private handleFabClick() {
+	private handleFabClick(): void {
 		setTimeout(() => this.props.history.push('/record'), 180);
+	}
+
+	private handleSearchClick(): void {
+		setTimeout(() => this.props.history.push('/search'), 180);
 	}
 
   render() {
@@ -53,8 +58,8 @@ class HomePage extends Component<any, any> {
 					<Typography variant="h4" style={inlineStyles.title}>Recordings</Typography>
 				</Header>
 				<List>
-					{ memos.map((m) =>
-						<MemoListItem title={m.name} categories={m.categories} />
+					{ memos.map((m: Memo) =>
+						<MemoListItem title={m.name} categories={m.categories} key={m.name} />
 					) }
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
@@ -65,7 +70,7 @@ class HomePage extends Component<any, any> {
 						<Fab color="primary" aria-label="Add" style={inlineStyles.fab} onClick={() => this.handleFabClick()}>
 							<AddIcon />
 						</Fab>
-						<IconButton color="inherit" aria-label="Open Settings">
+						<IconButton color="inherit" aria-label="Open Settings" onClick={() => this.handleSearchClick()}>
 							<SearchIcon />
 						</IconButton>
 					</Toolbar>

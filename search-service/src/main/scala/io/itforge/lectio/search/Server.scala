@@ -16,13 +16,13 @@ object Server extends IOApp {
 
   def createServer[F[_]: ContextShift: ConcurrentEffect: Timer]
     : Resource[F, Http4sServer[F]] = {
-    val client = ElasticClient(ElasticProperties("http://localhost:9200"))
+    val client = ElasticClient(ElasticProperties(Config.elasticHost))
     val memoRepository = MemoRepositoryInterpreter[F](client)
     val memoService = MemoService[F](memoRepository)
     val routes = MemoEndpoints.endpoints[F](memoService)
 
     BlazeServerBuilder[F]
-      .bindHttp(9001, "0.0.0.0")
+      .bindHttp(Config.listeningPort, Config.listeningAddress)
       .withHttpApp(Router("/" -> routes).orNotFound)
       .resource
   }

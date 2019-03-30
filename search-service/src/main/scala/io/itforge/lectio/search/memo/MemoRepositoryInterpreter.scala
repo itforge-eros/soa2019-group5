@@ -5,8 +5,8 @@ import cats.effect._
 import com.sksamuel.elastic4s.circe._
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
-import com.sksamuel.elastic4s.searches.{QueryApi, SearchRequest}
 import io.circe.generic.auto._
+import io.itforge.lectio.search.Config
 import io.itforge.lectio.search.utils.ElasticHelper
 
 import scala.language.higherKinds
@@ -17,7 +17,7 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
 
   override def findAll: F[List[Memo]] =
     client.fetch {
-      search("memos")
+      search(index)
     }
 
   override def searchQuery(query: String,
@@ -25,18 +25,21 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
                            limit: Option[Int],
                            tags: Set[String]): F[List[Memo]] = {
     client.fetch {
-      val filter = combineOptionalQuery(
-        offset.map(a => q(_.start(a))),
-        limit.map(a => q(_.limit(a))),
-        tags.toList.headOption.map(a =>
-          q(_ query {
-            boolQuery.must(termQuery("tags", a))
-          }))
-      )
-
-      filter(search("memos") query query)
+      search(index)
+        .query {
+          matchQuery("title", query)
+        }
+        .postFilter {
+          boolQuery.filter {
+            tags.map(termQuery("tags", _))
+          }
+        }
+        .start(offset)
+        .limit(limit)
     }
   }
+
+  private val index = Config.memosIndex
 
 }
 
