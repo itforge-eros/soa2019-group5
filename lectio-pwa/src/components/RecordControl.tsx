@@ -4,12 +4,12 @@ import { FiberManualRecord, Pause } from '@material-ui/icons';
 import Recorder from '../vendor/recorder';
 import styles from './RecordControl.module.sass';
 
-interface State {
+type State = {
 	recording: boolean,
 	supportsRecording: boolean,
 	hasError: boolean,
 	blobUrl: string
-}
+};
 
 const inlineStyles = {
 	Fab: {
@@ -19,6 +19,8 @@ const inlineStyles = {
 };
 
 class RecordControl extends Component<any, State> {
+	audioContext: AudioContext | undefined;
+	audioInput: MediaStreamAudioSourceNode | undefined;
 	rec: any;
 
 	constructor(props: any) {
@@ -39,9 +41,9 @@ class RecordControl extends Component<any, State> {
 			.then((stream) => {
 				// Set up recorder
 				console.log('Initiating recorder');
-				const audioContext: AudioContext = new AudioContext();
-				const input: MediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
-				this.rec = new Recorder(input);
+				this.audioContext = new AudioContext();
+				this.audioInput = this.audioContext.createMediaStreamSource(stream);
+				this.rec = new Recorder(this.audioInput);
 				this.setState({ supportsRecording: true });
 				console.log('Initiated recorder');
 
@@ -51,11 +53,15 @@ class RecordControl extends Component<any, State> {
 			})
 			.catch((error) => {
 				console.log('Error initiating recorder');
+				console.log(error.toString());
+				alert(error.toString());
 				this.setState({ supportsRecording: false, hasError: true });
 			});
 	}
 
 	componentWillUnmount() {
+		if (this.audioInput) this.audioInput.disconnect();
+		if (this.audioContext) this.audioContext.close();
 		// TODO: Stop only if it's recording
 		if (this.rec) {
 			console.log('Stopping recording');
@@ -77,6 +83,8 @@ class RecordControl extends Component<any, State> {
 		console.log(this.state.blobUrl);
 		return this.state.blobUrl;
 	}
+
+
 
 	private finishRecording(blob: Blob): void {
 		// TODO: Wait for setState to complete

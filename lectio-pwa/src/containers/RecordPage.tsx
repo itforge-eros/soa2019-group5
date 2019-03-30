@@ -99,7 +99,7 @@ class RecordPage extends Component<any, State> {
 							{this.state.memoTags.map(tag => (
 								<Chip label={tag.name} className={styles.chip} />
 							))}
-							<Button onClick={() => this.handleTagBtn()}>
+							<Button>
 								<AddIcon fontSize="small" />
 							</Button>
 						</div>
