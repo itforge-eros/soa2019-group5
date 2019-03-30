@@ -8,12 +8,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
+import {Prompt} from "react-router-dom";
 
 type State = {
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<any>,
-	dialogOpen: boolean
+	dialogOpen: boolean,
+	blockPageLeave: boolean
 }
 
 const inlineStyles = {
@@ -36,7 +38,8 @@ class RecordPage extends Component<any, State> {
 			memoTags: [
 				{ name: 'Demo tag' }
 			],
-			dialogOpen: false
+			dialogOpen: false,
+			blockPageLeave: true
 		};
 		this.handleDialogNo = this.handleDialogNo.bind(this);
 		this.handleDialogYes = this.handleDialogYes.bind(this);
@@ -54,7 +57,6 @@ class RecordPage extends Component<any, State> {
 
 	private handleBackBtn() {
 		this.handleDialogOpen();
-		// setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleTagBtn() {
@@ -71,7 +73,7 @@ class RecordPage extends Component<any, State> {
 	}
 
 	private handleDialogYes() {
-		this.setState({ dialogOpen: false });
+		this.setState({ dialogOpen: false, blockPageLeave: false });
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
@@ -116,6 +118,7 @@ class RecordPage extends Component<any, State> {
 						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
 					</DialogActions>
 				</Dialog>
+				<Prompt when={this.state.blockPageLeave} message="Do you want to discard recording?" />
 			</Fragment>
 		)
 	}
