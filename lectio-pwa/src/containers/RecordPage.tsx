@@ -3,11 +3,17 @@ import {AppBar, Button, Chip, IconButton, Toolbar, Typography} from '@material-u
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
 
 type State = {
 	memoName: string,
 	memoBody: string,
-	memoTags: Array<any>
+	memoTags: Array<any>,
+	dialogOpen: boolean
 }
 
 const inlineStyles = {
@@ -29,25 +35,44 @@ class RecordPage extends Component<any, State> {
 			memoBody: 'lorem ipsum',
 			memoTags: [
 				{ name: 'Demo tag' }
-			]
+			],
+			dialogOpen: false
 		};
+		this.handleDialogNo = this.handleDialogNo.bind(this);
+		this.handleDialogYes = this.handleDialogYes.bind(this);
 	}
 
-	componentWillUnmount() {
+	/* componentWillUnmount() {
+		// Set a reference to RecordControl instance
 		let rc = this.recordControl.current;
+		// Prevent null
 		if (rc) {
 			console.log('rc exists');
 			rc.getRecording();
 		}
-	}
+	} */
 
 	private handleBackBtn() {
-		setTimeout(() => this.props.history.goBack(), 180);
+		this.handleDialogOpen();
+		// setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleTagBtn() {
 		const currentPath: string = this.props.location.pathname;
 		setTimeout(() => this.props.history.push(`${currentPath}/tags/`), 180);
+	}
+
+	private handleDialogOpen() {
+		this.setState({ dialogOpen: true });
+	}
+
+	private handleDialogNo() {
+		this.setState({ dialogOpen: false });
+	}
+
+	private handleDialogYes() {
+		this.setState({ dialogOpen: false });
+		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	render() {
@@ -79,6 +104,18 @@ class RecordPage extends Component<any, State> {
 					</div>
 					<RecordControl ref={this.recordControl} />
 				</div>
+				<Dialog open={this.state.dialogOpen}>
+					<DialogTitle>Discard memo?</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							Do you want to <strong>discard</strong> this memo?
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" onClick={this.handleDialogYes}>Yes</Button>
+						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
+					</DialogActions>
+				</Dialog>
 			</Fragment>
 		)
 	}
