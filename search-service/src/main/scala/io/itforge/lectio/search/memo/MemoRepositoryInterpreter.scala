@@ -7,7 +7,7 @@ import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import io.circe.generic.auto._
 import io.itforge.lectio.search.Config
-import io.itforge.lectio.search.utils.ElasticHelper
+import io.itforge.lectio.search.utils.{ElasticHelper, SortBy}
 
 import scala.language.higherKinds
 
@@ -23,11 +23,12 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
   override def searchQuery(query: String,
                            offset: Option[Int],
                            limit: Option[Int],
-                           tags: Set[String]): F[List[Memo]] = {
+                           tags: Set[String],
+                           sortBy: Option[SortBy]): F[List[Memo]] = {
     client.fetch {
       search(index)
         .query {
-          matchQuery("title", query)
+          multiMatchQuery(query)
         }
         .postFilter {
           boolQuery.filter {
@@ -36,6 +37,8 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
         }
         .start(offset)
         .limit(limit)
+//      TODO: Fix 500 sorting error in ElasticSearch
+//        .sortBy(sortBy)
     }
   }
 

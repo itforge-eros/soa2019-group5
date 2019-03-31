@@ -1,6 +1,7 @@
 package io.itforge.lectio.search.utils
 
-import cats.Monoid
+import cats._
+import cats.implicits._
 import cats.effect.LiftIO
 import com.sksamuel.elastic4s.HitReader
 import com.sksamuel.elastic4s.cats.effect.instances._
@@ -27,6 +28,12 @@ trait ElasticHelper {
 
     def limit(i: Option[Int]): SearchRequest =
       i.map(request.limit).getOrElse(request)
+
+    def sortBy(s: Option[SortBy]): SearchRequest =
+      s map {
+        case SortAsc(field)  => request.sortByFieldAsc(field)
+        case SortDesc(field) => request.sortByFieldDesc(field)
+      } getOrElse request
 
   }
 
