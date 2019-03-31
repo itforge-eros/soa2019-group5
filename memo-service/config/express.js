@@ -5,7 +5,7 @@
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
-// const csrf = require('csurf');
+const cors = require('cors');
 const helmet = require('helmet');
 
 const env = process.env.NODE_ENV || 'development';
@@ -16,6 +16,7 @@ const env = process.env.NODE_ENV || 'development';
 
 module.exports = function(app) {
   app.use(helmet());
+  app.use(cors());
 
   // Don't log during tests
   // Logging middleware

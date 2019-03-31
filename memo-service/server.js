@@ -52,6 +52,7 @@ function listen() {
   if (app.get('env') === 'test') return;
   app.listen(port);
   console.log('Express app started on port ' + port);
+  console.log('With config', config);
 }
 
 function connect() {
