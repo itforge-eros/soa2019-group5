@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Fab } from "@material-ui/core";
 import { FiberManualRecord, Pause } from '@material-ui/icons';
-import Recorder from '../vendor/recorder';
 import styles from './RecordControl.module.sass';
 
-interface State {
+type State = {
 	recording: boolean,
-	supportsRecording: boolean,
-	hasError: boolean
-}
+	supportsRecording: boolean, // this will be false at first
+	hasError: boolean // so this is needed to work in conjunction with supportsRecording
+};
 
 const inlineStyles = {
 	Fab: {
@@ -18,7 +17,7 @@ const inlineStyles = {
 };
 
 class RecordControl extends Component<any, State> {
-	rec: any;
+	private mediaRecorder: MediaRecorder | undefined;
 
 	constructor(props: any) {
 		super(props);
@@ -28,7 +27,7 @@ class RecordControl extends Component<any, State> {
 			hasError: false
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
-		this.handleSaveClick = this.handleSaveClick.bind(this);
+		this.getRecording = this.getRecording.bind(this);
 	}
 
 	componentDidMount() {
@@ -36,44 +35,44 @@ class RecordControl extends Component<any, State> {
 			.then((stream) => {
 				// Set up recorder
 				console.log('Initiating recorder');
-				const audioContext: AudioContext = new AudioContext();
-				const input: MediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
-				this.rec = new Recorder(input);
+				this.mediaRecorder = new MediaRecorder(stream);
 				this.setState({ supportsRecording: true });
 				console.log('Initiated recorder');
 
 				// Start recording
-				this.rec.record();
+				this.mediaRecorder.start();
 				this.setState({ recording: true });
 			})
 			.catch((error) => {
 				console.log('Error initiating recorder');
+				console.log(error.toString());
+				alert(error.toString());
 				this.setState({ supportsRecording: false, hasError: true });
 			});
 	}
 
 	componentWillUnmount() {
-		// TODO: Stop only if it's recording
-		if (this.rec) {
-			console.log('Stopping recording');
-			this.handleSaveClick();
+		if (this.mediaRecorder) {
+			if (this.mediaRecorder.state === 'recording') this.mediaRecorder.stop();
 		}
 	}
 
 	private handleFabClick(): void {
-		if (this.state.recording) this.rec.stop(); // pause
-		else this.rec.record(); // resume
-		this.setState(state => ({ recording: !state.recording }));
+		if (this.mediaRecorder) {
+			if (this.state.recording) this.mediaRecorder.pause();
+			else this.mediaRecorder.resume();
+			this.setState(state => ({recording: !state.recording}));
+		}
 	}
 
-	public handleSaveClick(): void {
-		this.rec.stop();
-		this.rec.exportWAV(this.finishRecording);
-	}
-
-	private finishRecording(blob: Blob): void {
-		const url = URL.createObjectURL(blob);
-		console.log(url);
+	public getRecording(...cb: Array<Function>): void {
+		if (this.mediaRecorder) {
+			this.mediaRecorder.resume();
+			this.mediaRecorder.requestData();
+			this.mediaRecorder.ondataavailable = (blobEvent: any) => {
+				cb[0](blobEvent);
+			}
+		}
 	}
 
 	render() {

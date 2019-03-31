@@ -46,3 +46,13 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Credits
 
 [Realtime-search with React](https://codepen.io/eladrin201/pen/MawMdB) by Allisan Betancourt
+
+## Remarks
+
+The web application is targeted for the following browsers:
+- Chrome 47 or later
+- Firefox 25 or later
+- Opera 36 or later
+- Chrome for Android 49 or later
+- Firefox for Android 25 or later
+- Opera for Android 36 or later
