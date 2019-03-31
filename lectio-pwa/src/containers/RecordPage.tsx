@@ -43,17 +43,21 @@ class RecordPage extends Component<any, State> {
 		};
 		this.handleDialogNo = this.handleDialogNo.bind(this);
 		this.handleDialogYes = this.handleDialogYes.bind(this);
+		this.handleSaveBtn = this.handleSaveBtn.bind(this);
 	}
 
-	/* componentWillUnmount() {
+	private handleSaveBtn(): void {
 		// Set a reference to RecordControl instance
 		let rc = this.recordControl.current;
 		// Prevent null
 		if (rc) {
 			console.log('rc exists');
-			rc.getRecording();
+			rc.getRecording((blobEvent: any) => {
+				console.log('received');
+				console.log(blobEvent.data);
+			});
 		}
-	} */
+	}
 
 	private handleBackBtn() {
 		this.handleDialogOpen();
@@ -86,7 +90,7 @@ class RecordPage extends Component<any, State> {
 							<ArrowBack />
 						</IconButton>
 						<div className="grow"/>
-						<IconButton>
+						<IconButton onClick={this.handleSaveBtn}>
 							<Save />
 						</IconButton>
 					</Toolbar>
