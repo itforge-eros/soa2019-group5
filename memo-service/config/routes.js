@@ -4,7 +4,6 @@
  * Module dependencies.
  */
 
-const home = require('../app/controllers/home');
 const memo = require('../app/controllers/api/memo');
 
 /**
@@ -12,7 +11,6 @@ const memo = require('../app/controllers/api/memo');
  */
 
 module.exports = function(app) {
-  app.get('/', home.index);
   app.get('/api/memos', memo.all);
   app.post('/api/memos', memo.create);
   app.get('/api/memos/:uuid', memo.get);
