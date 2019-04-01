@@ -24,10 +24,10 @@ trait ElasticHelper {
   implicit class ElasticRequest(request: SearchRequest) {
 
     def start(i: Option[Int]): SearchRequest =
-      i.map(request.start).getOrElse(request)
+      i map request.start getOrElse request
 
     def limit(i: Option[Int]): SearchRequest =
-      i.map(request.limit).getOrElse(request)
+      i map request.limit getOrElse request
 
     def sortBy(s: Option[SortBy]): SearchRequest =
       s map {

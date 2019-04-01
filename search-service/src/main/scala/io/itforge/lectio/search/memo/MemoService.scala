@@ -12,6 +12,7 @@ class MemoService[F[_]](repository: MemoRepositoryAlgebra[F]) {
     * @param limit limit query result size; default: 10
     * @param tags filter with tags
     * @param sort sorting field and ordering
+    *             default ordering: ascending
     *             format: field_name:[asc|desc]
     *             example: title:desc
     */

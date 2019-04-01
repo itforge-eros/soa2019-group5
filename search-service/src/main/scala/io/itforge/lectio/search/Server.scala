@@ -11,11 +11,16 @@ import io.itforge.lectio.search.memo.{
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.{Router, Server => Http4sServer}
 import org.http4s.syntax.kleisli._
+import io.circe.config.parser
+
 
 object Server extends IOApp {
 
   def createServer[F[_]: ContextShift: ConcurrentEffect: Timer]
     : Resource[F, Http4sServer[F]] = {
+    for {
+      conf <- Resource.liftF(parser`)
+    }
     val client = ElasticClient(ElasticProperties(Config.elasticHost))
     val memoRepository = MemoRepositoryInterpreter[F](client)
     val memoService = MemoService[F](memoRepository)
