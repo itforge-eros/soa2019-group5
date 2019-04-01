@@ -12,6 +12,7 @@ val elastic4sVersion = "6.5.1"
 val mockitoVersion = "1.2.1"
 val catsVersion = "1.6.0"
 val circeVersion = "0.11.1"
+val circeConfigVersion     = "0.6.1"
 
 libraryDependencies ++= Seq(
   "org.typelevel"             %% "cats-core"              % catsVersion,
@@ -31,9 +32,11 @@ libraryDependencies ++= Seq(
   "io.circe"                  %% "circe-literal"          % circeVersion,
   "io.circe"                  %% "circe-generic-extras"   % circeVersion,
   "io.circe"                  %% "circe-parser"           % circeVersion,
+  "io.circe"                  %% "circe-config"           % circeConfigVersion,
 )
 addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6")
 addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")
+addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
 enablePlugins(ScalafmtPlugin)
 
 assemblyMergeStrategy in assembly := {

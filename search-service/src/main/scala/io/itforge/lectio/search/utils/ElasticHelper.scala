@@ -8,6 +8,7 @@ import com.sksamuel.elastic4s.cats.effect.instances._
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.searches.SearchRequest
+import io.circe.generic.extras._
 
 trait ElasticHelper {
 
@@ -24,16 +25,17 @@ trait ElasticHelper {
   implicit class ElasticRequest(request: SearchRequest) {
 
     def start(i: Option[Int]): SearchRequest =
-      i map request.start getOrElse request
+      i.map(request.start).getOrElse(request)
 
     def limit(i: Option[Int]): SearchRequest =
-      i map request.limit getOrElse request
+      i.map(request.limit).getOrElse(request)
 
     def sortBy(s: Option[SortBy]): SearchRequest =
-      s map {
-        case SortAsc(field)  => request.sortByFieldAsc(field)
-        case SortDesc(field) => request.sortByFieldDesc(field)
-      } getOrElse request
+      s.map {
+          case SortAsc(field) => request.sortByFieldAsc(field)
+          case SortDesc(field) => request.sortByFieldDesc(field)
+        }
+        .getOrElse(request)
 
   }
 
@@ -42,7 +44,7 @@ trait ElasticHelper {
 
   def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose =
     ops.flatten
-      .foldLeft((a: SearchRequest) => a)(_ andThen _)
+      .foldLeft((a: SearchRequest) => a)(_.andThen(_))
 
   type SearchCompose = SearchRequest => SearchRequest
 
@@ -52,7 +54,9 @@ trait ElasticHelper {
     new Monoid[SearchFilter] {
       def empty: SearchFilter = SearchFilter(identity)
       def combine(x: SearchFilter, y: SearchFilter): SearchFilter =
-        SearchFilter(x.filter andThen y.filter)
+        SearchFilter(x.filter.andThen(y.filter))
     }
+
+  implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
 
 }
