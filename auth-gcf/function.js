@@ -121,7 +121,7 @@ async function handleImplictSigninRequest(req, res) {
     throw Promise.reject(new Error("Invalid client"));
   }
   const token = jwt.sign(
-    { username: user.username, user_id: user.id },
+    { username: user.username, user_id: user.user_id },
     privateKey,
     {
       algorithm: "RS256",
