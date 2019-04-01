@@ -1,4 +1,10 @@
-FROM openjdk:8-jre
-COPY dist /dist
-EXPOSE 9000
-CMD /dist/bin/start -Dhttp.port=9000 -Dplay.secret.key=secretsecret121232121 -Dpidfile.path=/dev/null
+FROM node:10.12.0-alpine
+
+WORKDIR /app
+# https://stackoverflow.com/a/32785014/232619
+COPY package*.json ./
+RUN npm ci
+COPY . .
+EXPOSE 3000
+
+CMD ["npm", "run", "prod"]

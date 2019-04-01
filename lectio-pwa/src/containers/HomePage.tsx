@@ -6,6 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
+import {Memo} from "../types";
 
 const inlineStyles = {
 	appBar: {
@@ -21,21 +22,35 @@ const inlineStyles = {
 		top: -30,
 		left: 0,
 		right: 0,
-		margin: '0 auto'
+		margin: '0 auto',
+		backgroundColor: '#0062F5',
+		color: '#f4f4f4'
 	},
 	title: {
 		fontWeight: 600,
 	}
-}
+};
 
-const memos = [
+const memos: Array<Memo> = [
 	{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
 	{ name: 'Calculating NPV', categories: ['ITPM', 'Y3S2'] },
 	{ name: 'How to train ur dragon', categories: ['Movie'] },
 	{ name: 'Cooking without food', categories: ['Cooking'] },
 ];
 
-class HomePage extends Component {
+class HomePage extends Component<any, any> {
+	constructor(props: any) {
+		super(props);
+	}
+
+	private handleFabClick(): void {
+		setTimeout(() => this.props.history.push('/record'), 180);
+	}
+
+	private handleSearchClick(): void {
+		setTimeout(() => this.props.history.push('/search'), 180);
+	}
+
   render() {
 		return (
 			<Fragment>
@@ -43,19 +58,19 @@ class HomePage extends Component {
 					<Typography variant="h4" style={inlineStyles.title}>Recordings</Typography>
 				</Header>
 				<List>
-					{ memos.map((m) =>
-						<MemoListItem title={m.name} categories={m.categories} />
+					{ memos.map((m: Memo) =>
+						<MemoListItem title={m.name} categories={m.categories} key={m.name} />
 					) }
 				</List>
-				<AppBar position="fixed" color="primary" style={inlineStyles.appBar}>
+				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
 					<Toolbar style={inlineStyles.toolbar}>
 						<IconButton color="inherit" aria-label="Open Settings">
 							<SettingsIcon />
 						</IconButton>
-						<Fab color="secondary" aria-label="Add" style={inlineStyles.fab}>
+						<Fab color="primary" aria-label="Add" style={inlineStyles.fab} onClick={() => this.handleFabClick()}>
 							<AddIcon />
 						</Fab>
-						<IconButton color="inherit" aria-label="Open Settings">
+						<IconButton color="inherit" aria-label="Open Settings" onClick={() => this.handleSearchClick()}>
 							<SearchIcon />
 						</IconButton>
 					</Toolbar>

@@ -42,3 +42,17 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## Credits
+
+[Realtime-search with React](https://codepen.io/eladrin201/pen/MawMdB) by Allisan Betancourt
+
+## Remarks
+
+The web application is targeted for the following browsers:
+- Chrome 47 or later
+- Firefox 25 or later
+- Opera 36 or later
+- Chrome for Android 49 or later
+- Firefox for Android 25 or later
+- Opera for Android 36 or later

@@ -1,9 +1,7 @@
-logs
-target
-/.idea
-/.idea_modules
-/.classpath
-/.project
-/.settings
-/RUNNING_PID
-/dist
+node_modules
+coverage
+npm-debug.log
+.env
+data
+.vscode
+coverage
