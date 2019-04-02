@@ -70,7 +70,7 @@ class RecordControl extends Component<any, State> {
 			this.mediaRecorder.resume();
 			this.mediaRecorder.requestData();
 			this.mediaRecorder.ondataavailable = (blobEvent: any) => {
-				cb[0](blobEvent);
+				cb.forEach((f) => f(blobEvent));
 			}
 		}
 	}
