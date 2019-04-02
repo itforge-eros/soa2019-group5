@@ -12,7 +12,9 @@ val elastic4sVersion = "6.5.1"
 val mockitoVersion = "1.2.1"
 val catsVersion = "1.6.0"
 val circeVersion = "0.11.1"
-val circeConfigVersion     = "0.6.1"
+val circeConfigVersion = "0.6.1"
+val jwtScalaVersion = "2.1.0"
+val randomDataGeneratorVersion = "2.6"
 
 libraryDependencies ++= Seq(
   "org.typelevel"             %% "cats-core"              % catsVersion,
@@ -33,6 +35,9 @@ libraryDependencies ++= Seq(
   "io.circe"                  %% "circe-generic-extras"   % circeVersion,
   "io.circe"                  %% "circe-parser"           % circeVersion,
   "io.circe"                  %% "circe-config"           % circeConfigVersion,
+  "com.pauldijou"             %% "jwt-core"               % jwtScalaVersion,
+  "com.pauldijou"             %% "jwt-circe"              % jwtScalaVersion,
+  "com.danielasfregola"       %% "random-data-generator"  % randomDataGeneratorVersion,
 )
 addCompilerPlugin("org.spire-math" %% "kind-projector"     % "0.9.6")
 addCompilerPlugin("com.olegpy"     %% "better-monadic-for" % "0.2.4")

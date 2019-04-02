@@ -4,8 +4,9 @@ import cats.effect.Effect
 import cats.implicits._
 import io.circe.generic.auto._
 import io.circe.syntax._
+import io.itforge.lectio.search.auth.{AuthService, User}
 import io.itforge.lectio.search.utils.SearchParams
-import org.http4s.HttpRoutes
+import org.http4s.{AuthedService, HttpRoutes}
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 
@@ -24,32 +25,34 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
         } yield response
     }
 
-  def getSearchEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
-    HttpRoutes.of[F] {
+  def getSearchEndpoint(memoService: MemoService[F]): AuthedService[User, F] =
+    AuthedService {
       case GET -> Root / "search" / query
             :? Offset(offset)
             :? Limit(limit)
             :? Tags(tags)
-            :? Sort(sort) =>
+            :? Sort(sort) as user =>
         for {
-          memos <- memoService.query(query,
-                                     offset,
-                                     limit,
-                                     tags.getOrElse(Nil).toSet,
-                                     sort)
+          memos <- memoService.query(
+            query,
+            offset,
+            limit,
+            tags.getOrElse(Nil).toSet,
+            sort,
+            Some(user.userId.toString))
           response <- Ok(memos.asJson)
         } yield response
     }
 
-  def endpoints(memoService: MemoService[F]): HttpRoutes[F] =
-    getAllMemosEndpoint(memoService) <+>
-      getSearchEndpoint(memoService)
+  def endpoints(memo: MemoService[F], auth: AuthService[F]): HttpRoutes[F] =
+    getAllMemosEndpoint(memo) <+>
+      auth.middleware(getSearchEndpoint(memo))
 
 }
 
 object MemoEndpoints {
 
-  def endpoints[F[_]: Effect](memoService: MemoService[F]): HttpRoutes[F] =
-    new MemoEndpoints[F].endpoints(memoService)
+  def endpoints[F[_]: Effect](memo: MemoService[F], auth: AuthService[F]): HttpRoutes[F] =
+    new MemoEndpoints[F].endpoints(memo, auth)
 
 }

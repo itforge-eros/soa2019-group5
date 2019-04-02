@@ -8,7 +8,6 @@ import com.sksamuel.elastic4s.cats.effect.instances._
 import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.searches.SearchRequest
-import io.circe.generic.extras._
 
 trait ElasticHelper {
 
@@ -56,7 +55,5 @@ trait ElasticHelper {
       def combine(x: SearchFilter, y: SearchFilter): SearchFilter =
         SearchFilter(x.filter.andThen(y.filter))
     }
-
-  implicit val config: Configuration = Configuration.default.withSnakeCaseMemberNames
 
 }
