@@ -1,0 +1,9 @@
+dashboard:
+  enabled: true
+  domain: traefik.lectio.itforge.io
+rbac:
+  enabled: true
+kubernetes:
+  namespaces:
+   - default
+   - kube-system
