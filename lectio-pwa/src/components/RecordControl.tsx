@@ -65,6 +65,10 @@ class RecordControl extends Component<any, State> {
 		}
 	}
 
+	/**
+	 * Stops recording and returns the audio as blob
+	 * @param cb - callback
+	 */
 	public getRecording(...cb: Array<Function>): void {
 		if (this.mediaRecorder) {
 			this.mediaRecorder.resume();
