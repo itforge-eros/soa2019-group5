@@ -1,0 +1,28 @@
+{
+  "properties": {
+    "title": {
+      "type": "text"
+    },
+    "content": {
+      "type": "text"
+    },
+    "summary": {
+      "type": "text"
+    },
+    "tags": {
+      "type": "text",
+      "fields": {
+        "keyword": {
+          "type": "keyword",
+          "ignore_above": 256
+        }
+      }
+    },
+    "user_id": {
+      "type": "keyword"
+    },
+    "uuid": {
+      "type": "keyword"
+    }
+  }
+}
