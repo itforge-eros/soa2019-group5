@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import './index.sass';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {openConnection} from "./utils/idb";
+import Idb from "./utils/Idb";
 import ErrorPage from "./containers/ErrorPage";
 
-openConnection
+const idb = Idb.getInstance();
+
+idb.openConnection
 	.then(() => {
 		ReactDOM.render(<App />, document.getElementById('root'));
 	})
