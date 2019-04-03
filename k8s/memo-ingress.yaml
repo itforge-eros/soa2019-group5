@@ -1,15 +1,15 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: whoami-ingress
+  name: memo-ingress
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-  - host: lectio.itforge.io
+  - host: api.lectio.itforge.io
     http:
       paths:
-      - path: /
+      - path: /memos
         backend:
-          serviceName: whoami-service
+          serviceName: memo-service
           servicePort: http
