@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
-import { Route, NavLink, HashRouter } from 'react-router-dom';
+import {Route, HashRouter} from 'react-router-dom';
 import HomePage from './containers/HomePage';
 import MemoPage from './containers/MemoPage';
 import './App.sass';
-import SummaryPage from "./containers/SummaryPage";
-import TagSelectionPage from "./containers/TagSelectionPage";
-import RecordPage from "./containers/RecordPage";
-import SearchPage from "./containers/SearchPage";
-import {openConnection} from './utils/idb';
+import SummaryPage from './containers/SummaryPage';
+import TagSelectionPage from './containers/TagSelectionPage';
+import RecordPage from './containers/RecordPage';
+import SearchPage from './containers/SearchPage';
+import ErrorPage from './containers/ErrorPage';
 
 class App extends Component {
-	componentWillMount(): void {
-		openConnection
-			.then(() => alert('connected'))
-			.catch(() => alert('rejected'));
-	}
-
 	render() {
 		return (
 			<HashRouter>
@@ -26,6 +20,7 @@ class App extends Component {
 					<Route exact path="/memo/tags" component={TagSelectionPage} />
 					<Route exact path="/record" component={RecordPage} />
 					<Route exact path="/search" component={SearchPage} />
+					<Route exact path="/error" component={ErrorPage} />
 				</div>
 			</HashRouter>
 		);
