@@ -7,4 +7,4 @@ RUN npm ci
 COPY . .
 EXPOSE 3000
 
-CMD ["NODE_ENV=production", "node", "server.js"]
+CMD ["node", "server.js"]
