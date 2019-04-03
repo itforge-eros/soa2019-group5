@@ -1,0 +1,4 @@
+usePassword: false
+mongodbDatabase: lectio
+replicaSet:
+  enabled: true
