@@ -1,0 +1,21 @@
+package io.itforge.lectio.search.memo
+
+trait AuthData {
+
+  val publicKey: String =
+    """
+      |MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqt6NInZQ8Ty9wfprXhPx
+      |G16zV7Svd2DhJ3j6ZS/zfkThSeuo11fTcoxt8MaI5orORQDfRKLtwlYd9KnDR93Y
+      |I6JFyPDEzAoXkW9RRig2NiOHoOR368mu7NbA2R3F8jqIER42R24/AKUTkU9LPjus
+      |KZBUcADImLg9698GM5125x2s4j2U+T68jERRO4iEIPG9dVK98Y+vZ8XN29kb4AOK
+      |OtkO4ZFCrN2R6GbpvACShgczMgxgb4q3BZnB/RVkRFv4sW0AdO5jie7WKpP8XHeT
+      |3eifdt77uhoLjUSvpqs6VLYAc9xEpxCmzu63XNqVV7S8Qnzs05wyJk5LytdtEnnH
+      |XwIDAQAB
+    """.stripMargin.filter(_ != '\n')
+
+  val bearerToken: String =
+    "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlcl9pZCI6ImJmNzg5NjA0LWFiMDEtNGI0MC04ZTZjLWE1NDk0N2ZjMjAzMyIsImlhdCI6MTU1NDExMDE1NiwiZXhwIjoxNTU1OTEwMTU2LCJpc3MiOiJsZWN0aW8taXNzdWVyIn0.b5VB3-m-pr8MnP7xBGKSc1-6qjRWD4am67jbxhQqWGw8UXeVjeHGHhYh4CLDB3ZnWzC7CMnLWZS7jN6SUQJxzzHikC-2vDV4UHaD507w45WXht70wDldOEu1ZZBquwiPhLzsw6YiXmWL7ldLiR3X-fOsOlFBrLUrctpSg4R2P0PGWRY-9ZRiKaPCoU0HShke75cJJQ_P479aRRZuMPzpFvFGWd899GJj3uUf5UexRhuVP8wk2BWzbeNQR7M4dpwpm5uoQtSn0q0vJQ_A0KMwzraCVSFWzSqIL1PUPjYw7WXqnor91vrMsP1-6Km-LoWQKL9vHfwW4c7QK79Ybw8vug"
+
+  val userId: String = "bf789604-ab01-4b40-8e6c-a54947fc2033"
+
+}

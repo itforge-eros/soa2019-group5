@@ -15,16 +15,16 @@ class MemoServiceSpec extends org.specs2.mutable.Specification with MemoData {
   "search memos" >> {
     "return correct memos" >> {
       val result =
-        memoService.query("keyword", None, None, Set()).unsafeRunSync()
-      result must beEqualTo(memos)
+        memoService.query(memo1.title, Some(0), Some(10), Set(), None, None).unsafeRunSync()
+      result must beEqualTo(memo1 :: Nil)
     }
   }
 
   private val memoRepository: MemoRepositoryAlgebra[IO] = {
     val service = mock[MemoRepositoryAlgebra[IO]]
-    when(service.findAll) thenReturn IO.pure(memos)
-    when(service.searchQuery("keyword", None, None, Set())) thenReturn IO.pure(
-      memos)
+    when(service.findAll).thenReturn(IO.pure(memos))
+    when(service.searchQuery(memo1.title, Some(0), Some(10), Set(), None, None))
+      .thenReturn(IO.pure(memo1 :: Nil))
 
     service
   }

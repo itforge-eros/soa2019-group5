@@ -30,10 +30,11 @@ trait ElasticHelper {
       i.map(request.limit).getOrElse(request)
 
     def sortBy(s: Option[SortBy]): SearchRequest =
-      s map {
-        case SortAsc(field)  => request.sortByFieldAsc(field)
-        case SortDesc(field) => request.sortByFieldDesc(field)
-      } getOrElse request
+      s.map {
+          case SortAsc(field) => request.sortByFieldAsc(field)
+          case SortDesc(field) => request.sortByFieldDesc(field)
+        }
+        .getOrElse(request)
 
   }
 
@@ -42,7 +43,7 @@ trait ElasticHelper {
 
   def combineOptionalQuery(ops: Option[SearchCompose]*): SearchCompose =
     ops.flatten
-      .foldLeft((a: SearchRequest) => a)(_ andThen _)
+      .foldLeft((a: SearchRequest) => a)(_.andThen(_))
 
   type SearchCompose = SearchRequest => SearchRequest
 
@@ -52,7 +53,7 @@ trait ElasticHelper {
     new Monoid[SearchFilter] {
       def empty: SearchFilter = SearchFilter(identity)
       def combine(x: SearchFilter, y: SearchFilter): SearchFilter =
-        SearchFilter(x.filter andThen y.filter)
+        SearchFilter(x.filter.andThen(y.filter))
     }
 
 }

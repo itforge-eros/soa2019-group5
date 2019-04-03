@@ -7,6 +7,7 @@ const NOT_FOUND = { message: 'Not found', error_code: 404 };
 exports.all = async function(req, res) {
   console.log(req.user);
   const memos = await Memo.find({ user_id: req.user.user_id });
+  console.log(memos);
   res.send(memos);
 };
 
@@ -44,7 +45,7 @@ exports.update = async function(req, res) {
   });
   const memo = await Memo.findOneAndUpdate(
     { uuid: req.params.uuid, user_id: req.user.user_id },
-    unwrap(req.body),
+    { ...unwrap(req.body), updated_time: Date.now() },
     { new: true }
   );
   if (!memo) {

@@ -1,17 +1,18 @@
 package io.itforge.lectio.search.memo
 
+import java.util.UUID
+
 import cats._
 import cats.effect._
 import com.sksamuel.elastic4s.circe._
 import com.sksamuel.elastic4s.http.ElasticClient
-import com.sksamuel.elastic4s.http.ElasticDsl._
+import com.sksamuel.elastic4s.http.ElasticDsl.{termQuery, _}
 import io.circe.generic.auto._
-import io.itforge.lectio.search.Config
 import io.itforge.lectio.search.utils.{ElasticHelper, SortBy}
 
 import scala.language.higherKinds
 
-class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
+class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient, index: String)
     extends MemoRepositoryAlgebra[F]
     with ElasticHelper {
 
@@ -20,11 +21,13 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
       search(index)
     }
 
-  override def searchQuery(query: String,
-                           offset: Option[Int],
-                           limit: Option[Int],
-                           tags: Set[String],
-                           sortBy: Option[SortBy]): F[List[Memo]] = {
+  override def searchQuery(
+      query: String,
+      offset: Option[Int],
+      limit: Option[Int],
+      tags: Set[String],
+      sortBy: Option[SortBy],
+      userId: Option[String]): F[List[Memo]] =
     client.fetch {
       search(index)
         .query {
@@ -32,24 +35,27 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient)
         }
         .postFilter {
           boolQuery.filter {
-            tags.map(termQuery("tags", _))
+            val tagFilters = tags.map(termQuery("tags", _)).toList
+            userId match {
+              case Some(id) =>
+                termQuery("user_id", id) :: tagFilters
+              case None => tagFilters
+            }
           }
         }
         .start(offset)
         .limit(limit)
-//      TODO: Fix 500 sorting error in ElasticSearch
-//        .sortBy(sortBy)
+      //      TODO: Fix 500 sorting error in ElasticSearch
+      //        .sortBy(sortBy)
     }
-  }
-
-  private val index = Config.memosIndex
 
 }
 
 object MemoRepositoryInterpreter {
 
   def apply[F[_]: Monad: LiftIO](
-      client: ElasticClient): MemoRepositoryInterpreter[F] =
-    new MemoRepositoryInterpreter[F](client)
+      client: ElasticClient,
+      index: String): MemoRepositoryInterpreter[F] =
+    new MemoRepositoryInterpreter[F](client, index)
 
 }
