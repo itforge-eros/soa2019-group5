@@ -19,11 +19,11 @@ const pubJWTKey = fs.readFileSync('public.pem');
 
 module.exports = function(app) {
   app.use(jwt({ secret: pubJWTKey }));
-  app.get('/api/memos', memo.all);
-  app.post('/api/memos', memo.create);
-  app.get('/api/memos/:uuid', memo.get);
-  app.put('/api/memos/:uuid', memo.update);
-  app.delete('/api/memos/:uuid', memo.delete);
+  app.get('/memos', memo.all);
+  app.post('/memos', memo.create);
+  app.get('/memos/:uuid', memo.get);
+  app.put('/memos/:uuid', memo.update);
+  app.delete('/memos/:uuid', memo.delete);
   /**
    * Error handling
    */

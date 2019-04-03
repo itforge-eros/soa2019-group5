@@ -6,7 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
-import {Memo} from "../types";
+import Memo from "../model/Memo";
 
 const inlineStyles = {
 	appBar: {
@@ -32,10 +32,10 @@ const inlineStyles = {
 };
 
 const memos: Array<Memo> = [
-	{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
-	{ name: 'Calculating NPV', categories: ['ITPM', 'Y3S2'] },
-	{ name: 'How to train ur dragon', categories: ['Movie'] },
-	{ name: 'Cooking without food', categories: ['Cooking'] },
+	{ name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
+	{ name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
+	{ name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audio: 'blob' },
+	{ name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audio: 'blob' },
 ];
 
 class HomePage extends Component<any, any> {
@@ -59,7 +59,7 @@ class HomePage extends Component<any, any> {
 				</Header>
 				<List>
 					{ memos.map((m: Memo) =>
-						<MemoListItem title={m.name} categories={m.categories} key={m.name} />
+						<MemoListItem title={m.name} categories={m.tags} key={m.name} />
 					) }
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>

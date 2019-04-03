@@ -17,7 +17,8 @@ const MemoSchema = new Schema({
   summary: { type: String, default: '' },
   tags: { type: [String], default: '' },
   user_id: { type: String },
-  createdTime: { type: Date }
+  created_time: { type: Date },
+  updated_time: { type: Date }
 });
 
 /**
