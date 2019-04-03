@@ -9,10 +9,13 @@ trait MemoData extends RandomDataGenerator {
   override val seed: Seed = Seed(0)
 
   val memo1: Memo = random[Memo]
+  println(memo1)
 
   val memo2: Memo = random[Memo]
 
-  val memos: List[Memo] = List(memo1, memo2)
+  val memo3: Memo = random[Memo]
+
+  val memos: List[Memo] = List(memo1, memo2, memo3)
 
   private implicit def arbitraryMemo: Arbitrary[Memo] = Arbitrary {
     for {
