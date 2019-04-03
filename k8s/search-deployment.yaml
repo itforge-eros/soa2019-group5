@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: search
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: 
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      containers:
+        - name: search
+          imagePullPolicy: Always
+          image: asia.gcr.io/kavinvin-211411/search-service
+          env:
+            - name: ELASTIC_URI
+              value: "http://elasticsearch-master"
+            - name: AUTH_PUBLIC_KEY
+              value: >-
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
+                qt6NInZQ8Ty9wfprXhPxG16zV7Svd2DhJ3j6ZS/zfkTh
+                Seuo11fTcoxt8MaI5orORQDfRKLtwlYd9KnDR93YI6JF
+                yPDEzAoXkW9RRig2NiOHoOR368mu7NbA2R3F8jqIER42
+                R24/AKUTkU9LPjusKZBUcADImLg9698GM5125x2s4j2U
+                +T68jERRO4iEIPG9dVK98Y+vZ8XN29kb4AOKOtkO4ZFC
+                rN2R6GbpvACShgczMgxgb4q3BZnB/RVkRFv4sW0AdO5j
+                ie7WKpP8XHeT3eifdt77uhoLjUSvpqs6VLYAc9xEpxCm
+                zu63XNqVV7S8Qnzs05wyJk5LytdtEnnHXwIDAQAB
+          ports:
+            - containerPort: 3000
