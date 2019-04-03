@@ -38,11 +38,26 @@ class Idb {
 		};
 	});
 
-	/*public saveToDB = (objType: string, data: any): Promise<any> => {
-		new Promise((resolve, reject) => {
-
-		})
-	};*/
+	// TODO: Accept parameters
+	public saveToDB = new Promise((resolve, reject) => {
+		const request = indexedDB.open(DB_NAME, 2);
+		request.onsuccess = (event) => {
+			// @ts-ignore
+			const db = event.target.result;
+			const t = db.transaction(['memo'], 'readwrite')
+				.objectStore('memo')
+				.add({ id: 'wow', name: 'memo1', content: 'contentja', tags: 'wow' });
+			console.log('new promise');
+			t.onsuccess = (event: Event) => {
+				console.log('saved');
+				resolve(event);
+			};
+			t.onerror = (event: Event) => {
+				console.log('t.onerror');
+				reject(event);
+			};
+		};
+	});
 }
 
 export default Idb;
