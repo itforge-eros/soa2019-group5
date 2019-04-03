@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { AppBar, Toolbar, IconButton, InputBase, List } from '@material-ui/core';
 import { ArrowBack, Tune } from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
-import {Memo} from "../types";
+import Memo from "../model/Memo";
 
 const inlineStyles = {
   toolbar: {

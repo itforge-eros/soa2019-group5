@@ -7,8 +7,15 @@ import SummaryPage from "./containers/SummaryPage";
 import TagSelectionPage from "./containers/TagSelectionPage";
 import RecordPage from "./containers/RecordPage";
 import SearchPage from "./containers/SearchPage";
+import {openConnection} from './utils/idb';
 
 class App extends Component {
+	componentWillMount(): void {
+		openConnection
+			.then(() => alert('connected'))
+			.catch(() => alert('rejected'));
+	}
+
 	render() {
 		return (
 			<HashRouter>
