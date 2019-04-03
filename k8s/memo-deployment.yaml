@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memo
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: memo
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate: 
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: memo
+    spec:
+      containers:
+        - name: memo
+          imagePullPolicy: Always
+          image: asia.gcr.io/kavinvin-211411/memo-service
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: MONGODB_URL
+              value: "mongodb://mongo-mongodb/lectio"
+          ports:
+            - containerPort: 3000
