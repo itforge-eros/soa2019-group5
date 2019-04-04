@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monstache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: monstache
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: monstache
+    spec:
+      containers:
+        - name: monstache
+          imagePullPolicy: Always
+          image: asia.gcr.io/kavinvin-211411/monstache
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 8

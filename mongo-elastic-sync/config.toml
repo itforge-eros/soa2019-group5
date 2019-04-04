@@ -1,0 +1,2 @@
+mongo-url = "mongodb://mongo-mongodb"
+elasticsearch-urls = ["http://elasticsearch-master:9200"]
