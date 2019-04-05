@@ -59,21 +59,30 @@ class RecordControl extends Component<any, State> {
 
 	private handleFabClick(): void {
 		if (this.mediaRecorder) {
-			if (this.state.recording) this.mediaRecorder.pause();
-			else this.mediaRecorder.resume();
-			this.setState(state => ({recording: !state.recording}));
+			switch (this.mediaRecorder.state) {
+				case 'recording': {
+					this.mediaRecorder.pause();
+					this.setState({recording: false});
+					break;
+				}
+				case 'paused': {
+					this.mediaRecorder.resume();
+					this.setState({recording: true});
+					break;
+				}
+			}
 		}
 	}
 
 	/**
-	 * Stops recording and returns the audio as blob
+	 * Stops recording and returns an audio blob as a callback param
 	 * @param cb - callback
 	 */
 	public getRecording(...cb: Array<Function>): void {
 		if (this.mediaRecorder) {
-			this.mediaRecorder.resume();
-			this.mediaRecorder.requestData();
+			this.mediaRecorder.stop();
 			this.mediaRecorder.ondataavailable = (blobEvent: any) => {
+				this.setState({recording: false});
 				cb.forEach((f) => f(blobEvent));
 			}
 		}

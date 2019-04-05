@@ -28,6 +28,14 @@ const inlineStyles = {
 	},
 };
 
+const mockMemo = {
+	id: new Date().getSeconds().toString(),
+	name: 'lel',
+	content: 'ccc',
+	tags: ['t1', 't2'],
+	audioId: new Date().getSeconds().toString()
+};
+
 class RecordPage extends Component<any, State> {
 	recordControl: React.RefObject<RecordControl>;
 
@@ -54,9 +62,8 @@ class RecordPage extends Component<any, State> {
 		// Prevent null
 		if (rc) {
 			rc.getRecording((blobEvent: any) => {
-				console.log(blobEvent.data);
 				const idb = Idb.getInstance();
-				idb.saveToDB(IdbStoreType.memo, { id: '1', name: 'lel', content: 'ccc', tags: ['t1', 't2'], audioId: '1' })
+				idb.saveToDB(IdbStoreType.memo, mockMemo)
 					.then((event: any) => console.log('saved'))
 					.catch((event: any) => console.log(event.target));
 			});
