@@ -8,6 +8,7 @@ import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import {IdbStoreType} from '../constants';
 
 const inlineStyles = {
 	appBar: {

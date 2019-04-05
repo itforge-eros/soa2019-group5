@@ -1,4 +1,4 @@
-import {DB_NAME, DB_VERSION} from '../constants';
+import {DB_NAME, DB_VERSION, IdbStoreType} from '../constants';
 
 class Idb {
 	private static idb: Idb;
@@ -16,27 +16,32 @@ class Idb {
 	}
 
 	public openConnection = new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onerror = (event) => {
-			reject(event);
-		};
-		request.onupgradeneeded = (event) => {
-			console.log('Upgrading DB');
-			// @ts-ignore
-			this.db = event.target.result;
-			const memoStore = this.db.createObjectStore('memo', { keyPath: 'id' });
-			memoStore.createIndex('name', 'name', { unique: false });
-			memoStore.createIndex('content', 'content', { unique: false });
-			memoStore.createIndex('audioId', 'audioId', { unique: true });
-			memoStore.createIndex('tags', 'tags', { unique: false });
-			const memoAudioStore = this.db.createObjectStore('memoAudio', { keyPath: 'id' });
-			memoAudioStore.createIndex('blob', 'blob', { unique: false });
-		};
-		request.onsuccess = (event) => {
-			// @ts-ignore
-			this.db = event.target.result;
+		// Will open exactly one connection
+		if (this.db === undefined) {
+			const request = indexedDB.open(DB_NAME, DB_VERSION);
+			request.onerror = (event) => {
+				reject(event);
+			};
+			request.onupgradeneeded = (event) => {
+				console.log('Upgrading DB');
+				// @ts-ignore
+				this.db = event.target.result;
+				const memoStore = this.db.createObjectStore(IdbStoreType.memo, {keyPath: 'id'});
+				memoStore.createIndex('name', 'name', {unique: false});
+				memoStore.createIndex('content', 'content', {unique: false});
+				memoStore.createIndex('audioId', 'audioId', {unique: true});
+				memoStore.createIndex('tags', 'tags', {unique: false});
+				const memoAudioStore = this.db.createObjectStore(IdbStoreType.memoAudio, {keyPath: 'id'});
+				memoAudioStore.createIndex('blob', 'blob', {unique: false});
+			};
+			request.onsuccess = (event) => {
+				// @ts-ignore
+				this.db = event.target.result;
+				resolve();
+			};
+		} else {
 			resolve();
-		};
+		}
 	});
 
 
