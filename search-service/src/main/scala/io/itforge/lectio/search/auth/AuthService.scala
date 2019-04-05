@@ -22,7 +22,7 @@ class AuthService[F[_]: LiftIO: Monad](publicKey: String) extends AuthException 
           case "Bearer" :: bearerToken :: Nil => Right(bearerToken)
           case _ => Left(TOKEN_NOT_FOUND)
         }
-        credential <- getCredential(token, stripedPublicKey)
+        credential <- getCredential(token, strippedPublicKey)
         user = User(credential.username, credential.user_id)
       } yield user
 
@@ -38,7 +38,7 @@ class AuthService[F[_]: LiftIO: Monad](publicKey: String) extends AuthException 
       .map(_.getMessage)
 
   private val algorithm = JwtAlgorithm.RS256
-  private val stripedPublicKey = publicKey.filter(!_.isWhitespace)
+  private val strippedPublicKey = publicKey.filter(!_.isWhitespace)
 
 }
 

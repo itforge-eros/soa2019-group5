@@ -1,6 +1,6 @@
 package io.itforge.lectio.search.memo
 
-import com.danielasfregola.randomdatagenerator.RandomDataGenerator
+import com.danielasfregola.randomdatagenerator.magnolia.RandomDataGenerator
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
 
@@ -9,7 +9,6 @@ trait MemoData extends RandomDataGenerator {
   override val seed: Seed = Seed(0)
 
   val memo1: Memo = random[Memo]
-  println(memo1)
 
   val memo2: Memo = random[Memo]
 
