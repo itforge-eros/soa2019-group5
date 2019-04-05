@@ -108,8 +108,6 @@ jobs:
     working_directory: ~/soa2019-group5/memo-service
     docker:
       - image: google/cloud-sdk
-    environment:
-      GOOGLE_CLUSTER_NAME: lectio
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -124,10 +122,25 @@ jobs:
       - run:
           name: Build and Push docker image to asia.gcr.io
           command: |
-            docker build -t asia.gcr.io/kavinvin-211411/memo-service:latest .
-            docker push asia.gcr.io/kavinvin-211411/memo-service:latest
-            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
-            kubectl set image -n default deployment memo memo=asia.gcr.io/${GOOGLE_PROJECT_ID}/memo-service:latest
+            docker build -t asia.gcr.io/${GCLOUD_PROJECT_ID}/memo-service:latest .
+            docker push asia.gcr.io/${GCLOUD_PROJECT_ID}/memo-service:latest
+  deploy_kubernetes:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      GCLOUD_CLUSTER_NAME: lectio
+    steps:
+      - run:
+          name: Config gcloud credentials
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GCLOUD_PROJECT_ID}
+      - run:
+          name: Build and Push docker image to asia.gcr.io
+          command: |
+            gcloud --quiet container clusters get-credentials ${GCLOUD_CLUSTER_NAME} --zone asia-southeast1-a
+            kubectl set image -n default deployment memo memo=asia.gcr.io/${GCLOUD_PROJECT_ID}/memo-service:latest
+            kubectl set image -n default deployment search search=asia.gcr.io/${GCLOUD_PROJECT_ID}/search-service:latest
 workflows:
   version: 2
   deploy:
@@ -154,3 +167,8 @@ workflows:
             branches:
               only:
                 - master
+      - deploy_kubernetes:
+          requires:
+            - memo-deploy
+            - frontend-deploy
+            - search
