@@ -27,7 +27,7 @@ class Idb {
 			const memoStore = this.db.createObjectStore('memo', { keyPath: 'id' });
 			memoStore.createIndex('name', 'name', { unique: false });
 			memoStore.createIndex('content', 'content', { unique: false });
-			// memoStore.createIndex('audio', 'audio', { unique: true });
+			memoStore.createIndex('audioId', 'audioId', { unique: true });
 			memoStore.createIndex('tags', 'tags', { unique: false });
 			const memoAudioStore = this.db.createObjectStore('memoAudio', { keyPath: 'id' });
 			memoAudioStore.createIndex('blob', 'blob', { unique: false });

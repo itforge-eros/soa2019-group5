@@ -33,10 +33,10 @@ const inlineStyles = {
 };
 
 const memos: Array<Memo> = [
-	{ name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audio: 'blob' },
+	{ id: '1', name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '2', name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '3', name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '4', name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audioId: 'blob' },
 ];
 
 class HomePage extends Component<any, any> {
