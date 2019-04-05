@@ -108,6 +108,8 @@ jobs:
     working_directory: ~/soa2019-group5/memo-service
     docker:
       - image: google/cloud-sdk
+    environment:
+      GOOGLE_CLUSTER_NAME: lectio
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -124,6 +126,7 @@ jobs:
           command: |
             docker build -t asia.gcr.io/kavinvin-211411/memo-service:latest .
             docker push asia.gcr.io/kavinvin-211411/memo-service:latest
+            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
             kubectl set image -n default deployment memo memo=asia.gcr.io/${GOOGLE_PROJECT_ID}/memo-service:latest
 workflows:
   version: 2
