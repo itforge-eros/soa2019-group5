@@ -1,7 +1,5 @@
 package io.itforge.lectio.search.memo
 
-import java.util.UUID
-
 import cats._
 import cats.effect._
 import com.sksamuel.elastic4s.circe._

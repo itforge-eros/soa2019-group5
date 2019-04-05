@@ -9,12 +9,11 @@ import io.itforge.lectio.search.utils.SearchParams
 import org.http4s.{AuthedService, HttpRoutes}
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
+import SearchParams._
 
 import scala.language.higherKinds
 
 class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
-
-  import SearchParams._
 
   def getAllMemosEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
     HttpRoutes.of[F] {

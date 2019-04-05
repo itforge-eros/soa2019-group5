@@ -11,7 +11,10 @@ import pdi.jwt.{JwtAlgorithm, JwtCirce}
 
 class AuthService[F[_]: LiftIO: Monad](publicKey: String) extends AuthException {
 
-  val authUser: Kleisli[OptionT[F, ?], Request[F], User] =
+  val middleware: AuthMiddleware[F, User] =
+    AuthMiddleware.apply(authUser)
+
+  private def authUser: Kleisli[OptionT[F, ?], Request[F], User] =
     Kleisli { request =>
       val user = for {
         header <- request.headers.get(Authorization).toRight(AUTH_HEADER_NOT_FOUND)
@@ -19,15 +22,12 @@ class AuthService[F[_]: LiftIO: Monad](publicKey: String) extends AuthException 
           case "Bearer" :: bearerToken :: Nil => Right(bearerToken)
           case _ => Left(TOKEN_NOT_FOUND)
         }
-        credential <- getCredential(token, publicKey)
+        credential <- getCredential(token, strippedPublicKey)
         user = User(credential.username, credential.user_id)
       } yield user
 
       OptionT(IO(user.toOption).to[F])
     }
-
-  val middleware: AuthMiddleware[F, User] =
-    AuthMiddleware.apply(authUser)
 
   private def getCredential(token: String, key: String): Either[String, UserCredential] =
     JwtCirce
@@ -38,6 +38,7 @@ class AuthService[F[_]: LiftIO: Monad](publicKey: String) extends AuthException 
       .map(_.getMessage)
 
   private val algorithm = JwtAlgorithm.RS256
+  private val strippedPublicKey = publicKey.filter(!_.isWhitespace)
 
 }
 
