@@ -1,4 +1,5 @@
 import {DB_NAME, DB_VERSION, IdbStoreType} from '../constants';
+import Memo from '../model/Memo';
 
 class Idb {
 	private static idb: Idb;
@@ -45,7 +46,7 @@ class Idb {
 	});
 
 
-	public saveToDB = (objType: IdbStoreType, data: any) => new Promise((resolve, reject) => {
+	public saveToDB = (objType: IdbStoreType, data: Memo) => new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 		request.onsuccess = (event) => {
 			// @ts-ignore

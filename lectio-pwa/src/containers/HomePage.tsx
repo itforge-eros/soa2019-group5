@@ -7,8 +7,6 @@ import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
-import Idb from '../utils/Idb';
-import {IdbStoreType} from '../constants';
 
 const inlineStyles = {
 	appBar: {
@@ -43,13 +41,6 @@ const memos: Array<Memo> = [
 class HomePage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
-	}
-
-	componentDidMount(): void {
-		const idb = Idb.getInstance();
-		idb.saveToDB(IdbStoreType.memo, { id: '1', name: 'lel', content: 'ccc', tags: ['t1', 't2'] })
-			.then(event => console.log)
-			.catch(event => console.log);
 	}
 
 	private handleFabClick(): void {

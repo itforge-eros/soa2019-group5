@@ -9,6 +9,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import {Prompt} from "react-router-dom";
+import Idb from '../utils/Idb';
+import {IdbStoreType} from '../constants';
 
 type State = {
 	memoName: string,
@@ -51,10 +53,12 @@ class RecordPage extends Component<any, State> {
 		let rc = this.recordControl.current;
 		// Prevent null
 		if (rc) {
-			console.log('rc exists');
 			rc.getRecording((blobEvent: any) => {
-				console.log('received');
 				console.log(blobEvent.data);
+				const idb = Idb.getInstance();
+				idb.saveToDB(IdbStoreType.memo, { id: '1', name: 'lel', content: 'ccc', tags: ['t1', 't2'], audioId: '1' })
+					.then((event: any) => console.log('saved'))
+					.catch((event: any) => console.log(event.target));
 			});
 		}
 	}
