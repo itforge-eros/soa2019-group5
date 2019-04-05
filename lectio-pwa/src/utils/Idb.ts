@@ -39,15 +39,15 @@ class Idb {
 		};
 	});
 
-	// TODO: Accept parameters
-	public saveToDB = new Promise((resolve, reject) => {
+
+	public saveToDB = (objType: IdbStoreType, data: any) => new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 		request.onsuccess = (event) => {
 			// @ts-ignore
 			const db = event.target.result;
-			const t = db.transaction(['memo'], 'readwrite')
+			const t = db.transaction([objType], 'readwrite')
 				.objectStore('memo')
-				.add({ id: 'wow', name: 'memo1', content: 'contentja', tags: 'wow' });
+				.add(data);
 			t.onsuccess = (event: Event) => {
 				resolve(event);
 			};

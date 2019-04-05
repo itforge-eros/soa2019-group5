@@ -46,7 +46,7 @@ class HomePage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const idb = Idb.getInstance();
-		idb.saveToDB
+		idb.saveToDB(IdbStoreType.memo, { id: '1', name: 'lel', content: 'ccc', tags: ['t1', 't2'] })
 			.then(event => console.log)
 			.catch(event => console.log);
 	}
