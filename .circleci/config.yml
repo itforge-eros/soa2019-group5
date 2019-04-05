@@ -74,7 +74,7 @@ jobs:
             - node_modules
           key: dependencies-{{ checksum "package.json" }}
       - persist_to_workspace:
-          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is 
+          # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is
           # taken to be the root directory of the workspace.
           root: workspace
           # Must be relative path from root
@@ -124,7 +124,7 @@ jobs:
           command: |
             docker build -t asia.gcr.io/kavinvin-211411/memo-service:latest .
             docker push asia.gcr.io/kavinvin-211411/memo-service:latest
-
+            kubectl set image -n default deployment memo memo=asia.gcr.io/${GOOGLE_PROJECT_ID}/memo-service:latest
 workflows:
   version: 2
   deploy:
