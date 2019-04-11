@@ -58,7 +58,7 @@ class SearchPage extends Component<any, any> {
 				<div className="contentArea">
 	        <List>
 						{ this.state.memos.map((m: Memo) =>
-							<MemoListItem title={m.name} categories={m.tags} key={m.name} />
+							<MemoListItem memo={m} key={m.name} />
 						) }
 					</List>
 				</div>

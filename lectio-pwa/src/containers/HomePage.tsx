@@ -57,7 +57,7 @@ class HomePage extends Component<any, any> {
 	}
 
 	private handleSearchClick(): void {
-		setTimeout(() => this.props.history.push('/search'), 180);
+		//setTimeout(() => this.props.history.push('/search'), 180);
 	}
 
   render() {
@@ -68,7 +68,7 @@ class HomePage extends Component<any, any> {
 				</Header>
 				<List>
 					{ this.state.memoList.reverse().map((m: Memo) =>
-						<MemoListItem title={m.name} categories={m.tags} key={m.name} />
+						<MemoListItem key={m.name} memo={m} />
 					) }
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
