@@ -62,7 +62,7 @@ class RecordPage extends Component<any, State> {
 			rc.getRecording((blobEvent: any) => {
 				const idb = Idb.getInstance();
 				const finalMemoName =
-					this.state.memoName.replace(/\s/g, '') === '' ?
+					this.state.memoName.trim() === '' ?
 						this.defaultMemoName : this.state.memoName.trim();
 				const memoToSave: Memo = new Memo(
 					this.state.memoId,
