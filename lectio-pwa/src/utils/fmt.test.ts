@@ -6,16 +6,16 @@ it ('separates list items with commas', () => {
 });
 
 it ('formats a second into mm:ss', () => {
-	const result = Fmt.msToHuman(59);
+	const result = Fmt.secToHuman(59);
 	expect(result).toEqual('00:59');
 });
 
 it ('formats a second into mm:ss', () => {
-	const result = Fmt.msToHuman(60);
+	const result = Fmt.secToHuman(60);
 	expect(result).toEqual('01:00');
 });
 
 it ('formats a second into mm:ss', () => {
-	const result = Fmt.msToHuman(61);
+	const result = Fmt.secToHuman(61);
 	expect(result).toEqual('01:01');
 });

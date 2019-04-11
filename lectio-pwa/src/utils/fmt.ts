@@ -12,7 +12,7 @@ export const listWithCommas = (list: Array<string>) : string => {
  * Formats a second into mm:ss
  * @param second - A second to format
  */
-export const msToHuman = (second: number) : string => {
+export const secToHuman = (second: number) : string => {
 	let tempSec = second;
 	const m = Math.floor(second / 60);
 	tempSec -= 60 * m;

@@ -3,6 +3,7 @@ import { Fab } from "@material-ui/core";
 import { FiberManualRecord, Pause } from '@material-ui/icons';
 import ElapsedTime from 'elapsed-time';
 import styles from './RecordControl.module.sass';
+import {secToHuman} from '../utils/fmt';
 
 type State = {
 	recording: boolean,
@@ -113,7 +114,7 @@ class RecordControl extends Component<any, State> {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
 				{ this.state.hasError && <p>Cannot set up recording</p> }
-				{ this.state.supportsRecording && <p>{ this.state.recording ? 'Recording' : 'Paused' } { this.state.elapsedTime }</p> }
+				{ this.state.supportsRecording && <p>{ secToHuman(this.state.elapsedTime) }</p> }
 				{ this.state.supportsRecording &&
 					<Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
 						{ this.state.recording ? <Pause /> : <FiberManualRecord /> }
