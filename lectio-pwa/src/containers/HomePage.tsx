@@ -7,7 +7,6 @@ import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
-import Idb from '../utils/Idb';
 
 const inlineStyles = {
 	appBar: {
@@ -33,10 +32,10 @@ const inlineStyles = {
 };
 
 const memos: Array<Memo> = [
-	{ name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audio: 'blob' },
-	{ name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audio: 'blob' },
+	{ id: '1', name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '2', name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '3', name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audioId: 'blob' },
+	{ id: '4', name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audioId: 'blob' },
 ];
 
 class HomePage extends Component<any, any> {
@@ -45,10 +44,7 @@ class HomePage extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
-		const idb = Idb.getInstance();
-		idb.saveToDB
-			.then(event => console.log)
-			.catch(event => console.log);
+		//this.props.history.clear
 	}
 
 	private handleFabClick(): void {

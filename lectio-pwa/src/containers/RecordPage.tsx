@@ -1,5 +1,5 @@
-import React, {Component, Fragment} from 'react';
-import {AppBar, Button, Chip, IconButton, Toolbar, Typography} from '@material-ui/core';
+import React, {ChangeEvent, Component, Fragment} from 'react';
+import {AppBar, Button, Chip, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
@@ -9,8 +9,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import {Prompt} from "react-router-dom";
+import Idb from '../utils/Idb';
+import {IdbStoreType} from '../constants';
+import Memo from '../model/Memo';
+import MemoAudio from '../model/MemoAudio';
 
 type State = {
+	memoId: string,
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<any>,
@@ -24,16 +29,21 @@ const inlineStyles = {
 		paddingRight: '8px',
 		backgroundColor: '#fff'
 	},
+	memoBody: {
+		marginBottom: '1em'
+	}
 };
 
 class RecordPage extends Component<any, State> {
 	recordControl: React.RefObject<RecordControl>;
+	defaultMemoName: string = `Memo ${new Date().toLocaleString()}`;
 
 	constructor(props: any) {
 		super(props);
 		this.recordControl = React.createRef();
 		this.state = {
-			memoName: `Memo ${new Date().toLocaleString()}`,
+			memoId: new Date().getTime().toString(),
+			memoName: this.defaultMemoName,
 			memoBody: 'lorem ipsum',
 			memoTags: [
 				{ name: 'Demo tag' }
@@ -44,6 +54,8 @@ class RecordPage extends Component<any, State> {
 		this.handleDialogNo = this.handleDialogNo.bind(this);
 		this.handleDialogYes = this.handleDialogYes.bind(this);
 		this.handleSaveBtn = this.handleSaveBtn.bind(this);
+		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
+		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
 	}
 
 	private handleSaveBtn(): void {
@@ -51,10 +63,34 @@ class RecordPage extends Component<any, State> {
 		let rc = this.recordControl.current;
 		// Prevent null
 		if (rc) {
-			console.log('rc exists');
 			rc.getRecording((blobEvent: any) => {
-				console.log('received');
-				console.log(blobEvent.data);
+				const idb = Idb.getInstance();
+				const finalMemoName =
+					this.state.memoName.trim() === '' ?
+						this.defaultMemoName : this.state.memoName.trim();
+				const memoToSave: Memo = new Memo(
+					this.state.memoId,
+					finalMemoName,
+					this.state.memoBody,
+					this.state.memoId,
+					this.state.memoTags
+				);
+				const memoAudioToSave: MemoAudio = new MemoAudio(
+					this.state.memoId,
+					blobEvent.data
+				);
+				idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
+					.then(() => {
+						idb.saveToDB(IdbStoreType.memo, memoToSave)
+							.then(() => {
+								this.setState({ blockPageLeave: false });
+								this.props.history.replace('/');
+							})
+							.catch((event: any) => console.log(event.target));
+					})
+					.catch((error: any) => {
+						console.log(error);
+					});
 			});
 		}
 	}
@@ -81,6 +117,16 @@ class RecordPage extends Component<any, State> {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
+	private handleMemoNameChange(event: ChangeEvent): void {
+		// @ts-ignore
+		this.setState({ memoName: event.target.value });
+	}
+
+	private handleMemoBodyChange(event: ChangeEvent): void {
+		// @ts-ignore
+		this.setState({ memoBody: event.target.value });
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -97,8 +143,15 @@ class RecordPage extends Component<any, State> {
 				</AppBar>
 				<div className={styles.contentArea}>
 					<div className={styles.textArea}>
-						<Typography variant="h6">{ this.state.memoName }</Typography>
-						<p className="bodyText">{ this.state.memoBody }</p>
+						<InputBase onChange={this.handleMemoNameChange}
+						           placeholder={this.state.memoName}
+						           className={styles.memoTitle}
+						           fullWidth />
+						<InputBase onChange={this.handleMemoBodyChange}
+						           placeholder="Note"
+						           className="bodyText"
+						           style={inlineStyles.memoBody}
+						           multiline fullWidth />
 						<div className={styles.chipWrap}>
 							{this.state.memoTags.map(tag => (
 								<Chip label={tag.name} className={styles.chip} />

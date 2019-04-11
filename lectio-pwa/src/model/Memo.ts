@@ -3,15 +3,17 @@
  * @class
  */
 class Memo {
+	public id: string;
 	public name: string;
 	public content: string;
-	public audio: any; //blob
+	public audioId: string;
 	public tags: Array<any>;
 
-	constructor(name: string, content: string, audio: any, tags: Array<any>) {
+	constructor(id: string, name: string, content: string, audioId: string, tags: Array<any>) {
+		this.id = id;
 		this.name = name;
 		this.content = content;
-		this.audio = audio;
+		this.audioId = audioId;
 		this.tags = tags;
 	}
 }
