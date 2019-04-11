@@ -64,7 +64,10 @@ class RecordPage extends Component<any, State> {
 			rc.getRecording((blobEvent: any) => {
 				const idb = Idb.getInstance();
 				idb.saveToDB(IdbStoreType.memo, mockMemo)
-					.then((event: any) => console.log('saved'))
+					.then(() => {
+						this.setState({ blockPageLeave: false });
+						this.props.history.goBack();
+					})
 					.catch((event: any) => console.log(event.target));
 			});
 		}
