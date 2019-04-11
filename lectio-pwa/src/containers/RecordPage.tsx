@@ -29,6 +29,9 @@ const inlineStyles = {
 		paddingRight: '8px',
 		backgroundColor: '#fff'
 	},
+	memoBody: {
+		marginBottom: '1em'
+	}
 };
 
 class RecordPage extends Component<any, State> {
@@ -52,6 +55,7 @@ class RecordPage extends Component<any, State> {
 		this.handleDialogYes = this.handleDialogYes.bind(this);
 		this.handleSaveBtn = this.handleSaveBtn.bind(this);
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
+		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
 	}
 
 	private handleSaveBtn(): void {
@@ -113,9 +117,14 @@ class RecordPage extends Component<any, State> {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
-	private handleMemoNameChange(event: ChangeEvent) {
+	private handleMemoNameChange(event: ChangeEvent): void {
 		// @ts-ignore
 		this.setState({ memoName: event.target.value });
+	}
+
+	private handleMemoBodyChange(event: ChangeEvent): void {
+		// @ts-ignore
+		this.setState({ memoBody: event.target.value });
 	}
 
 	render() {
@@ -134,8 +143,15 @@ class RecordPage extends Component<any, State> {
 				</AppBar>
 				<div className={styles.contentArea}>
 					<div className={styles.textArea}>
-						<InputBase onChange={this.handleMemoNameChange} placeholder={this.state.memoName} className={styles.memoTitle} fullWidth />
-						<p className="bodyText">{ this.state.memoBody }</p>
+						<InputBase onChange={this.handleMemoNameChange}
+						           placeholder={this.state.memoName}
+						           className={styles.memoTitle}
+						           fullWidth />
+						<InputBase onChange={this.handleMemoBodyChange}
+						           placeholder="Note"
+						           className="bodyText"
+						           style={inlineStyles.memoBody}
+						           multiline fullWidth />
 						<div className={styles.chipWrap}>
 							{this.state.memoTags.map(tag => (
 								<Chip label={tag.name} className={styles.chip} />
