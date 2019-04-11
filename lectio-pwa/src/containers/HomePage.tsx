@@ -42,7 +42,7 @@ class HomePage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const idb = Idb.getInstance();
-		idb.getAllMemo()
+		idb.getMemo()
 			.then((event) => {
 				// @ts-ignore
 				this.setState({ memoList: event.target.result });
