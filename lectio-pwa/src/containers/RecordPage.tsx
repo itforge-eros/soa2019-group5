@@ -11,8 +11,11 @@ import DialogActions from "@material-ui/core/DialogActions";
 import {Prompt} from "react-router-dom";
 import Idb from '../utils/Idb';
 import {IdbStoreType} from '../constants';
+import Memo from '../model/Memo';
+import MemoAudio from '../model/MemoAudio';
 
 type State = {
+	memoId: string,
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<any>,
@@ -28,14 +31,6 @@ const inlineStyles = {
 	},
 };
 
-const mockMemo = {
-	id: new Date().getSeconds().toString(),
-	name: 'lel',
-	content: 'ccc',
-	tags: ['t1', 't2'],
-	audioId: new Date().getSeconds().toString()
-};
-
 class RecordPage extends Component<any, State> {
 	recordControl: React.RefObject<RecordControl>;
 
@@ -43,6 +38,7 @@ class RecordPage extends Component<any, State> {
 		super(props);
 		this.recordControl = React.createRef();
 		this.state = {
+			memoId: new Date().getTime().toString(),
 			memoName: `Memo ${new Date().toLocaleString()}`,
 			memoBody: 'lorem ipsum',
 			memoTags: [
@@ -63,12 +59,29 @@ class RecordPage extends Component<any, State> {
 		if (rc) {
 			rc.getRecording((blobEvent: any) => {
 				const idb = Idb.getInstance();
-				idb.saveToDB(IdbStoreType.memo, mockMemo)
+				const memoToSave: Memo = new Memo(
+					this.state.memoId,
+					this.state.memoName,
+					this.state.memoBody,
+					this.state.memoId,
+					this.state.memoTags
+				);
+				const memoAudioToSave: MemoAudio = new MemoAudio(
+					this.state.memoId,
+					blobEvent.data
+				);
+				idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
-						this.setState({ blockPageLeave: false });
-						this.props.history.replace('/');
+						idb.saveToDB(IdbStoreType.memo, memoToSave)
+							.then(() => {
+								this.setState({ blockPageLeave: false });
+								this.props.history.replace('/');
+							})
+							.catch((event: any) => console.log(event.target));
 					})
-					.catch((event: any) => console.log(event.target));
+					.catch((error: any) => {
+						console.log(error);
+					});
 			});
 		}
 	}

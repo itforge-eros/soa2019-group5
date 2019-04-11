@@ -1,5 +1,6 @@
 import {DB_NAME, DB_VERSION, IdbStoreType} from '../constants';
 import Memo from '../model/Memo';
+import MemoAudio from '../model/MemoAudio';
 
 class Idb {
 	private static idb: Idb;
@@ -46,13 +47,13 @@ class Idb {
 	});
 
 
-	public saveToDB = (objType: IdbStoreType, data: Memo) => new Promise((resolve, reject) => {
+	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio) => new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 		request.onsuccess = (event) => {
 			// @ts-ignore
 			const db = event.target.result;
-			const t = db.transaction([objType], 'readwrite')
-				.objectStore('memo')
+			const t = db.transaction(objType, 'readwrite')
+				.objectStore(objType)
 				.add(data);
 			t.onsuccess = (event: Event) => {
 				resolve(event);
