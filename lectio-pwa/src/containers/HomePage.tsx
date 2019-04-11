@@ -43,6 +43,10 @@ class HomePage extends Component<any, any> {
 		super(props);
 	}
 
+	componentDidMount(): void {
+		//this.props.history.clear
+	}
+
 	private handleFabClick(): void {
 		setTimeout(() => this.props.history.push('/record'), 180);
 	}

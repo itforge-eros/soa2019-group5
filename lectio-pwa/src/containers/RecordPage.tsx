@@ -66,7 +66,7 @@ class RecordPage extends Component<any, State> {
 				idb.saveToDB(IdbStoreType.memo, mockMemo)
 					.then(() => {
 						this.setState({ blockPageLeave: false });
-						this.props.history.goBack();
+						this.props.history.replace('/');
 					})
 					.catch((event: any) => console.log(event.target));
 			});
