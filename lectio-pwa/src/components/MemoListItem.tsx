@@ -13,6 +13,7 @@ class MemoListItem extends Component<any, any> {
 	}
 
   render() {
+		const tagNames = this.props.categories.map((c: any) => c.name);
 		return (
 			<ListItem
 				button divider
@@ -21,7 +22,7 @@ class MemoListItem extends Component<any, any> {
 				>
 				<ListItemText
 					primary={this.props.title}
-					secondary={listWithCommas(this.props.categories)} />
+					secondary={listWithCommas(tagNames)} />
 			</ListItem>
 		)
 	}

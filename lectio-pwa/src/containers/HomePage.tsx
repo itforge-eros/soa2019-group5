@@ -7,6 +7,7 @@ import Header from '../components/Header';
 import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
+import Idb from '../utils/Idb';
 
 const inlineStyles = {
 	appBar: {
@@ -31,20 +32,24 @@ const inlineStyles = {
 	}
 };
 
-const memos: Array<Memo> = [
-	{ id: '1', name: 'Distributed Computing intro', tags: ['DCS', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
-	{ id: '2', name: 'Calculating NPV', tags: ['ITPM', 'Y3S2'], content: 'Lorem ipsum', audioId: 'blob' },
-	{ id: '3', name: 'How to train ur dragon', tags: ['Movie'], content: 'Lorem ipsum', audioId: 'blob' },
-	{ id: '4', name: 'Cooking without food', tags: ['Cooking'], content: 'Lorem ipsum', audioId: 'blob' },
-];
-
 class HomePage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
+		this.state = {
+			memoList: []
+		}
 	}
 
 	componentDidMount(): void {
-		//this.props.history.clear
+		const idb = Idb.getInstance();
+		idb.getAllMemo()
+			.then((event) => {
+				// @ts-ignore
+				this.setState({ memoList: event.target.result });
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
 	private handleFabClick(): void {
@@ -62,7 +67,7 @@ class HomePage extends Component<any, any> {
 					<Typography variant="h4" style={inlineStyles.title}>Recordings</Typography>
 				</Header>
 				<List>
-					{ memos.map((m: Memo) =>
+					{ this.state.memoList.reverse().map((m: Memo) =>
 						<MemoListItem title={m.name} categories={m.tags} key={m.name} />
 					) }
 				</List>

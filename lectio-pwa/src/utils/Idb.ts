@@ -46,7 +46,6 @@ class Idb {
 		}
 	});
 
-
 	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio) => new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 		request.onsuccess = (event) => {
@@ -62,6 +61,23 @@ class Idb {
 				reject(event);
 			};
 		};
+	});
+
+	public getAllMemo = () => new Promise((resolve, reject) => {
+		const request = indexedDB.open(DB_NAME, DB_VERSION);
+		request.onsuccess = (event) => {
+			// @ts-ignore
+			const db = event.target.result;
+			const t = db.transaction(IdbStoreType.memo)
+				.objectStore(IdbStoreType.memo)
+				.getAll();
+			t.onsuccess = (event: Event) => {
+				resolve(event);
+			};
+			t.onerror = (event: Event) => {
+				reject(event);
+			};
+		}
 	});
 }
 
