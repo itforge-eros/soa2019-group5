@@ -81,9 +81,8 @@ class MemoPage extends Component<any, any> {
 		this.setState({ tagDialogOpen: true });
 	}
 
-	private handleTagClose() {
-		// TODO: Get selected tags
-		this.setState({ tagDialogOpen: false });
+	private handleTagClose(newTags: Array<MemoTag>) {
+		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
 	private handleMemoNameChange(event: ChangeEvent): void {
