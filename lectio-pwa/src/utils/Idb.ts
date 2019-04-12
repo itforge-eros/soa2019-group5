@@ -75,8 +75,24 @@ class Idb {
 			const s: IDBObjectStore = db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
 			let r: IDBRequest;
 			if (id) r = s.get(id); else r = s.getAll();
-			r.onsuccess = (event: Event) => { resolve(event) };
-			r.onerror = (event: Event) => { reject(event) };
+			r.onsuccess = (event: Event) => resolve(event);
+			r.onerror = (event: Event) => reject(event);
+		}
+	});
+
+	/**
+	 * Update an existing memo
+	 * @param memo - An updated Memo object
+	 */
+	public updateMemo = (memo: Memo) => new Promise((resolve, reject) => {
+		const request = indexedDB.open(DB_NAME, DB_VERSION);
+		request.onsuccess = ev => {
+			// @ts-ignore
+			const db = ev.target.result;
+			const s: IDBObjectStore = db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
+			const r: IDBRequest = s.put(memo);
+			r.onsuccess = ev => resolve(ev);
+			r.onerror = ev => reject(ev);
 		}
 	});
 }
