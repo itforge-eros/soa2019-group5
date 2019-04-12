@@ -13,7 +13,8 @@ import {Close} from '@material-ui/icons';
 import Idb from '../utils/Idb';
 
 type theState = {
-    searchValue: string;
+    searchValue: string,
+    tags: Array<MemoTag>
 };
 
 const inlineStyles = {
@@ -29,20 +30,26 @@ const inlineStyles = {
 };
 
 class TagSelectionPage extends Component<any, theState> {
+    idb = Idb.getInstance();
+
     constructor(props: any) {
         super(props);
         this.state = {
-            searchValue: ''
+            searchValue: '',
+            tags: []
         };
         this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
         this.handleCreateTag = this.handleCreateTag.bind(this);
     }
 
-    private availableTags: Array<any> = [
-        { name: 'Distributed Computing' },
-        { name: 'Library Usage' },
-        { name: 'Year 3' }
-    ];
+    componentDidMount(): void {
+        this.idb.getTag()
+          .then((event) => {
+              // @ts-ignore
+              this.setState({ tags: event.target.result });
+          })
+          .catch();
+    }
 
     private handleBackBtn(): void {
         this.props.onClose();
@@ -56,8 +63,7 @@ class TagSelectionPage extends Component<any, theState> {
         const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
         const tagName = this.state.searchValue.trim();
         const tagToSave: MemoTag = { id: tagId, name: tagName };
-        const idb = Idb.getInstance();
-        idb.saveTag(tagToSave)
+        this.idb.saveTag(tagToSave)
           .then(() => {
               // TODO: Update tag list
           })
@@ -65,7 +71,7 @@ class TagSelectionPage extends Component<any, theState> {
     }
 
     render() {
-        let tagsToDisplay: Array<any> = this.availableTags;
+        let tagsToDisplay: Array<any> = this.state.tags;
         let searchValue: string = this.state.searchValue.trim().toLowerCase();
         let hasExactMatch: boolean = false;
         if (searchValue.length > 0) {

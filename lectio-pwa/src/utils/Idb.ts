@@ -112,6 +112,18 @@ class Idb {
 		r.onsuccess = ev => resolve(ev);
 		r.onerror = ev => reject(ev);
 	});
+
+	/**
+	 * Get a specific tag or all tags
+	 * @param id - A tag ID (leave blank to get all tags)
+	 */
+	public getTag = (id?: string) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag).objectStore(IdbStoreType.tag);
+		let r: IDBRequest;
+		if (id) r = s.get(id); else r = s.getAll();
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
+	});
 }
 
 export default Idb;
