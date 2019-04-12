@@ -43,12 +43,7 @@ class TagSelectionPage extends Component<any, theState> {
 	}
 
 	componentDidMount(): void {
-		this.idb.getTag()
-			.then((event) => {
-				// @ts-ignore
-				this.setState({ tags: event.target.result });
-			})
-			.catch();
+		this.updateTagList()
 	}
 
 	private handleBackBtn(): void {
@@ -65,13 +60,23 @@ class TagSelectionPage extends Component<any, theState> {
 		const tagToSave: MemoTag = { id: tagId, name: tagName };
 		this.idb.saveTag(tagToSave)
 			.then(() => {
-				// TODO: Update tag list
+				this.setState({ searchValue: '' });
+				this.updateTagList();
+			})
+			.catch();
+	}
+
+	private updateTagList(): void {
+		this.idb.getTag()
+			.then((event) => {
+				// @ts-ignore
+				this.setState({ tags: event.target.result });
 			})
 			.catch();
 	}
 
 	render() {
-		let tagsToDisplay: Array<any> = this.state.tags;
+		let tagsToDisplay: Array<MemoTag> = this.state.tags;
 		let searchValue: string = this.state.searchValue.trim().toLowerCase();
 		let hasExactMatch: boolean = false;
 		if (searchValue.length > 0) {
