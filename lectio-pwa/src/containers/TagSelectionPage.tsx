@@ -9,7 +9,7 @@ import {
     ListItemText,
     Toolbar
 } from '@material-ui/core';
-import {ArrowBack} from '@material-ui/icons';
+import {Close} from '@material-ui/icons';
 
 interface State {
     searchValue: string;
@@ -43,7 +43,8 @@ class TagSelectionPage extends Component<any, State> {
     ];
 
     private handleBackBtn(): void {
-        setTimeout(() => this.props.history.goBack(), 180);
+        //setTimeout(() => this.props.history.goBack(), 180);
+        this.props.onClose();
     }
 
     private handleSearchValueChange(e: any): void {
@@ -65,7 +66,7 @@ class TagSelectionPage extends Component<any, State> {
                 <AppBar position="fixed" color="default" elevation={0}>
                     <Toolbar style={inlineStyles.toolbar}>
                         <IconButton onClick={() => this.handleBackBtn()}>
-                            <ArrowBack />
+                            <Close />
                         </IconButton>
                         <InputBase
                             placeholder="Type to search or create a tag"
