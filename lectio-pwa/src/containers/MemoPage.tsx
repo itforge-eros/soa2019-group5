@@ -19,6 +19,8 @@ const inlineStyles = {
 };
 
 class MemoPage extends Component<any, any> {
+	private idb = Idb.getInstance();
+
 	constructor(props: any) {
 		super(props);
 		this.state = {
@@ -33,18 +35,30 @@ class MemoPage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const memoId = this.props.match.params.id;
-		const idb = Idb.getInstance();
-		idb.getMemo(memoId)
+		this.idb.getMemo(memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memo: Memo = event.target.result;
 				this.setState({
+					memoId: memo.id,
 					memoName: memo.name,
 					memoBody: memo.content,
 					memoTags: memo.tags,
+					memoAudioId: memo.audioId
 				});
 			})
 			.catch((event) => console.log(event));
+	}
+
+	componentWillUnmount(): void {
+		const memo = new Memo(
+			this.state.memoId,
+			this.state.memoName,
+			this.state.memoBody,
+			this.state.memoAudioId,
+			this.state.memoTags
+		);
+		this.idb.updateMemo(memo);
 	}
 
 	private handleBackBtn() {
