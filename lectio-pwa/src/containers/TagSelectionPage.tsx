@@ -32,7 +32,7 @@ class TagSelectionPage extends Component<any, State> {
         super(props);
         this.state = {
             searchValue: ''
-        }
+        };
         this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
     }
 
