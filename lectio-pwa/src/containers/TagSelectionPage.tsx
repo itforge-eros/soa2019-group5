@@ -10,6 +10,7 @@ import {
     Toolbar
 } from '@material-ui/core';
 import {Close} from '@material-ui/icons';
+import Idb from '../utils/Idb';
 
 type theState = {
     searchValue: string;
@@ -34,6 +35,7 @@ class TagSelectionPage extends Component<any, theState> {
             searchValue: ''
         };
         this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+        this.handleCreateTag = this.handleCreateTag.bind(this);
     }
 
     private availableTags: Array<any> = [
@@ -43,12 +45,23 @@ class TagSelectionPage extends Component<any, theState> {
     ];
 
     private handleBackBtn(): void {
-        //setTimeout(() => this.props.history.goBack(), 180);
         this.props.onClose();
     }
 
     private handleSearchValueChange(e: any): void {
         this.setState({ searchValue: e.target.value });
+    }
+
+    private handleCreateTag(event: React.MouseEvent) {
+        const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
+        const tagName = this.state.searchValue.trim();
+        const tagToSave: MemoTag = { id: tagId, name: tagName };
+        const idb = Idb.getInstance();
+        idb.saveTag(tagToSave)
+          .then(() => {
+              // TODO: Update tag list
+          })
+          .catch();
     }
 
     render() {
@@ -86,8 +99,8 @@ class TagSelectionPage extends Component<any, theState> {
                             </ListItem>
                         ))}
                         {searchValue !== '' && !hasExactMatch &&
-                            <ListItem button>
-                                <ListItemText primary={`Create tag ${searchValue}`} />
+                            <ListItem button onClick={this.handleCreateTag}>
+                                <ListItemText primary={`Create tag ${this.state.searchValue.trim()}`} />
                             </ListItem>
                         }
                     </List>

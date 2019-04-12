@@ -105,6 +105,13 @@ class Idb {
 			r.onerror = ev => reject(ev);
 		}
 	});
+
+	public saveTag = (tag: MemoTag) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag, 'readwrite').objectStore(IdbStoreType.tag);
+		const r: IDBRequest = s.add(tag);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
+	});
 }
 
 export default Idb;
