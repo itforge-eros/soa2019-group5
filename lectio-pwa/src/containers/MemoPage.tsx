@@ -1,5 +1,5 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, Dialog, Fab, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Button, Chip, Dialog, Fab, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
 import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
@@ -18,6 +18,8 @@ const inlineStyles = {
 		marginBottom: '1em'
 	}
 };
+
+const Transition = (props: any) => <Slide direction="up" {...props} />;
 
 class MemoPage extends Component<any, any> {
 	private idb = Idb.getInstance();
@@ -80,6 +82,7 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleTagClose() {
+		// TODO: Get selected tags
 		this.setState({ tagDialogOpen: false });
 	}
 
@@ -133,7 +136,7 @@ class MemoPage extends Component<any, any> {
 					<PlaybackControl />
 				</div>
 
-				<Dialog fullScreen open={this.state.tagDialogOpen}>
+				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} />
 				</Dialog>
 			</Fragment>
