@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import { ListItem, ListItemText } from "@material-ui/core";
-import { withRouter } from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
 import { listWithCommas } from '../utils/fmt';
+import Memo from '../model/Memo';
 
-class MemoListItem extends Component<any, any> {
+type theProp = {
+	memo: Memo,
+	history: any,
+	selected?: boolean
+};
+
+class MemoListItem extends Component<theProp & RouteComponentProps<{}>, any> {
 	constructor(props: any) {
 		super(props);
 	}
 
 	handleItemClick() {
-		setTimeout(() => this.props.history.push('/memo'), 200);
+		const url = '/memo/' + this.props.memo.id;
+		setTimeout(() => this.props.history.push(url), 200);
 	}
 
   render() {
+		const tagNames = this.props.memo.tags.map((c: any) => c.name);
 		return (
 			<ListItem
 				button divider
@@ -20,8 +29,8 @@ class MemoListItem extends Component<any, any> {
 				onClick={() => this.handleItemClick()}
 				>
 				<ListItemText
-					primary={this.props.title}
-					secondary={listWithCommas(this.props.categories)} />
+					primary={this.props.memo.name}
+					secondary={listWithCommas(tagNames)} />
 			</ListItem>
 		)
 	}

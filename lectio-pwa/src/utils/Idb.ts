@@ -46,7 +46,6 @@ class Idb {
 		}
 	});
 
-
 	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio) => new Promise((resolve, reject) => {
 		const request = indexedDB.open(DB_NAME, DB_VERSION);
 		request.onsuccess = (event) => {
@@ -62,6 +61,23 @@ class Idb {
 				reject(event);
 			};
 		};
+	});
+
+	/**
+	 * Get a specific memo or all memos
+	 * @param id - A memo ID (leave blank to get all memos)
+	 */
+	public getMemo = (id?: number) => new Promise((resolve, reject) => {
+		const request = indexedDB.open(DB_NAME, DB_VERSION);
+		request.onsuccess = (event) => {
+			// @ts-ignore
+			const db = event.target.result;
+			const s: IDBObjectStore = db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
+			let r: IDBRequest;
+			if (id) r = s.get(id); else r = s.getAll();
+			r.onsuccess = (event: Event) => { resolve(event) };
+			r.onerror = (event: Event) => { reject(event) };
+		}
 	});
 }
 

@@ -15,7 +15,7 @@ class App extends Component {
 			<BrowserRouter>
 				<div className="App">
 					<Route exact path="/" component={HomePage} />
-					<Route exact path="/memo" component={MemoPage} />
+					<Route exact path="/memo/:id" component={MemoPage} />
 					<Route exact path="/memo/summary" component={SummaryPage} />
 					<Route exact path="/memo/tags" component={TagSelectionPage} />
 					<Route exact path="/record" component={RecordPage} />

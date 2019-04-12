@@ -4,6 +4,8 @@ import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/ico
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
+import Idb from '../utils/Idb';
+import Memo from '../model/Memo';
 
 const inlineStyles = {
 	toolbar: {
@@ -16,6 +18,20 @@ const inlineStyles = {
 class MemoPage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
+		this.state = {
+			memo: undefined
+		};
+	}
+
+	componentDidMount(): void {
+		const memoId = this.props.match.params.id;
+		const idb = Idb.getInstance();
+		idb.getMemo(memoId)
+			.then((event) => {
+				// @ts-ignore
+				this.setState({ memo: event.target.result })
+			})
+			.catch((event) => console.log(event));
 	}
 
 	private handleBackBtn() {
@@ -52,20 +68,20 @@ class MemoPage extends Component<any, any> {
 				<div className={styles.contentArea}>
 					<div className={styles.textArea}>
 						<Typography variant="h6">
-							Memo name here
+							{ this.state.memo ? this.state.memo.name : '' }
 						</Typography>
 						<p className="bodyText">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-							sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-							Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
-							nisi ut aliquip ex ea commodo consequat.
+							{ this.state.memo ? this.state.memo.content : '' }
 						</p>
+						{this.state.memo &&
 						<div className={styles.chipWrap}>
-							<Chip label="Demo tag" className={styles.chip} />
+							{this.state.memo.tags.map((tag: any) =>
+								<Chip key={tag.name} label={tag.name} className={styles.chip}/>
+							)}
 							<Button onClick={() => this.handleTagBtn()}>
 								<AddIcon fontSize="small" />
 							</Button>
-						</div>
+						</div>}
 					</div>
 					<PlaybackControl />
 				</div>

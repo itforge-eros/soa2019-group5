@@ -44,7 +44,7 @@ class RecordPage extends Component<any, State> {
 		this.state = {
 			memoId: new Date().getTime().toString(),
 			memoName: this.defaultMemoName,
-			memoBody: 'lorem ipsum',
+			memoBody: '',
 			memoTags: [
 				{ name: 'Demo tag' }
 			],

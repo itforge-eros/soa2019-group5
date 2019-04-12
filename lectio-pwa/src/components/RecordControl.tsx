@@ -77,8 +77,8 @@ class RecordControl extends Component<any, State> {
 		if (this.mediaRecorder) {
 			if (this.mediaRecorder.state === 'recording') this.mediaRecorder.stop();
 		}
-		clearInterval(this.elapsedInterval);
-		this.stopwatch.reset();
+		if (this.elapsedInterval) clearInterval(this.elapsedInterval);
+		if (this.stopwatch) this.stopwatch.reset();
 	}
 
 	private handleFabClick(): void {
