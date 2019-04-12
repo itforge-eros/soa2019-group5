@@ -17,6 +17,11 @@ type theState = {
 	tags: Array<MemoTag>
 };
 
+type theProp = {
+	currentTags: Array<MemoTag>,
+	onClose: Function
+};
+
 const inlineStyles = {
 	toolbar: {
 		paddingLeft: '8px',
@@ -29,7 +34,7 @@ const inlineStyles = {
 	}
 };
 
-class TagSelectionPage extends Component<any, theState> {
+class TagSelectionPage extends Component<theProp, theState> {
 	idb = Idb.getInstance();
 
 	constructor(props: any) {
@@ -77,7 +82,7 @@ class TagSelectionPage extends Component<any, theState> {
 
 	render() {
 		let tagsToDisplay: Array<MemoTag> = this.state.tags;
-		let searchValue: string = this.state.searchValue.trim().replace(/\s/g, '').toLowerCase();
+		const searchValue: string = this.state.searchValue.trim().replace(/\s/g, '').toLowerCase();
 		let hasExactMatch: boolean = false;
 		if (searchValue.length > 0) {
 			tagsToDisplay = tagsToDisplay.filter(t => {
@@ -85,6 +90,7 @@ class TagSelectionPage extends Component<any, theState> {
 				return t.name.toLowerCase().match(searchValue);
 			});
 		}
+		const currentTags = this.props.currentTags.map(t => t.id);
 		return (
 			<Fragment>
 				<AppBar position="fixed" color="default" elevation={0}>
@@ -105,14 +111,14 @@ class TagSelectionPage extends Component<any, theState> {
 							<ListItem key={tag.name}>
 								<ListItemText primary={tag.name} />
 								<ListItemSecondaryAction>
-									<Checkbox />
+									<Checkbox defaultChecked={currentTags.includes(tag.id)} />
 								</ListItemSecondaryAction>
 							</ListItem>
 						))}
 						{searchValue !== '' && !hasExactMatch &&
-            <ListItem button onClick={this.handleCreateTag}>
-                <ListItemText primary={`Create tag ${this.state.searchValue.trim()}`} />
-            </ListItem>
+	            <ListItem button onClick={this.handleCreateTag}>
+	                <ListItemText primary={`Create tag ${this.state.searchValue.trim()}`} />
+	            </ListItem>
 						}
 					</List>
 				</div>

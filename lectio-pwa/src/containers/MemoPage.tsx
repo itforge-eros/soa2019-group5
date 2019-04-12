@@ -137,7 +137,7 @@ class MemoPage extends Component<any, any> {
 				</div>
 
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
-					<TagSelectionPage onClose={this.handleTagClose} />
+					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
 			</Fragment>
 		);
