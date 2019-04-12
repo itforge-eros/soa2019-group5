@@ -28,13 +28,23 @@ class Idb {
 				console.log('Upgrading DB');
 				// @ts-ignore
 				this.db = event.target.result;
-				const memoStore = this.db.createObjectStore(IdbStoreType.memo, {keyPath: 'id'});
-				memoStore.createIndex('name', 'name', {unique: false});
-				memoStore.createIndex('content', 'content', {unique: false});
-				memoStore.createIndex('audioId', 'audioId', {unique: true});
-				memoStore.createIndex('tags', 'tags', {unique: false});
-				const memoAudioStore = this.db.createObjectStore(IdbStoreType.memoAudio, {keyPath: 'id'});
-				memoAudioStore.createIndex('blob', 'blob', {unique: false});
+
+				// DB_VERSION 5
+				if (event.oldVersion < 5) {
+					const memoStore = this.db.createObjectStore(IdbStoreType.memo, {keyPath: 'id'});
+					memoStore.createIndex('name', 'name', {unique: false});
+					memoStore.createIndex('content', 'content', {unique: false});
+					memoStore.createIndex('audioId', 'audioId', {unique: true});
+					memoStore.createIndex('tags', 'tags', {unique: false});
+					const memoAudioStore = this.db.createObjectStore(IdbStoreType.memoAudio, {keyPath: 'id'});
+					memoAudioStore.createIndex('blob', 'blob', {unique: false});
+				}
+
+				// DB_VERSION 6
+				if (event.oldVersion < 6) {
+					const tagStore = this.db.createObjectStore(IdbStoreType.tag, {keyPath: 'id'});
+					tagStore.createIndex('name', 'name', {unique: true});
+				}
 			};
 			request.onsuccess = (event) => {
 				// @ts-ignore

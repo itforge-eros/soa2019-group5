@@ -11,9 +11,9 @@ import {
 } from '@material-ui/core';
 import {Close} from '@material-ui/icons';
 
-interface State {
+type theState = {
     searchValue: string;
-}
+};
 
 const inlineStyles = {
     toolbar: {
@@ -27,7 +27,7 @@ const inlineStyles = {
     }
 };
 
-class TagSelectionPage extends Component<any, State> {
+class TagSelectionPage extends Component<any, theState> {
     constructor(props: any) {
         super(props);
         this.state = {
