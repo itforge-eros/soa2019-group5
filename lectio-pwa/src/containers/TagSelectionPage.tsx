@@ -77,7 +77,7 @@ class TagSelectionPage extends Component<any, theState> {
 
 	render() {
 		let tagsToDisplay: Array<MemoTag> = this.state.tags;
-		let searchValue: string = this.state.searchValue.trim().toLowerCase();
+		let searchValue: string = this.state.searchValue.trim().replace(/\s/g, '').toLowerCase();
 		let hasExactMatch: boolean = false;
 		if (searchValue.length > 0) {
 			tagsToDisplay = tagsToDisplay.filter(t => {
