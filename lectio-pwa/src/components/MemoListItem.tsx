@@ -21,7 +21,7 @@ class MemoListItem extends Component<theProp & RouteComponentProps<{}>, any> {
 	}
 
   render() {
-		const tagNames = this.props.memo.tags.map((c: any) => c.name);
+ 		const tagNames = this.props.memo.tags.map((t: MemoTag) => t.name);
 		return (
 			<ListItem
 				button divider

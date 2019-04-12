@@ -18,7 +18,7 @@ type State = {
 	memoId: string,
 	memoName: string,
 	memoBody: string,
-	memoTags: Array<any>,
+	memoTags: Array<MemoTag>,
 	dialogOpen: boolean,
 	blockPageLeave: boolean
 }
@@ -46,7 +46,7 @@ class RecordPage extends Component<any, State> {
 			memoName: this.defaultMemoName,
 			memoBody: '',
 			memoTags: [
-				{ name: 'Demo tag' }
+				{ id: 'demo-tag', name: 'Demo Tag' }
 			],
 			dialogOpen: false,
 			blockPageLeave: true

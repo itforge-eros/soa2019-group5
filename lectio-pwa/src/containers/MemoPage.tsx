@@ -1,11 +1,12 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, Fab, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Button, Chip, Dialog, Fab, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
 import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
 import Memo from '../model/Memo';
+import TagSelectionPage from './TagSelectionPage';
 
 const inlineStyles = {
 	toolbar: {
@@ -18,19 +19,25 @@ const inlineStyles = {
 	}
 };
 
+const Transition = (props: any) => <Slide direction="up" {...props} />;
+
 class MemoPage extends Component<any, any> {
 	private idb = Idb.getInstance();
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			memo: new Memo('', '', '', '', []),
+			memoId: '',
 			memoName: '',
 			memoBody: '',
 			memoTags: [],
+			memoAudioId: '',
+			tagDialogOpen: false
 		};
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
+		this.handleTagOpen = this.handleTagOpen.bind(this);
+		this.handleTagClose = this.handleTagClose.bind(this);
 	}
 
 	componentDidMount(): void {
@@ -70,9 +77,12 @@ class MemoPage extends Component<any, any> {
         setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
 	}
 
-	private handleTagBtn() {
-        const currentPath: string = this.props.location.pathname;
-        setTimeout(() => this.props.history.push(`${currentPath}/tags/`), 180);
+	private handleTagOpen() {
+		this.setState({ tagDialogOpen: true });
+	}
+
+	private handleTagClose(newTags: Array<MemoTag>) {
+		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
 	private handleMemoNameChange(event: ChangeEvent): void {
@@ -113,19 +123,21 @@ class MemoPage extends Component<any, any> {
 						           className="bodyText"
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
-						{this.state.memo &&
-							<div className={styles.chipWrap}>
-								{this.state.memo.tags.map((tag: any) =>
-									<Chip key={tag.name} label={tag.name} className={styles.chip}/>
-								)}
-								<Button onClick={() => this.handleTagBtn()}>
-									<AddIcon fontSize="small" />
-								</Button>
-							</div>
-						}
+						<div className={styles.chipWrap}>
+							{this.state.memoTags.map((tag: any) =>
+								<Chip key={tag.name} label={tag.name} className={styles.chip}/>
+							)}
+							<Button onClick={this.handleTagOpen}>
+								<AddIcon fontSize="small" />
+							</Button>
+						</div>
 					</div>
 					<PlaybackControl />
 				</div>
+
+				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
+					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
+				</Dialog>
 			</Fragment>
 		);
 	}

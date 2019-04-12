@@ -1,7 +1,8 @@
 export const DB_NAME: string = 'lectio-pwa';
-export const DB_VERSION: number = 5;
+export const DB_VERSION: number = 6;
 
 export enum IdbStoreType {
 	memo = 'memo',
-	memoAudio = 'memoAudio'
+	memoAudio = 'memoAudio',
+	tag = 'tag'
 }
