@@ -14,7 +14,8 @@ import Idb from '../utils/Idb';
 
 type theState = {
 	searchValue: string,
-	tags: Array<MemoTag>
+	availableTags: Array<MemoTag>,
+	chosenTags: Array<MemoTag>
 };
 
 type theProp = {
@@ -41,18 +42,22 @@ class TagSelectionPage extends Component<theProp, theState> {
 		super(props);
 		this.state = {
 			searchValue: '',
-			tags: []
+			availableTags: [],
+			chosenTags: []
 		};
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
 		this.handleCreateTag = this.handleCreateTag.bind(this);
+		this.handleTagToggle = this.handleTagToggle.bind(this);
 	}
 
 	componentDidMount(): void {
-		this.updateTagList()
+		this.updateTagList();
+		this.setState({ chosenTags: this.props.currentTags });
 	}
 
 	private handleBackBtn(): void {
-		this.props.onClose();
+		// TODO: Collect all chosen tags
+		this.props.onClose(this.state.chosenTags);
 	}
 
 	private handleSearchValueChange(e: any): void {
@@ -71,17 +76,35 @@ class TagSelectionPage extends Component<theProp, theState> {
 			.catch();
 	}
 
+	private handleTagToggle(event: any): void {
+		const selectedValue = event.target.value;
+		console.log(`${selectedValue} is ${event.target.checked}`);
+		if (event.target.checked) {
+			this.setState((prev) => {
+				const tagToCheck: Array<MemoTag> = prev.availableTags.filter(t => t.id === selectedValue);
+				const newChosen: Array<MemoTag> = [...prev.chosenTags, tagToCheck[0]];
+				return {chosenTags: newChosen}
+			});
+		} else {
+			this.setState((prev) => {
+				const newChosen: Array<MemoTag> = prev.chosenTags.filter(t => t.id !== selectedValue);
+				return {chosenTags: newChosen}
+			});
+		}
+		console.log(this.state.chosenTags);
+	}
+
 	private updateTagList(): void {
 		this.idb.getTag()
 			.then((event) => {
 				// @ts-ignore
-				this.setState({ tags: event.target.result });
+				this.setState({ availableTags: event.target.result });
 			})
 			.catch();
 	}
 
 	render() {
-		let tagsToDisplay: Array<MemoTag> = this.state.tags;
+		let tagsToDisplay: Array<MemoTag> = this.state.availableTags;
 		const searchValue: string = this.state.searchValue.trim().replace(/\s/g, '').toLowerCase();
 		let hasExactMatch: boolean = false;
 		if (searchValue.length > 0) {
@@ -90,6 +113,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 				return t.name.toLowerCase().match(searchValue);
 			});
 		}
+		// Tags currently in the memo
 		const currentTags = this.props.currentTags.map(t => t.id);
 		return (
 			<Fragment>
@@ -111,7 +135,11 @@ class TagSelectionPage extends Component<theProp, theState> {
 							<ListItem key={tag.name}>
 								<ListItemText primary={tag.name} />
 								<ListItemSecondaryAction>
-									<Checkbox defaultChecked={currentTags.includes(tag.id)} />
+									<Checkbox
+										defaultChecked={currentTags.includes(tag.id)}
+										value={tag.id}
+										onChange={this.handleTagToggle}
+									/>
 								</ListItemSecondaryAction>
 							</ListItem>
 						))}
