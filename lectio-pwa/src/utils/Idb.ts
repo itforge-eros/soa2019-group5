@@ -106,6 +106,17 @@ class Idb {
 		}
 	});
 
+	/**
+	 * Delete a memo
+	 * @param id - A memo ID
+	 */
+	public deleteMemo = (id: string) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
+		const r: IDBRequest = s.delete(id);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
+	});
+
 	public saveTag = (tag: MemoTag) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag, 'readwrite').objectStore(IdbStoreType.tag);
 		const r: IDBRequest = s.add(tag);

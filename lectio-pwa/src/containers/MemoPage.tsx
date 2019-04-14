@@ -32,7 +32,8 @@ class MemoPage extends Component<any, any> {
 			memoBody: '',
 			memoTags: [],
 			memoAudioId: '',
-			tagDialogOpen: false
+			tagDialogOpen: false,
+			deleteMemo: false
 		};
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
@@ -58,14 +59,16 @@ class MemoPage extends Component<any, any> {
 	}
 
 	componentWillUnmount(): void {
-		const memo = new Memo(
-			this.state.memoId,
-			this.state.memoName,
-			this.state.memoBody,
-			this.state.memoAudioId,
-			this.state.memoTags
-		);
-		this.idb.updateMemo(memo);
+		if (!this.state.deleteMemo) {
+			const memo = new Memo(
+				this.state.memoId,
+				this.state.memoName,
+				this.state.memoBody,
+				this.state.memoAudioId,
+				this.state.memoTags
+			);
+			this.idb.updateMemo(memo);
+		}
 	}
 
 	private handleBackBtn() {
@@ -75,6 +78,13 @@ class MemoPage extends Component<any, any> {
 	private handleSummaryBtn() {
         const currentPath: string = this.props.location.pathname;
         setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
+	}
+
+	private handleDeleteBtn() {
+		this.setState({ deleteMemo: true });
+		this.idb.deleteMemo(this.state.memoId)
+			.then(() => this.props.history.replace('/'))
+			.catch((event) => alert('Cannot delete memo'));
 	}
 
 	private handleTagOpen() {
@@ -104,7 +114,7 @@ class MemoPage extends Component<any, any> {
 							<ArrowBack />
 						</IconButton>
 						<div className="grow"/>
-						<IconButton>
+						<IconButton onClick={() => this.handleDeleteBtn()}>
 							<Delete />
 						</IconButton>
 						<IconButton onClick={() => this.handleSummaryBtn()}>
