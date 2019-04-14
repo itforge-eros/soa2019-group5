@@ -49,7 +49,7 @@ exports.update = async function(req, res) {
   if (!memo) {
     res.status(404);
     res.json(NOT_FOUND);
-    res.end();
+    return;
   }
   res.send(memo);
 };
