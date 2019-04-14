@@ -20,7 +20,7 @@ type State = {
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<MemoTag>,
-	dialogOpen: boolean,
+	backDialogOpen: boolean,
 	blockPageLeave: boolean,
 	tagDialogOpen: boolean
 }
@@ -50,7 +50,7 @@ class RecordPage extends Component<any, State> {
 			memoName: this.defaultMemoName,
 			memoBody: '',
 			memoTags: [],
-			dialogOpen: false,
+			backDialogOpen: false,
 			blockPageLeave: true,
 			tagDialogOpen: false
 		};
@@ -113,15 +113,15 @@ class RecordPage extends Component<any, State> {
 	}
 
 	private handleDialogOpen() {
-		this.setState({ dialogOpen: true });
+		this.setState({ backDialogOpen: true });
 	}
 
 	private handleDialogNo() {
-		this.setState({ dialogOpen: false });
+		this.setState({ backDialogOpen: false });
 	}
 
 	private handleDialogYes() {
-		this.setState({ dialogOpen: false, blockPageLeave: false });
+		this.setState({ backDialogOpen: false, blockPageLeave: false });
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
@@ -171,7 +171,7 @@ class RecordPage extends Component<any, State> {
 					</div>
 					<RecordControl ref={this.recordControl} />
 				</div>
-				<Dialog open={this.state.dialogOpen}>
+				<Dialog open={this.state.backDialogOpen}>
 					<DialogTitle>Discard memo?</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
