@@ -135,6 +135,17 @@ class Idb {
 		r.onsuccess = (event: Event) => resolve(event);
 		r.onerror = (event: Event) => reject(event);
 	});
+
+	/**
+	 * Delete a memo audio
+	 * @param id - A memoAudio ID
+	 */
+	public deleteMemoAudio = (id: string) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio, 'readwrite').objectStore(IdbStoreType.memoAudio);
+		const r: IDBRequest = s.delete(id);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
+	})
 }
 
 export default Idb;

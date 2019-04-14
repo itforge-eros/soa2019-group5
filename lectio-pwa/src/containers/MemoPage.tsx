@@ -83,7 +83,10 @@ class MemoPage extends Component<any, any> {
 	private handleDeleteBtn() {
 		this.setState({ deleteMemo: true });
 		this.idb.deleteMemo(this.state.memoId)
-			.then(() => this.props.history.replace('/'))
+			.then(() => {
+				this.idb.deleteMemoAudio(this.state.memoId);
+				this.props.history.replace('/');
+			})
 			.catch((event) => alert('Cannot delete memo'));
 	}
 
