@@ -1,5 +1,5 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, IconButton, InputBase, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
@@ -13,14 +13,16 @@ import Idb from '../utils/Idb';
 import {IdbStoreType} from '../constants';
 import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
+import TagSelectionPage from './TagSelectionPage';
 
 type State = {
 	memoId: string,
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<MemoTag>,
-	dialogOpen: boolean,
-	blockPageLeave: boolean
+	backDialogOpen: boolean,
+	blockPageLeave: boolean,
+	tagDialogOpen: boolean
 }
 
 const inlineStyles = {
@@ -34,6 +36,8 @@ const inlineStyles = {
 	}
 };
 
+const Transition = (props: any) => <Slide direction="up" {...props} />;
+
 class RecordPage extends Component<any, State> {
 	recordControl: React.RefObject<RecordControl>;
 	defaultMemoName: string = `Memo ${new Date().toLocaleString()}`;
@@ -45,17 +49,18 @@ class RecordPage extends Component<any, State> {
 			memoId: new Date().getTime().toString(),
 			memoName: this.defaultMemoName,
 			memoBody: '',
-			memoTags: [
-				{ id: 'demo-tag', name: 'Demo Tag' }
-			],
-			dialogOpen: false,
-			blockPageLeave: true
+			memoTags: [],
+			backDialogOpen: false,
+			blockPageLeave: true,
+			tagDialogOpen: false
 		};
 		this.handleDialogNo = this.handleDialogNo.bind(this);
 		this.handleDialogYes = this.handleDialogYes.bind(this);
 		this.handleSaveBtn = this.handleSaveBtn.bind(this);
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
+		this.handleTagOpen = this.handleTagOpen.bind(this);
+		this.handleTagClose = this.handleTagClose.bind(this);
 	}
 
 	private handleSaveBtn(): void {
@@ -99,21 +104,24 @@ class RecordPage extends Component<any, State> {
 		this.handleDialogOpen();
 	}
 
-	private handleTagBtn() {
-		const currentPath: string = this.props.location.pathname;
-		setTimeout(() => this.props.history.push(`${currentPath}/tags/`), 180);
+	private handleTagOpen() {
+		this.setState({ tagDialogOpen: true });
+	}
+
+	private handleTagClose(newTags: Array<MemoTag>): void {
+		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
 	private handleDialogOpen() {
-		this.setState({ dialogOpen: true });
+		this.setState({ backDialogOpen: true });
 	}
 
 	private handleDialogNo() {
-		this.setState({ dialogOpen: false });
+		this.setState({ backDialogOpen: false });
 	}
 
 	private handleDialogYes() {
-		this.setState({ dialogOpen: false, blockPageLeave: false });
+		this.setState({ backDialogOpen: false, blockPageLeave: false });
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
@@ -156,14 +164,14 @@ class RecordPage extends Component<any, State> {
 							{this.state.memoTags.map(tag => (
 								<Chip label={tag.name} className={styles.chip} />
 							))}
-							<Button>
+							<Button onClick={this.handleTagOpen}>
 								<AddIcon fontSize="small" />
 							</Button>
 						</div>
 					</div>
 					<RecordControl ref={this.recordControl} />
 				</div>
-				<Dialog open={this.state.dialogOpen}>
+				<Dialog open={this.state.backDialogOpen}>
 					<DialogTitle>Discard memo?</DialogTitle>
 					<DialogContent>
 						<DialogContentText>
@@ -174,6 +182,9 @@ class RecordPage extends Component<any, State> {
 						<Button color="primary" onClick={this.handleDialogYes}>Yes</Button>
 						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
 					</DialogActions>
+				</Dialog>
+				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
+					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
 				<Prompt when={this.state.blockPageLeave} message="Do you want to discard recording?" />
 			</Fragment>
