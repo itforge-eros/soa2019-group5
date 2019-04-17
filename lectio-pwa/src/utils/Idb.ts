@@ -69,16 +69,9 @@ class Idb {
 	 * @param {Memo | MemoAudio | MemoTag} data - Data to save
 	 */
 	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio | MemoTag) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = (event) => {
-			// @ts-ignore
-			const db = event.target.result;
-			const t = db.transaction(objType, 'readwrite')
-				.objectStore(objType)
-				.add(data);
-			t.onsuccess = (event: Event) => resolve(event);
-			t.onerror = (event: Event) => reject(event);
-		};
+		const r: IDBRequest = this.db.transaction(objType, 'readwrite').objectStore(objType).add(data);
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
 	});
 
 	/**
@@ -86,16 +79,11 @@ class Idb {
 	 * @param {string} id - A memo ID (leave blank to get all memos)
 	 */
 	public getMemo = (id?: number) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = (event) => {
-			// @ts-ignore
-			const db = event.target.result;
-			const s: IDBObjectStore = db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
-			let r: IDBRequest;
-			if (id) r = s.get(id); else r = s.getAll();
-			r.onsuccess = (event: Event) => resolve(event);
-			r.onerror = (event: Event) => reject(event);
-		}
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
+		let r: IDBRequest;
+		if (id) r = s.get(id); else r = s.getAll();
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
 	});
 
 	/**
@@ -103,15 +91,10 @@ class Idb {
 	 * @param {Memo} memo - An updated Memo object
 	 */
 	public updateMemo = (memo: Memo) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = ev => {
-			// @ts-ignore
-			const db = ev.target.result;
-			const s: IDBObjectStore = db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
-			const r: IDBRequest = s.put(memo);
-			r.onsuccess = ev => resolve(ev);
-			r.onerror = ev => reject(ev);
-		}
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
+		const r: IDBRequest = s.put(memo);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
 	});
 
 	/**
