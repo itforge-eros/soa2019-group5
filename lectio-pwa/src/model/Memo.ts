@@ -1,6 +1,5 @@
 /**
- * Creates a new Memo.
- * @class
+ * @class Memo
  */
 class Memo {
 	public id: string;
