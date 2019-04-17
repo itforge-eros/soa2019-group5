@@ -19,6 +19,13 @@ const inlineStyles = {
 	}
 };
 
+const strings = {
+	ariaBackBtn: 'Go back',
+	ariaDeleteBtn: 'Delete this memo',
+	ariaSummaryBtn: 'Show summary',
+	ariaTagAdd: 'Manage tags'
+};
+
 const Transition = (props: any) => <Slide direction="up" {...props} />;
 
 class MemoPage extends Component<any, any> {
@@ -113,14 +120,14 @@ class MemoPage extends Component<any, any> {
 			<Fragment>
 				<AppBar position="fixed" color="default" elevation={0}>
 					<Toolbar style={inlineStyles.toolbar}>
-						<IconButton onClick={() => this.handleBackBtn()}>
+						<IconButton onClick={() => this.handleBackBtn()} aria-label={strings.ariaBackBtn}>
 							<ArrowBack />
 						</IconButton>
 						<div className="grow"/>
-						<IconButton onClick={() => this.handleDeleteBtn()}>
+						<IconButton onClick={() => this.handleDeleteBtn()} aria-label={strings.ariaDeleteBtn}>
 							<Delete />
 						</IconButton>
-						<IconButton onClick={() => this.handleSummaryBtn()}>
+						<IconButton onClick={() => this.handleSummaryBtn()} aria-label={strings.ariaSummaryBtn}>
 							<ScatterPlot />
 						</IconButton>
 					</Toolbar>
@@ -140,7 +147,7 @@ class MemoPage extends Component<any, any> {
 							{this.state.memoTags.map((tag: any) =>
 								<Chip key={tag.name} label={tag.name} className={styles.chip}/>
 							)}
-							<Button onClick={this.handleTagOpen}>
+							<Button onClick={this.handleTagOpen} aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
 							</Button>
 						</div>
