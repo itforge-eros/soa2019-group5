@@ -1,4 +1,8 @@
 /**
+ * Formatter utilities for strings and the likes
+ */
+
+/**
  * Formats an array into a comma-separated list
  * @param list - An array of items
  */
