@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Toolbar, Typography, AppBar, Fab, IconButton, List } from '@material-ui/core';
+import React, {Component, Fragment} from 'react';
+import {Toolbar, Typography, AppBar, Fab, IconButton, List} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
@@ -32,6 +32,13 @@ const inlineStyles = {
 	}
 };
 
+const strings = {
+	pageTitle: 'Recordings',
+	ariaSettingBtn: 'Open settings',
+	ariaRecordBtn: 'Add a new memo',
+	ariaSearchBtn: 'Search for memos'
+};
+
 class HomePage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
@@ -45,7 +52,7 @@ class HomePage extends Component<any, any> {
 		idb.getMemo()
 			.then((event) => {
 				// @ts-ignore
-				this.setState({ memoList: event.target.result });
+				this.setState({memoList: event.target.result});
 			})
 			.catch((error) => {
 				console.log(error);
@@ -57,36 +64,37 @@ class HomePage extends Component<any, any> {
 	}
 
 	private handleSearchClick(): void {
-		//setTimeout(() => this.props.history.push('/search'), 180);
+		setTimeout(() => this.props.history.push('/search'), 180);
 	}
 
-  render() {
+	render() {
 		return (
 			<Fragment>
 				<Header>
-					<Typography variant="h4" style={inlineStyles.title}>Recordings</Typography>
+					<Typography variant="h4" style={inlineStyles.title}>{strings.pageTitle}</Typography>
 				</Header>
 				<List>
-					{ this.state.memoList.reverse().map((m: Memo) =>
-						<MemoListItem key={m.name} memo={m} />
-					) }
+					{this.state.memoList.reverse().map((m: Memo) =>
+						<MemoListItem key={m.name} memo={m}/>
+					)}
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
 					<Toolbar style={inlineStyles.toolbar}>
-						<IconButton color="inherit" aria-label="Open Settings">
-							<SettingsIcon />
+						<IconButton color="inherit" aria-label={strings.ariaSettingBtn}>
+							<SettingsIcon/>
 						</IconButton>
-						<Fab color="primary" aria-label="Add" style={inlineStyles.fab} onClick={() => this.handleFabClick()}>
-							<AddIcon />
+						<Fab color="primary" aria-label={strings.ariaRecordBtn} style={inlineStyles.fab}
+						     onClick={() => this.handleFabClick()}>
+							<AddIcon/>
 						</Fab>
-						<IconButton color="inherit" aria-label="Open Settings" onClick={() => this.handleSearchClick()}>
-							<SearchIcon />
+						<IconButton color="inherit" aria-label={strings.ariaSearchBtn} onClick={() => this.handleSearchClick()}>
+							<SearchIcon/>
 						</IconButton>
 					</Toolbar>
 				</AppBar>
 			</Fragment>
 		)
-  }
+	}
 }
 
 export default HomePage;

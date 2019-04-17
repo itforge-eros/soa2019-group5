@@ -1,3 +1,7 @@
+/**
+ * Memo audio blob
+ * @class
+ */
 class MemoAudio {
 	public id: string;
 	public blob: any;
