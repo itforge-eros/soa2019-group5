@@ -15,6 +15,9 @@ const inlineStyles = {
     },
 };
 
+/**
+ * An audio playback control
+ */
 class PlaybackControl extends Component {
     render() {
         return(

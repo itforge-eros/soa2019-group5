@@ -19,6 +19,9 @@ const inlineStyles = {
 	}
 };
 
+/**
+ * An audio record control
+ */
 class RecordControl extends Component<any, State> {
 	private mediaRecorder: MediaRecorder | undefined;
 	private stopwatch: any;
