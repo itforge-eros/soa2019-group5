@@ -83,8 +83,8 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleSummaryBtn() {
-        const currentPath: string = this.props.location.pathname;
-        setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
+		const currentPath: string = this.props.location.pathname;
+		setTimeout(() => this.props.history.push(`${currentPath}/summary/`), 180);
 	}
 
 	private handleDeleteBtn() {
