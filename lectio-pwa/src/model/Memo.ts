@@ -1,5 +1,6 @@
 /**
- * @class Memo
+ * Memo
+ * @class
  */
 class Memo {
 	public id: string;

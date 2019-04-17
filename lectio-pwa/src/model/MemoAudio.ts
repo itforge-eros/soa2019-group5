@@ -1,5 +1,6 @@
 /**
- * @class Memo audio blob
+ * Memo audio blob
+ * @class
  */
 class MemoAudio {
 	public id: string;
