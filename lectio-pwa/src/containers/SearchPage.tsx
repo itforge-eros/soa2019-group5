@@ -17,6 +17,10 @@ const inlineStyles = {
   }
 };
 
+const strings = {
+	searchBar: 'Type to search for memos'
+};
+
 class SearchPage extends Component<any, any> {
 	idb = Idb.getInstance();
 
@@ -54,7 +58,7 @@ class SearchPage extends Component<any, any> {
               <ArrowBack />
             </IconButton>
             <InputBase
-              placeholder="Type to search for memos"
+              placeholder={strings.searchBar}
               onChange={this.handleSearchValueChange}
               value={this.state.searchValue}
               style={inlineStyles.searchBar}
