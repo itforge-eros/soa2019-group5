@@ -3,6 +3,7 @@ import { AppBar, Toolbar, IconButton, InputBase, List } from '@material-ui/core'
 import { ArrowBack, Tune } from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
+import Idb from '../utils/Idb';
 
 const inlineStyles = {
   toolbar: {
@@ -17,17 +18,25 @@ const inlineStyles = {
 };
 
 class SearchPage extends Component<any, any> {
+	idb = Idb.getInstance();
+
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			memos: [
-				{ name: 'Distributed Computing intro', categories: ['DCS', 'Y3S2'] },
-				{ name: 'Calculating NPV', categories: ['ITPM', 'Y3S2'] },
-				{ name: 'How to train ur dragon', categories: ['Movie'] },
-				{ name: 'Cooking without food', categories: ['Cooking'] },
-			]
+			memoList: []
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
+	}
+
+	componentDidMount(): void {
+		this.idb.getMemo()
+			.then((event) => {
+				// @ts-ignore
+				this.setState({ memoList: event.target.result });
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}
 
 	private handleBackBtn(): void {
@@ -41,7 +50,7 @@ class SearchPage extends Component<any, any> {
 			<Fragment>
 				<AppBar position="fixed" color="default" elevation={0}>
           <Toolbar style={inlineStyles.toolbar}>
-            <IconButton onClick={() => this.handleBackBtn()}>
+            <IconButton onClick={this.handleBackBtn}>
               <ArrowBack />
             </IconButton>
             <InputBase
@@ -57,7 +66,7 @@ class SearchPage extends Component<any, any> {
       	</AppBar>
 				<div className="contentArea">
 	        <List>
-						{ this.state.memos.map((m: Memo) =>
+						{ this.state.memoList.map((m: Memo) =>
 							<MemoListItem memo={m} key={m.name} />
 						) }
 					</List>
