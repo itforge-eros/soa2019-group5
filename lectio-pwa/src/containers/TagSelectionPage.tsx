@@ -56,7 +56,6 @@ class TagSelectionPage extends Component<theProp, theState> {
 	}
 
 	private handleBackBtn(): void {
-		// TODO: Collect all chosen tags
 		this.props.onClose(this.state.chosenTags);
 	}
 

@@ -1,5 +1,5 @@
 /**
- * Creates a new Memo.
+ * Memo
  * @class
  */
 class Memo {

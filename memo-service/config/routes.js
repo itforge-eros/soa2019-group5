@@ -37,7 +37,17 @@ module.exports = function(app) {
     ) {
       return next();
     }
+
+    if (err.name === 'UnauthorizedError') {
+      res.status(401).json({
+        url: req.originalUrl,
+        error: 'Unauthorized',
+        error_code: 401
+      });
+      return next();
+    }
     console.error(err.stack);
+
     // error page
     res.status(500).json({ error: err.message, error_code: '500' });
   });

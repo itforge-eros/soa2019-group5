@@ -2,6 +2,9 @@ import {DB_NAME, DB_VERSION, IdbStoreType} from '../constants';
 import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
 
+/**
+ * IndexedDB utility
+ */
 class Idb {
 	private static idb: Idb;
 	// @ts-ignore
@@ -11,6 +14,10 @@ class Idb {
 		Idb.idb = this;
 	}
 
+	/**
+	 * Get an Idb instance
+	 * @return {Idb} An Idb instance
+	 */
 	public static getInstance(): Idb {
 		if (this.idb) return this.idb;
 		else this.idb = new Idb();
@@ -56,59 +63,43 @@ class Idb {
 		}
 	});
 
-	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = (event) => {
-			// @ts-ignore
-			const db = event.target.result;
-			const t = db.transaction(objType, 'readwrite')
-				.objectStore(objType)
-				.add(data);
-			t.onsuccess = (event: Event) => {
-				resolve(event);
-			};
-			t.onerror = (event: Event) => {
-				reject(event);
-			};
-		};
+	/**
+	 * Save a new object to DB
+	 * @param {IdbStoreType} objType - Type of the object to save
+	 * @param {Memo | MemoAudio | MemoTag} data - Data to save
+	 */
+	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio | MemoTag) => new Promise((resolve, reject) => {
+		const r: IDBRequest = this.db.transaction(objType, 'readwrite').objectStore(objType).add(data);
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
 	});
 
 	/**
 	 * Get a specific memo or all memos
-	 * @param id - A memo ID (leave blank to get all memos)
+	 * @param {string} id - A memo ID (leave blank to get all memos)
 	 */
 	public getMemo = (id?: number) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = (event) => {
-			// @ts-ignore
-			const db = event.target.result;
-			const s: IDBObjectStore = db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
-			let r: IDBRequest;
-			if (id) r = s.get(id); else r = s.getAll();
-			r.onsuccess = (event: Event) => resolve(event);
-			r.onerror = (event: Event) => reject(event);
-		}
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
+		let r: IDBRequest;
+		if (id) r = s.get(id); else r = s.getAll();
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
 	});
 
 	/**
 	 * Update an existing memo
-	 * @param memo - An updated Memo object
+	 * @param {Memo} memo - An updated Memo object
 	 */
 	public updateMemo = (memo: Memo) => new Promise((resolve, reject) => {
-		const request = indexedDB.open(DB_NAME, DB_VERSION);
-		request.onsuccess = ev => {
-			// @ts-ignore
-			const db = ev.target.result;
-			const s: IDBObjectStore = db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
-			const r: IDBRequest = s.put(memo);
-			r.onsuccess = ev => resolve(ev);
-			r.onerror = ev => reject(ev);
-		}
+		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
+		const r: IDBRequest = s.put(memo);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
 	});
 
 	/**
 	 * Delete a memo
-	 * @param id - A memo ID
+	 * @param {string} id - A memo ID
 	 */
 	public deleteMemo = (id: string) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
@@ -117,6 +108,11 @@ class Idb {
 		r.onerror = ev => reject(ev);
 	});
 
+	/**
+	 * Save a new tag
+	 * @deprecated Please switch to {@link saveToDB}
+	 * @param {MemoTag} tag - A MemoTag object
+	 */
 	public saveTag = (tag: MemoTag) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag, 'readwrite').objectStore(IdbStoreType.tag);
 		const r: IDBRequest = s.add(tag);
@@ -126,7 +122,7 @@ class Idb {
 
 	/**
 	 * Get a specific tag or all tags
-	 * @param id - A tag ID (leave blank to get all tags)
+	 * @param {string} id - A tag ID (leave blank to get all tags)
 	 */
 	public getTag = (id?: string) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag).objectStore(IdbStoreType.tag);
@@ -138,7 +134,7 @@ class Idb {
 
 	/**
 	 * Delete a memo audio
-	 * @param id - A memoAudio ID
+	 * @param {string} id - A memoAudio ID
 	 */
 	public deleteMemoAudio = (id: string) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio, 'readwrite').objectStore(IdbStoreType.memoAudio);

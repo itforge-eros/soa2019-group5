@@ -10,6 +10,9 @@ type theProp = {
 	selected?: boolean
 };
 
+/**
+ * A ListItem for displaying a Memo object
+ */
 class MemoListItem extends Component<theProp & RouteComponentProps<{}>, any> {
 	constructor(props: any) {
 		super(props);
