@@ -9,7 +9,9 @@ type State = {
 	recording: boolean,
 	supportsRecording: boolean, // this will be false at first
 	hasError: boolean, // so this is needed to work in conjunction with supportsRecording
-	elapsedTime: number
+	elapsedTime: number,
+	supportsTranscription: boolean,
+	transcript: string
 };
 
 const inlineStyles = {
@@ -37,7 +39,9 @@ class RecordControl extends Component<any, State> {
 			recording: false,
 			supportsRecording: false,
 			hasError: false,
-			elapsedTime: 0
+			elapsedTime: 0,
+			supportsTranscription: false,
+			transcript: ''
 		};
 		this.handleFabClick = this.handleFabClick.bind(this);
 		this.getRecording = this.getRecording.bind(this);
@@ -47,32 +51,16 @@ class RecordControl extends Component<any, State> {
 		navigator.mediaDevices.getUserMedia({audio: true, video: false})
 			.then((stream) => {
 				// Set up recorder
-				this.mediaRecorder = new MediaRecorder(stream);
-				this.mediaRecorder.onpause = () => {
-					this.stopwatch.pause();
-					this.setState({recording: false});
-				};
-				this.mediaRecorder.onresume = () => {
-					this.stopwatch.resume();
-					this.setState({recording: true});
-				};
-				this.setState({ supportsRecording: true });
+				this.initRecorder(stream);
 
 				// Set up stopwatch
 				this.stopwatch = new ElapsedTime();
 
 				// Set up speech recognition
-				if (this.SpeechRecognition !== undefined) {
-					// @ts-ignore
-					this.recognition = new this.SpeechRecognition();
-					this.recognition.lang = 'en-US';
-					this.recognition.start();
-					this.recognition.onresult = (event) => {
-						console.log(event.results);
-					}
-				}
+				if (this.SpeechRecognition !== undefined) this.initSpeechRecognizer();
 
 				// Start recording
+				// @ts-ignore
 				this.mediaRecorder.start();
 				this.stopwatch.start();
 				this.setState({ recording: true });
@@ -95,6 +83,7 @@ class RecordControl extends Component<any, State> {
 		if (this.mediaRecorder) {
 			if (this.mediaRecorder.state === 'recording') this.mediaRecorder.stop();
 		}
+		if (this.recognition) this.recognition.stop();
 		if (this.elapsedInterval) clearInterval(this.elapsedInterval);
 		if (this.stopwatch) this.stopwatch.reset();
 	}
@@ -113,6 +102,35 @@ class RecordControl extends Component<any, State> {
 				}
 			}
 		}
+	}
+
+	private initRecorder(stream: MediaStream): void {
+		this.mediaRecorder = new MediaRecorder(stream);
+		this.mediaRecorder.onpause = () => {
+			this.stopwatch.pause();
+			this.setState({recording: false});
+		};
+		this.mediaRecorder.onresume = () => {
+			this.stopwatch.resume();
+			this.setState({recording: true});
+		};
+		this.mediaRecorder.onstop = () => {
+			stream.getTracks().forEach(t => t.stop());
+		}
+		this.setState({ supportsRecording: true });
+	}
+
+	private initSpeechRecognizer(): void {
+		// @ts-ignore
+		this.recognition = new this.SpeechRecognition();
+		this.recognition.lang = 'en-US';
+		this.recognition.continuous = true;
+		this.recognition.start();
+		this.recognition.onresult = (event) => {
+			const msg = event.results[event.results.length - 1][0].transcript;
+			this.setState((prev: any) => ({ transcript: prev.transcript.concat(msg) }));
+		}
+		this.setState({ supportsTranscription: true });
 	}
 
 	/**
