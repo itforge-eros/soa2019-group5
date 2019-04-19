@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Fab } from "@material-ui/core";
-import { PlayArrow } from "@material-ui/icons";
+import { PlayArrow, Pause } from "@material-ui/icons";
 import WaveSurfer from 'wavesurfer.js';
 import styles from './PlaybackControl.module.sass';
 
@@ -26,6 +26,13 @@ const inlineStyles = {
 class PlaybackControl extends Component<theProp, any> {
 	waveSurfer: any;
 
+	constructor(props: Readonly<theProp>) {
+		super(props);
+		this.state = {
+			isPlaying: false
+		}
+	}
+
 	componentDidMount(): void {
 		this.waveSurfer = WaveSurfer.create({
 			// Use the id or class-name of the element you created, as a selector
@@ -42,13 +49,14 @@ class PlaybackControl extends Component<theProp, any> {
 
 	private handleFab(): void {
 		this.waveSurfer.playPause();
+		this.setState({ isPlaying: this.waveSurfer.isPlaying() });
 	}
 
 	render() {
 		return(
 			<div className={styles.audioArea}>
 				<Fab aria-label="Play" style={inlineStyles.fab} onClick={() => this.handleFab()}>
-					<PlayArrow />
+					{this.state.isPlaying ? <Pause /> : <PlayArrow />}
 				</Fab>
 				<div id="waveform"></div>
 			</div>
