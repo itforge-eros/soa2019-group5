@@ -18,7 +18,7 @@ const inlineStyles = {
 
 const strings = {
   pageTitle: 'Summary',
-  loading: 'Generating a summary'
+  transcribing: 'Generating a summary'
 };
 
 class SummaryPage extends Component<any, any> {
@@ -71,10 +71,12 @@ class SummaryPage extends Component<any, any> {
           </Toolbar>
         </AppBar>
         <div style={inlineStyles.contentArea}>
-          <div className={ContainerStyle['loading-indicator']}>
-            <CircularProgress />
-            <p>{strings.loading}</p>
-          </div>
+          {this.state.isTranscribing &&
+            <div className={ContainerStyle['loading-indicator']}>
+              <CircularProgress />
+              <p>{strings.transcribing}</p>
+            </div>
+          }
           <p className={ContainerStyle.bodyText}></p>
         </div>
       </Fragment>
