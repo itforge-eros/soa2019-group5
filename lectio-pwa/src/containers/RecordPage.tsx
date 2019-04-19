@@ -15,7 +15,7 @@ import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
 import TagSelectionPage from './TagSelectionPage';
 
-type State = {
+type theState = {
 	memoId: string,
 	memoName: string,
 	memoBody: string,
@@ -38,7 +38,7 @@ const inlineStyles = {
 
 const Transition = (props: any) => <Slide direction="up" {...props} />;
 
-class RecordPage extends Component<any, State> {
+class RecordPage extends Component<any, theState> {
 	recordControl: React.RefObject<RecordControl>;
 	defaultMemoName: string = `Memo ${new Date().toLocaleString()}`;
 

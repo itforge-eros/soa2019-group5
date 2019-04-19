@@ -18,6 +18,18 @@ class SummaryPage extends Component<any, any> {
     super(props);
   }
 
+  componentDidMount(): void {
+    /*
+    if transcript is present:
+      show the saved transcript
+    else:
+      load the audio
+      transcribe the audio
+      save the transcript
+      show the generated transcript
+     */
+  }
+
   private handleBackBtn() {
     setTimeout(() => this.props.history.goBack(), 200);
   }
