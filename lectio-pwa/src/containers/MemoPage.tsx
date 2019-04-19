@@ -132,6 +132,7 @@ class MemoPage extends Component<any, any> {
 		this.idb.deleteMemo(this.state.memoId)
 			.then(() => {
 				this.idb.deleteMemoAudio(this.state.memoId);
+				// TODO: Delete memo transcript
 				this.props.history.replace('/');
 			})
 			.catch((event) => alert('Cannot delete memo'));

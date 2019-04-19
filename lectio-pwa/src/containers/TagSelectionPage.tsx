@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import {Close} from '@material-ui/icons';
 import Idb from '../utils/Idb';
+import ContainerStyle from './Containers.module.sass';
 
 type theState = {
 	searchValue: string,
@@ -126,7 +127,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 							style={inlineStyles.searchBar} />
 					</Toolbar>
 				</AppBar>
-				<div className="contentArea">
+				<div className={ContainerStyle.contentArea}>
 					<List>
 						{tagsToDisplay.map(tag => (
 							<ListItem key={tag.name}>

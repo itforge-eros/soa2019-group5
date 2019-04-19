@@ -4,6 +4,7 @@ import { ArrowBack, Tune } from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import ContainerStyle from './Containers.module.sass';
 
 const inlineStyles = {
   toolbar: {
@@ -68,7 +69,7 @@ class SearchPage extends Component<any, any> {
             </IconButton>
           </Toolbar>
       	</AppBar>
-				<div className="contentArea">
+				<div className={ContainerStyle.contentArea}>
 	        <List>
 						{ this.state.memoList.map((m: Memo) =>
 							<MemoListItem memo={m} key={m.name} />
