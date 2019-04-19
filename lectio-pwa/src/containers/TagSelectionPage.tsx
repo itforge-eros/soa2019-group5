@@ -77,7 +77,6 @@ class TagSelectionPage extends Component<theProp, theState> {
 
 	private handleTagToggle(event: any): void {
 		const selectedValue = event.target.value;
-		console.log(`${selectedValue} is ${event.target.checked}`);
 		if (event.target.checked) {
 			this.setState((prev) => {
 				const tagToCheck: Array<MemoTag> = prev.availableTags.filter(t => t.id === selectedValue);
@@ -90,7 +89,6 @@ class TagSelectionPage extends Component<theProp, theState> {
 				return {chosenTags: newChosen}
 			});
 		}
-		console.log(this.state.chosenTags);
 	}
 
 	private updateTagList(): void {
