@@ -26,6 +26,10 @@ class RecordControl extends Component<any, State> {
 	private mediaRecorder: MediaRecorder | undefined;
 	private stopwatch: any;
 	private elapsedInterval: any;
+	// @ts-ignore
+	private SpeechRecognition: SpeechRecognition | undefined = window.SpeechRecognition || window.webkitSpeechRecognition;
+	// @ts-ignore
+	private recognition: SpeechRecognition;
 
 	constructor(props: any) {
 		super(props);
@@ -57,6 +61,17 @@ class RecordControl extends Component<any, State> {
 				// Set up stopwatch
 				this.stopwatch = new ElapsedTime();
 
+				// Set up speech recognition
+				if (this.SpeechRecognition !== undefined) {
+					// @ts-ignore
+					this.recognition = new this.SpeechRecognition();
+					this.recognition.lang = 'en-US';
+					this.recognition.start();
+					this.recognition.onresult = (event) => {
+						console.log(event.results);
+					}
+				}
+
 				// Start recording
 				this.mediaRecorder.start();
 				this.stopwatch.start();
@@ -85,6 +100,7 @@ class RecordControl extends Component<any, State> {
 	}
 
 	private handleFabClick(): void {
+		this.recognition.stop();
 		if (this.mediaRecorder) {
 			switch (this.mediaRecorder.state) {
 				case 'recording': {
