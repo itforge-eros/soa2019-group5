@@ -47,6 +47,10 @@ class PlaybackControl extends Component<theProp, any> {
 		this.waveSurfer.on('finish', () => this.setState({ isPlaying: false }));
 	}
 
+	componentWillUnmount(): void {
+		this.waveSurfer.destroy();
+	}
+
 	private handleFab(): void {
 		this.waveSurfer.playPause();
 		this.setState({ isPlaying: this.waveSurfer.isPlaying() });
