@@ -40,10 +40,14 @@ class PlaybackControl extends Component<theProp, any> {
 		this.waveSurfer.loadBlob(this.props.audioBlob);
 	}
 
+	private handleFab(): void {
+		this.waveSurfer.playPause();
+	}
+
 	render() {
 		return(
 			<div className={styles.audioArea}>
-				<Fab aria-label="Add" style={inlineStyles.fab}>
+				<Fab aria-label="Play" style={inlineStyles.fab} onClick={() => this.handleFab()}>
 					<PlayArrow />
 				</Fab>
 				<div id="waveform"></div>
