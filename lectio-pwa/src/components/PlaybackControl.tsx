@@ -35,16 +35,16 @@ class PlaybackControl extends Component<theProp, any> {
 
 	componentDidMount(): void {
 		this.waveSurfer = WaveSurfer.create({
-			// Use the id or class-name of the element you created, as a selector
 			container: '#waveform',
-			// The color can be either a simple CSS color or a Canvas gradient
 			waveColor: 'grey',
 			progressColor: 'hsla(200, 100%, 30%, 0.5)',
 			cursorColor: '#fff',
-			// This parameter makes the waveform look like SoundCloud's player
-			barWidth: 3
+			barWidth: 3,
+			height: 80,
+			responsive: true
 		});
 		this.waveSurfer.loadBlob(this.props.audioBlob);
+		this.waveSurfer.on('finish', () => this.setState({ isPlaying: false }));
 	}
 
 	private handleFab(): void {
