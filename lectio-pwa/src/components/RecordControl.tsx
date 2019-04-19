@@ -89,7 +89,9 @@ class RecordControl extends Component<any, State> {
 	}
 
 	private handleFabClick(): void {
-		this.recognition.stop();
+		// TODO: Implement pause solution
+		if (this.recognition) this.recognition.stop();
+
 		if (this.mediaRecorder) {
 			switch (this.mediaRecorder.state) {
 				case 'recording': {
