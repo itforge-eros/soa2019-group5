@@ -1,5 +1,17 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, Dialog, Fab, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
+import {
+	AppBar,
+	Button,
+	Chip,
+	Dialog, DialogActions, DialogContent, DialogContentText,
+	DialogTitle,
+	Fab,
+	IconButton,
+	InputBase,
+	Slide,
+	Toolbar,
+	Typography
+} from '@material-ui/core';
 import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
 import styles from './MemoPage.module.sass';
@@ -20,11 +32,21 @@ const inlineStyles = {
 	}
 };
 
-const strings = {
+const strings: { [index: string] : any } = {
 	ariaBackBtn: 'Go back',
 	ariaDeleteBtn: 'Delete this memo',
 	ariaSummaryBtn: 'Show summary',
-	ariaTagAdd: 'Manage tags'
+	ariaTagAdd: 'Manage tags',
+	errorDialog: {
+		memoError: {
+			title: 'Error loading memo',
+			content: 'There was a problem loading this memo.'
+		},
+		audioError: {
+			title: 'Error loading audio',
+			content: 'There was a problem loading the audio file of this memo.'
+		}
+	}
 };
 
 const Transition = (props: any) => <Slide direction="up" {...props} />;
@@ -42,12 +64,15 @@ class MemoPage extends Component<any, any> {
 			memoAudioId: '',
 			memoAudioBlob: undefined,
 			tagDialogOpen: false,
-			deleteMemo: false
+			deleteMemo: false,
+			errorDialogOpen: false,
+			errorType: ''
 		};
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
 		this.handleTagOpen = this.handleTagOpen.bind(this);
 		this.handleTagClose = this.handleTagClose.bind(this);
+		this.handleErrorOk = this.handleErrorOk.bind(this);
 	}
 
 	componentDidMount(): void {
@@ -64,14 +89,20 @@ class MemoPage extends Component<any, any> {
 					memoAudioId: memo.audioId
 				});
 			})
-			.catch((event) => console.log(event));
+			.catch((event) => {
+				console.log(event);
+				this.setState({errorDialogOpen: true, errorType: 'memoError'});
+			});
 		this.idb.getMemoAudio(memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memoAudio: MemoAudio = event.target.result;
 				this.setState({ memoAudioBlob: memoAudio.blob });
 			})
-			.catch((event) => console.log(event));
+			.catch((event) => {
+				console.log(event);
+				this.setState({errorDialogOpen: true, errorType: 'audioError'});
+			});
 	}
 
 	componentWillUnmount(): void {
@@ -124,6 +155,10 @@ class MemoPage extends Component<any, any> {
 		this.setState({ memoBody: event.target.value });
 	}
 
+	private handleErrorOk(): void {
+		this.props.history.goBack();
+	}
+
 	render() {
 		return (
 			<Fragment>
@@ -166,6 +201,15 @@ class MemoPage extends Component<any, any> {
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
+				{this.state.errorType && <Dialog open={this.state.errorDialogOpen}>
+					<DialogTitle>{strings.errorDialog[this.state.errorType].title}</DialogTitle>
+					<DialogContent>
+						<DialogContentText>{strings.errorDialog[this.state.errorType].content}</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" autoFocus onClick={this.handleErrorOk}>{'OK'}</Button>
+					</DialogActions>
+				</Dialog>}
 			</Fragment>
 		);
 	}
