@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Fab } from "@material-ui/core";
 import { PlayArrow, Pause } from "@material-ui/icons";
 import WaveSurfer from 'wavesurfer.js';
+import { secToHuman } from '../utils/fmt';
 import styles from './PlaybackControl.module.sass';
 
 type theProp = {
@@ -29,7 +30,8 @@ class PlaybackControl extends Component<theProp, any> {
 	constructor(props: Readonly<theProp>) {
 		super(props);
 		this.state = {
-			isPlaying: false
+			isPlaying: false,
+			currentTime: '00:00'
 		}
 	}
 
@@ -45,10 +47,15 @@ class PlaybackControl extends Component<theProp, any> {
 		});
 		this.waveSurfer.loadBlob(this.props.audioBlob);
 		this.waveSurfer.on('finish', () => this.setState({ isPlaying: false }));
+		setInterval(() => {
+			const time = this.waveSurfer.getCurrentTime();
+			this.setState({ currentTime: secToHuman(time) });
+		}, 1000);
 	}
 
 	componentWillUnmount(): void {
 		this.waveSurfer.destroy();
+		clearInterval();
 	}
 
 	private handleFab(): void {
@@ -62,6 +69,7 @@ class PlaybackControl extends Component<theProp, any> {
 				<Fab aria-label="Play" style={inlineStyles.fab} onClick={() => this.handleFab()}>
 					{this.state.isPlaying ? <Pause /> : <PlayArrow />}
 				</Fab>
+				<div className={styles.currentTime}>{this.state.currentTime}</div>
 				<div id="waveform"></div>
 			</div>
 		)
