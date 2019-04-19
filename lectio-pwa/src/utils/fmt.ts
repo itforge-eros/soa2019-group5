@@ -20,6 +20,6 @@ export const secToHuman = (second: number) : string => {
 	let tempSec = second;
 	const m = Math.floor(second / 60);
 	tempSec -= 60 * m;
-	const s = tempSec;
+	const s = Math.floor(tempSec);
 	return `${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}`;
 };

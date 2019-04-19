@@ -7,6 +7,7 @@ import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
 import Memo from '../model/Memo';
 import TagSelectionPage from './TagSelectionPage';
+import MemoAudio from '../model/MemoAudio';
 
 const inlineStyles = {
 	toolbar: {
@@ -39,6 +40,7 @@ class MemoPage extends Component<any, any> {
 			memoBody: '',
 			memoTags: [],
 			memoAudioId: '',
+			memoAudioBlob: undefined,
 			tagDialogOpen: false,
 			deleteMemo: false
 		};
@@ -61,6 +63,13 @@ class MemoPage extends Component<any, any> {
 					memoTags: memo.tags,
 					memoAudioId: memo.audioId
 				});
+			})
+			.catch((event) => console.log(event));
+		this.idb.getMemoAudio(memoId)
+			.then((event) => {
+				// @ts-ignore
+				const memoAudio: MemoAudio = event.target.result;
+				this.setState({ memoAudioBlob: memoAudio.blob });
 			})
 			.catch((event) => console.log(event));
 	}
@@ -152,7 +161,7 @@ class MemoPage extends Component<any, any> {
 							</Button>
 						</div>
 					</div>
-					<PlaybackControl />
+					{this.state.memoAudioBlob && <PlaybackControl audioBlob={this.state.memoAudioBlob} />}
 				</div>
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
