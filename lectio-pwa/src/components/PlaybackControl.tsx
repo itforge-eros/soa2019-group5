@@ -38,10 +38,11 @@ class PlaybackControl extends Component<theProp, any> {
 	componentDidMount(): void {
 		this.waveSurfer = WaveSurfer.create({
 			container: '#waveform',
-			waveColor: 'grey',
-			progressColor: 'hsla(200, 100%, 30%, 0.5)',
-			cursorColor: '#fff',
-			barWidth: 3,
+			waveColor: '#eee',
+			progressColor: '#6e7070',
+			cursorColor: '#00F5C9',
+			cursorWidth: 3,
+			barWidth: 2,
 			height: 80,
 			responsive: true
 		});
