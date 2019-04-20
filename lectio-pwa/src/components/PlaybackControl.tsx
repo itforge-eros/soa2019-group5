@@ -55,8 +55,9 @@ class PlaybackControl extends Component<theProp, any> {
 	}
 
 	componentWillUnmount(): void {
-		this.waveSurfer.destroy();
 		clearInterval();
+		this.waveSurfer.unAll();
+		this.waveSurfer.destroy();
 	}
 
 	private handleFab(): void {

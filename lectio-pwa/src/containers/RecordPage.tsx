@@ -1,5 +1,5 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar} from '@material-ui/core';
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
@@ -15,14 +15,15 @@ import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
 import TagSelectionPage from './TagSelectionPage';
 
-type State = {
+type theState = {
 	memoId: string,
 	memoName: string,
 	memoBody: string,
 	memoTags: Array<MemoTag>,
 	backDialogOpen: boolean,
 	blockPageLeave: boolean,
-	tagDialogOpen: boolean
+	tagDialogOpen: boolean,
+	errorDialogOpen: boolean
 }
 
 const inlineStyles = {
@@ -36,9 +37,20 @@ const inlineStyles = {
 	}
 };
 
+const strings = {
+	leaveTitle: 'Discard this memo?',
+	leaveContent: 'Do you want to discard this memo?',
+	leaveYes: 'Yes',
+	leaveNo: 'No',
+	saveErrorTitle: 'Cannot save the memo',
+	saveErrorContent: 'A problem has occurred and we could not save this memo.',
+	ok: 'OK'
+};
+
 const Transition = (props: any) => <Slide direction="up" {...props} />;
 
-class RecordPage extends Component<any, State> {
+class RecordPage extends Component<any, theState> {
+	idb = Idb.getInstance();
 	recordControl: React.RefObject<RecordControl>;
 	defaultMemoName: string = `Memo ${new Date().toLocaleString()}`;
 
@@ -52,10 +64,11 @@ class RecordPage extends Component<any, State> {
 			memoTags: [],
 			backDialogOpen: false,
 			blockPageLeave: true,
-			tagDialogOpen: false
+			tagDialogOpen: false,
+			errorDialogOpen: false
 		};
-		this.handleDialogNo = this.handleDialogNo.bind(this);
-		this.handleDialogYes = this.handleDialogYes.bind(this);
+		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
+		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
 		this.handleSaveBtn = this.handleSaveBtn.bind(this);
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
@@ -69,10 +82,10 @@ class RecordPage extends Component<any, State> {
 		// Prevent null
 		if (rc) {
 			rc.getRecording((blobEvent: any) => {
-				const idb = Idb.getInstance();
 				const finalMemoName =
 					this.state.memoName.trim() === '' ?
 						this.defaultMemoName : this.state.memoName.trim();
+
 				const memoToSave: Memo = new Memo(
 					this.state.memoId,
 					finalMemoName,
@@ -80,50 +93,64 @@ class RecordPage extends Component<any, State> {
 					this.state.memoId,
 					this.state.memoTags
 				);
+
 				const memoAudioToSave: MemoAudio = new MemoAudio(
 					this.state.memoId,
 					blobEvent.data
 				);
-				idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
+
+				const memoTranscript: MemoTranscript = {
+					id: this.state.memoId,
+					// @ts-ignore
+					transcript: rc.getTranscript(),
+					summary: ''
+				};
+
+				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
-						idb.saveToDB(IdbStoreType.memo, memoToSave)
+						this.idb.saveToDB(IdbStoreType.memo, memoToSave)
 							.then(() => {
-								this.setState({ blockPageLeave: false });
-								this.props.history.replace('/');
+								this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
+									.then(() => {
+										this.setState({ blockPageLeave: false });
+										this.props.history.replace('/');
+									})
+									.catch((event: any) => {
+										console.log(event.target);
+										this.setState({ errorDialogOpen: true });
+									});
 							})
-							.catch((event: any) => console.log(event.target));
+							.catch((event: any) => {
+								console.log(event.target);
+								this.setState({ errorDialogOpen: true });
+							});
 					})
 					.catch((error: any) => {
-						console.log(error);
+						console.log(error.target);
+						this.setState({ errorDialogOpen: true });
 					});
 			});
 		}
 	}
 
-	private handleBackBtn() {
-		this.handleDialogOpen();
-	}
+	private handleBackBtn() { this.handleLeaveDialogOpen() }
 
-	private handleTagOpen() {
-		this.setState({ tagDialogOpen: true });
-	}
+	private handleTagOpen() { this.setState({ tagDialogOpen: true }) }
 
 	private handleTagClose(newTags: Array<MemoTag>): void {
 		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
-	private handleDialogOpen() {
-		this.setState({ backDialogOpen: true });
-	}
+	private handleLeaveDialogOpen() { this.setState({ backDialogOpen: true }) }
 
-	private handleDialogNo() {
-		this.setState({ backDialogOpen: false });
-	}
+	private handleLeaveDialogNo() { this.setState({ backDialogOpen: false }) }
 
-	private handleDialogYes() {
+	private handleLeaveDialogYes() {
 		this.setState({ backDialogOpen: false, blockPageLeave: false });
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
+
+	private handleErrorDialogOk(): void { this.setState({ errorDialogOpen: false }) }
 
 	private handleMemoNameChange(event: ChangeEvent): void {
 		// @ts-ignore
@@ -172,21 +199,28 @@ class RecordPage extends Component<any, State> {
 					<RecordControl ref={this.recordControl} />
 				</div>
 				<Dialog open={this.state.backDialogOpen}>
-					<DialogTitle>Discard memo?</DialogTitle>
+					<DialogTitle>{strings.leaveTitle}</DialogTitle>
 					<DialogContent>
-						<DialogContentText>
-							Do you want to <strong>discard</strong> this memo?
-						</DialogContentText>
+						<DialogContentText>{strings.leaveContent}</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" onClick={this.handleDialogYes}>Yes</Button>
-						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogYes}>{strings.leaveYes}</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogNo}>{strings.leaveNo}</Button>
+					</DialogActions>
+				</Dialog>
+				<Dialog open={this.state.errorDialogOpen}>
+					<DialogTitle>{strings.saveErrorTitle}</DialogTitle>
+					<DialogContent>
+						<DialogContentText>{strings.saveErrorContent}</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" onClick={() => this.handleErrorDialogOk}>{strings.ok}</Button>
 					</DialogActions>
 				</Dialog>
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
-				<Prompt when={this.state.blockPageLeave} message="Do you want to discard recording?" />
+				<Prompt when={this.state.blockPageLeave} message={strings.leaveContent} />
 			</Fragment>
 		)
 	}

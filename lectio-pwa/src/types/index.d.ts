@@ -5,3 +5,9 @@ type MemoTag = {
 	id: string,
 	name: string
 }
+
+declare type MemoTranscript = {
+	id: string,
+	transcript: string,
+	summary: string
+}

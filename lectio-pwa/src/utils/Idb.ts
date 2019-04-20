@@ -52,6 +52,13 @@ class Idb {
 					const tagStore = this.db.createObjectStore(IdbStoreType.tag, {keyPath: 'id'});
 					tagStore.createIndex('name', 'name', {unique: true});
 				}
+
+				// DB_VERSION 7
+				if (event.oldVersion < 7) {
+					const transcriptStore = this.db.createObjectStore(IdbStoreType.transcript, {keyPath: 'id'});
+					transcriptStore.createIndex('transcript', 'transcript');
+					transcriptStore.createIndex('summary', 'summary');
+				}
 			};
 			request.onsuccess = (event) => {
 				// @ts-ignore
@@ -66,9 +73,12 @@ class Idb {
 	/**
 	 * Save a new object to DB
 	 * @param {IdbStoreType} objType - Type of the object to save
-	 * @param {Memo | MemoAudio | MemoTag} data - Data to save
+	 * @param {Memo | MemoAudio | MemoTag | MemoTranscript} data - Data to save
 	 */
-	public saveToDB = (objType: IdbStoreType, data: Memo | MemoAudio | MemoTag) => new Promise((resolve, reject) => {
+	public saveToDB = (
+		objType: IdbStoreType,
+		data: Memo | MemoAudio | MemoTag | MemoTranscript
+	) => new Promise((resolve, reject) => {
 		const r: IDBRequest = this.db.transaction(objType, 'readwrite').objectStore(objType).add(data);
 		r.onsuccess = (event: Event) => resolve(event);
 		r.onerror = (event: Event) => reject(event);
@@ -150,6 +160,19 @@ class Idb {
 	public getMemoAudio = (id: string) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio).objectStore(IdbStoreType.memoAudio);
 		let r: IDBRequest = s.get(id);
+		r.onsuccess = (event: Event) => resolve(event);
+		r.onerror = (event: Event) => reject(event);
+	});
+
+	/**
+	 * Get one or all object of a specific type
+	 * @param {IDBObjectStore} objType - An object type to get
+	 * @param {string} id - An ID of the object to get
+	 */
+	public getFromDB = (objType: IdbStoreType, id?: string) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(objType).objectStore(objType);
+		let r: IDBRequest;
+		if (id) r = s.get(id); else r = s.getAll();
 		r.onsuccess = (event: Event) => resolve(event);
 		r.onerror = (event: Event) => reject(event);
 	});

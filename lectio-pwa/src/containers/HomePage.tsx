@@ -1,5 +1,15 @@
 import React, {Component, Fragment} from 'react';
-import {Toolbar, Typography, AppBar, Fab, IconButton, List} from '@material-ui/core';
+import {
+	Toolbar,
+	Typography,
+	AppBar,
+	Fab,
+	IconButton,
+	List,
+	Dialog,
+	DialogTitle,
+	DialogContent, DialogContentText, DialogActions, Button
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
@@ -36,14 +46,18 @@ const strings = {
 	pageTitle: 'Recordings',
 	ariaSettingBtn: 'Open settings',
 	ariaRecordBtn: 'Add a new memo',
-	ariaSearchBtn: 'Search for memos'
+	ariaSearchBtn: 'Search for memos',
+	errorDialogTitle: 'Error loading memos',
+	errorDialogContent: 'Cannot get memos. Please relaunch the app.',
+	errorDialogReload: 'Relaunch'
 };
 
 class HomePage extends Component<any, any> {
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			memoList: []
+			memoList: [],
+			errorDialogOpen: false
 		}
 	}
 
@@ -56,6 +70,7 @@ class HomePage extends Component<any, any> {
 			})
 			.catch((error) => {
 				console.log(error);
+				this.setState({errorDialogOpen: true});
 			});
 	}
 
@@ -92,6 +107,15 @@ class HomePage extends Component<any, any> {
 						</IconButton>
 					</Toolbar>
 				</AppBar>
+				<Dialog open={this.state.errorDialogOpen}>
+					<DialogTitle>{strings.errorDialogTitle}</DialogTitle>
+					<DialogContent>
+						<DialogContentText>{strings.errorDialogContent}</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" autoFocus onClick={() => location.reload()}>{strings.errorDialogReload}</Button>
+					</DialogActions>
+				</Dialog>
 			</Fragment>
 		)
 	}
