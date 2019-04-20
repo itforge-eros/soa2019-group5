@@ -22,7 +22,8 @@ type theState = {
 	memoTags: Array<MemoTag>,
 	backDialogOpen: boolean,
 	blockPageLeave: boolean,
-	tagDialogOpen: boolean
+	tagDialogOpen: boolean,
+	errorDialogOpen: boolean
 }
 
 const inlineStyles = {
@@ -53,7 +54,8 @@ class RecordPage extends Component<any, theState> {
 			memoTags: [],
 			backDialogOpen: false,
 			blockPageLeave: true,
-			tagDialogOpen: false
+			tagDialogOpen: false,
+			errorDialogOpen: false
 		};
 		this.handleDialogNo = this.handleDialogNo.bind(this);
 		this.handleDialogYes = this.handleDialogYes.bind(this);
@@ -93,7 +95,7 @@ class RecordPage extends Component<any, theState> {
 					transcript: rc.getTranscript(),
 					summary: ''
 				};
-				
+
 				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
 						this.idb.saveToDB(IdbStoreType.memo, memoToSave)
@@ -103,11 +105,20 @@ class RecordPage extends Component<any, theState> {
 										this.setState({ blockPageLeave: false });
 										this.props.history.replace('/');
 									})
-									.catch((event: any) => console.log(event.target));
+									.catch((event: any) => {
+										console.log(event.target);
+										this.setState({ errorDialogOpen: true });
+									});
 							})
-							.catch((event: any) => console.log(event.target));
+							.catch((event: any) => {
+								console.log(event.target);
+								this.setState({ errorDialogOpen: true });
+							});
 					})
-					.catch((error: any) => console.log(error.target));
+					.catch((error: any) => {
+						console.log(error.target);
+						this.setState({ errorDialogOpen: true });
+					});
 			});
 		}
 	}
@@ -193,6 +204,17 @@ class RecordPage extends Component<any, theState> {
 					<DialogActions>
 						<Button color="primary" onClick={this.handleDialogYes}>Yes</Button>
 						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
+					</DialogActions>
+				</Dialog>
+				<Dialog open={this.state.backDialogOpen}>
+					<DialogTitle>Cannot save the memo</DialogTitle>
+					<DialogContent>
+						<DialogContentText>
+							A problem has occurred and we could not save this memo.
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button color="primary" onClick={this.handleDialogYes}>OK</Button>
 					</DialogActions>
 				</Dialog>
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
