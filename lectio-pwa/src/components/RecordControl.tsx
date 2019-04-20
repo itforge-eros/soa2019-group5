@@ -56,7 +56,7 @@ class RecordControl extends Component<any, State> {
 				// Set up stopwatch
 				this.stopwatch = new ElapsedTime();
 
-				// Set up speech recognition
+				// Set up and start speech recognition if supported
 				if (this.SpeechRecognition !== undefined) this.initSpeechRecognizer();
 
 				// Start recording
@@ -89,9 +89,10 @@ class RecordControl extends Component<any, State> {
 	}
 
 	private handleFabClick(): void {
-		// TODO: Implement pause solution
-		if (this.recognition) this.recognition.stop();
-
+		if (this.recognition) {
+			if (this.state.recording) this.recognition.stop();
+			else this.recognition.start();
+		}
 		if (this.mediaRecorder) {
 			switch (this.mediaRecorder.state) {
 				case 'recording': {
@@ -118,7 +119,7 @@ class RecordControl extends Component<any, State> {
 		};
 		this.mediaRecorder.onstop = () => {
 			stream.getTracks().forEach(t => t.stop());
-		}
+		};
 		this.setState({ supportsRecording: true });
 	}
 
@@ -127,11 +128,12 @@ class RecordControl extends Component<any, State> {
 		this.recognition = new this.SpeechRecognition();
 		this.recognition.lang = 'en-US';
 		this.recognition.continuous = true;
-		this.recognition.start();
 		this.recognition.onresult = (event) => {
 			const msg = event.results[event.results.length - 1][0].transcript;
-			this.setState((prev: any) => ({ transcript: prev.transcript.concat(msg) }));
-		}
+			this.setState((prev: any) => ({ transcript: prev.transcript.concat(msg + ' ') }));
+		};
+
+		this.recognition.start();
 		this.setState({ supportsTranscription: true });
 	}
 
