@@ -37,6 +37,16 @@ const inlineStyles = {
 	}
 };
 
+const strings = {
+	leaveTitle: 'Discard this memo?',
+	leaveContent: 'Do you want to discard this memo?',
+	leaveYes: 'Yes',
+	leaveNo: 'No',
+	saveErrorTitle: 'Cannot save the memo',
+	saveErrorContent: 'A problem has occurred and we could not save this memo.',
+	ok: 'OK'
+};
+
 const Transition = (props: any) => <Slide direction="up" {...props} />;
 
 class RecordPage extends Component<any, theState> {
@@ -57,8 +67,8 @@ class RecordPage extends Component<any, theState> {
 			tagDialogOpen: false,
 			errorDialogOpen: false
 		};
-		this.handleDialogNo = this.handleDialogNo.bind(this);
-		this.handleDialogYes = this.handleDialogYes.bind(this);
+		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
+		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
 		this.handleSaveBtn = this.handleSaveBtn.bind(this);
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
@@ -123,30 +133,24 @@ class RecordPage extends Component<any, theState> {
 		}
 	}
 
-	private handleBackBtn() {
-		this.handleDialogOpen();
-	}
+	private handleBackBtn() { this.handleLeaveDialogOpen() }
 
-	private handleTagOpen() {
-		this.setState({ tagDialogOpen: true });
-	}
+	private handleTagOpen() { this.setState({ tagDialogOpen: true }) }
 
 	private handleTagClose(newTags: Array<MemoTag>): void {
 		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
-	private handleDialogOpen() {
-		this.setState({ backDialogOpen: true });
-	}
+	private handleLeaveDialogOpen() { this.setState({ backDialogOpen: true }) }
 
-	private handleDialogNo() {
-		this.setState({ backDialogOpen: false });
-	}
+	private handleLeaveDialogNo() { this.setState({ backDialogOpen: false }) }
 
-	private handleDialogYes() {
+	private handleLeaveDialogYes() {
 		this.setState({ backDialogOpen: false, blockPageLeave: false });
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
+
+	private handleErrorDialogOk(): void { this.setState({ errorDialogOpen: false }) }
 
 	private handleMemoNameChange(event: ChangeEvent): void {
 		// @ts-ignore
@@ -195,32 +199,28 @@ class RecordPage extends Component<any, theState> {
 					<RecordControl ref={this.recordControl} />
 				</div>
 				<Dialog open={this.state.backDialogOpen}>
-					<DialogTitle>Discard memo?</DialogTitle>
+					<DialogTitle>{strings.leaveTitle}</DialogTitle>
 					<DialogContent>
-						<DialogContentText>
-							Do you want to <strong>discard</strong> this memo?
-						</DialogContentText>
+						<DialogContentText>{strings.leaveContent}</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" onClick={this.handleDialogYes}>Yes</Button>
-						<Button color="primary" onClick={this.handleDialogNo}>No</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogYes}>{strings.leaveYes}</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogNo}>{strings.leaveNo}</Button>
 					</DialogActions>
 				</Dialog>
-				<Dialog open={this.state.backDialogOpen}>
-					<DialogTitle>Cannot save the memo</DialogTitle>
+				<Dialog open={this.state.errorDialogOpen}>
+					<DialogTitle>{strings.saveErrorTitle}</DialogTitle>
 					<DialogContent>
-						<DialogContentText>
-							A problem has occurred and we could not save this memo.
-						</DialogContentText>
+						<DialogContentText>{strings.saveErrorContent}</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" onClick={this.handleDialogYes}>OK</Button>
+						<Button color="primary" onClick={() => this.handleErrorDialogOk}>{strings.ok}</Button>
 					</DialogActions>
 				</Dialog>
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
-				<Prompt when={this.state.blockPageLeave} message="Do you want to discard recording?" />
+				<Prompt when={this.state.blockPageLeave} message={strings.leaveContent} />
 			</Fragment>
 		)
 	}
