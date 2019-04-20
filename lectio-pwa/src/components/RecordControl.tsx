@@ -161,7 +161,12 @@ class RecordControl extends Component<any, State> {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
 				{ this.state.hasError && <p>Cannot set up recording</p> }
-				{ this.state.supportsRecording && <p>{ secToHuman(this.state.elapsedTime) }</p> }
+				{ this.state.supportsRecording &&
+					<p>
+						{ secToHuman(this.state.elapsedTime) }
+						{ this.state.supportsTranscription && ' ∙ Transcribing' }
+					</p>
+				}
 				{ this.state.supportsRecording &&
 					<Fab aria-label="Add" style={inlineStyles.Fab} onClick={this.handleFabClick}>
 						{ this.state.recording ? <Pause /> : <FiberManualRecord /> }
