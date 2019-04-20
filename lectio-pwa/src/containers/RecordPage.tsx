@@ -1,5 +1,5 @@
 import React, {ChangeEvent, Component, Fragment} from 'react';
-import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar, Typography} from '@material-ui/core';
+import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar} from '@material-ui/core';
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
 import RecordControl from "../components/RecordControl";
@@ -39,6 +39,7 @@ const inlineStyles = {
 const Transition = (props: any) => <Slide direction="up" {...props} />;
 
 class RecordPage extends Component<any, theState> {
+	idb = Idb.getInstance();
 	recordControl: React.RefObject<RecordControl>;
 	defaultMemoName: string = `Memo ${new Date().toLocaleString()}`;
 
@@ -69,10 +70,10 @@ class RecordPage extends Component<any, theState> {
 		// Prevent null
 		if (rc) {
 			rc.getRecording((blobEvent: any) => {
-				const idb = Idb.getInstance();
 				const finalMemoName =
 					this.state.memoName.trim() === '' ?
 						this.defaultMemoName : this.state.memoName.trim();
+
 				const memoToSave: Memo = new Memo(
 					this.state.memoId,
 					finalMemoName,
@@ -80,22 +81,33 @@ class RecordPage extends Component<any, theState> {
 					this.state.memoId,
 					this.state.memoTags
 				);
+
 				const memoAudioToSave: MemoAudio = new MemoAudio(
 					this.state.memoId,
 					blobEvent.data
 				);
-				idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
+
+				const memoTranscript: MemoTranscript = {
+					id: this.state.memoId,
+					// @ts-ignore
+					transcript: rc.getTranscript(),
+					summary: ''
+				};
+				
+				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
-						idb.saveToDB(IdbStoreType.memo, memoToSave)
+						this.idb.saveToDB(IdbStoreType.memo, memoToSave)
 							.then(() => {
-								this.setState({ blockPageLeave: false });
-								this.props.history.replace('/');
+								this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
+									.then(() => {
+										this.setState({ blockPageLeave: false });
+										this.props.history.replace('/');
+									})
+									.catch((event: any) => console.log(event.target));
 							})
 							.catch((event: any) => console.log(event.target));
 					})
-					.catch((error: any) => {
-						console.log(error);
-					});
+					.catch((error: any) => console.log(error.target));
 			});
 		}
 	}
