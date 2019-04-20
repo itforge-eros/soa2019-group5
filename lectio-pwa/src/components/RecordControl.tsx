@@ -151,6 +151,12 @@ class RecordControl extends Component<any, State> {
 		}
 	}
 
+	/**
+	 * Get the transcript
+	 * @return {string} the transcript
+	 */
+	public getTranscript(): string { return this.state.transcript }
+
 	render() {
 		return(
 			<div className={`${styles.audioArea} ${this.state.recording ? styles.recording : ''}`}>
