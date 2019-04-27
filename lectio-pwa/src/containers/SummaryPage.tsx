@@ -27,6 +27,10 @@ const strings = {
   transcriptErrDialog: {
     title: 'Cannot summarize',
     body: 'Your memo does not have a transcript. This is probably because your device does not support it.'
+  },
+  transcriptNotLoadDialog: {
+    title: 'Cannot load transcript',
+    body: 'There was an error loading the transcript of this memo.'
   }
 };
 
@@ -38,6 +42,7 @@ class SummaryPage extends Component<any, any> {
     this.state = {
       isSummarizing: false,
       transcriptErrDialogOpen: false,
+      transcriptNotLoadDialogOpen: false,
       text: ''
     }
   }
@@ -66,7 +71,7 @@ class SummaryPage extends Component<any, any> {
         }
       })
       .catch((event) => {
-        // TODO: Display error dialog
+        this.setState({ transcriptNotLoadDialogOpen: true });
         console.log(event.error);
       });
   }
@@ -107,6 +112,16 @@ class SummaryPage extends Component<any, any> {
           <DialogTitle>{strings.transcriptErrDialog.title}</DialogTitle>
           <DialogContent>
             <DialogContentText>{strings.transcriptErrDialog.body}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={() => this.handleDialogOkBtn()}>{strings.ok}</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={this.state.transcriptNotLoadDialogOpen}>
+          <DialogTitle>{strings.transcriptNotLoadDialog.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{strings.transcriptNotLoadDialog.body}</DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button color="primary" onClick={() => this.handleDialogOkBtn()}>{strings.ok}</Button>
