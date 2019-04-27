@@ -96,18 +96,6 @@ class Idb {
 	});
 
 	/**
-	 * Save a new tag
-	 * @deprecated Please switch to {@link saveToDB}
-	 * @param {MemoTag} tag - A MemoTag object
-	 */
-	public saveTag = (tag: MemoTag) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag, 'readwrite').objectStore(IdbStoreType.tag);
-		const r: IDBRequest = s.add(tag);
-		r.onsuccess = ev => resolve(ev);
-		r.onerror = ev => reject(ev);
-	});
-
-	/**
 	 * Get one or all objects of a specific type
 	 * @param {IDBObjectStore} objType - An object type to get
 	 * @param {string} id - An ID of the object to get
@@ -122,7 +110,7 @@ class Idb {
 
 	/**
 	 * Delete a specified item
-	 * @param {IdbObjectStore} objType - An object type to delete
+	 * @param {IdbStoreType} objType - An object type to delete
 	 * @param {string} id - An ID of the object to delete
 	 */
 	public deleteFromDB = (objType: IdbStoreType, id: string) => new Promise((resolve, reject) => {

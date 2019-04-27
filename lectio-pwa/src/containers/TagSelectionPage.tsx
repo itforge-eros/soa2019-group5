@@ -70,7 +70,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 		const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
 		const tagName = this.state.searchValue.trim();
 		const tagToSave: MemoTag = { id: tagId, name: tagName };
-		this.idb.saveTag(tagToSave)
+		this.idb.saveToDB(IdbStoreType.tag, tagToSave)
 			.then(() => {
 				this.setState({ searchValue: '' });
 				this.updateTagList();
