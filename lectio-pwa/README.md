@@ -2,7 +2,47 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Features
+
+**v0.2.0**
+
+- Set a memo's name and content
+- Start/pause recording of a new memo
+- Auto-transcribe a new memo
+- Add/remove tags from a memo
+- Create a new tag
+- Delete a memo
+- Update a memo's name, content and tags
+- Play/pause a memo's recording
+
+**Planned**
+
+- View a memo's summary
+- Search for memos
+- Save data to cloud
+
+## Target Web Browsers
+
+Although we want to support as many web browsers as possible,
+Lectio web application utilises some new API's that are not available in some browsers.
+As a result, we can only guarantee some browsers that Lectio will run on.
+
+- Chrome 49 or later
+- Firefox 65 or later
+- Opera 36 or later (_by spec, not tested_)
+- Chrome for Android 49 or later
+- Firefox for Android 36 or later (_by spec, not tested_)
+- Opera for Android 36 or later (_by spec, not tested_)
+
+## Required Web Browser Features
+
+This list is used to specify the target web browsers above.
+
+- Web Speech API
+- MediaRecorder
+- IndexedDB
+
+## Available Scripts for Development
 
 In the project directory, you can run:
 
@@ -38,27 +78,6 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Target Web Browsers
-
-Although we want to support as many web browsers as possible,
-Lectio web application utilises some new API's that are not available in some browsers.
-As a result, we can only guarantee some browsers that Lectio will run on.
-
-- Chrome 49 or later
-- Firefox 65 or later
-- Opera 36 or later (_by spec, not tested_)
-- Chrome for Android 49 or later
-- Firefox for Android 36 or later (_by spec, not tested_)
-- Opera for Android 36 or later (_by spec, not tested_)
-
-## Required Web Browser Features
-
-This list is used to specify the target web browsers above.
-
-- Web Speech API
-- MediaRecorder
-- IndexedDB
 
 ## Credits
 
