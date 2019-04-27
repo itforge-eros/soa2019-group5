@@ -85,12 +85,16 @@ class Idb {
 	});
 
 	/**
-	 * Update an existing memo
-	 * @param {Memo} memo - An updated Memo object
+	 * Update an object to DB
+	 * @param {IdbStoreType} objType - Type of the object to update
+	 * @param {Memo | MemoAudio | MemoTag | MemoTranscript} data - Data to save
 	 */
-	public updateMemo = (memo: Memo) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
-		const r: IDBRequest = s.put(memo);
+	public updateToDB = (
+		objType: IdbStoreType,
+		data: Memo | MemoAudio | MemoTag | MemoTranscript
+	) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(objType, 'readwrite').objectStore(objType);
+		const r: IDBRequest = s.put(data);
 		r.onsuccess = ev => resolve(ev);
 		r.onerror = ev => reject(ev);
 	});

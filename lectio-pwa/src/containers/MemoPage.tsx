@@ -116,7 +116,7 @@ class MemoPage extends Component<any, any> {
 				this.state.memoAudioId,
 				this.state.memoTags
 			);
-			this.idb.updateMemo(memo);
+			this.idb.updateToDB(IdbStoreType.memo, memo);
 		}
 	}
 
