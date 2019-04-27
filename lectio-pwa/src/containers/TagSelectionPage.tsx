@@ -1,6 +1,7 @@
-import React, {ChangeEvent, Component, Fragment} from 'react';
+import React, {Component, Fragment} from 'react';
 import {
-	AppBar, Checkbox,
+	AppBar,
+	Checkbox,
 	IconButton,
 	InputBase,
 	List,
@@ -12,6 +13,7 @@ import {
 import {Close} from '@material-ui/icons';
 import Idb from '../utils/Idb';
 import ContainerStyle from './Containers.module.sass';
+import {IdbStoreType} from '../constants';
 
 type theState = {
 	searchValue: string,
@@ -68,7 +70,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 		const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
 		const tagName = this.state.searchValue.trim();
 		const tagToSave: MemoTag = { id: tagId, name: tagName };
-		this.idb.saveTag(tagToSave)
+		this.idb.saveToDB(IdbStoreType.tag, tagToSave)
 			.then(() => {
 				this.setState({ searchValue: '' });
 				this.updateTagList();
@@ -93,7 +95,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 	}
 
 	private updateTagList(): void {
-		this.idb.getTag()
+		this.idb.getFromDB(IdbStoreType.tag)
 			.then((event) => {
 				// @ts-ignore
 				this.setState({ availableTags: event.target.result });

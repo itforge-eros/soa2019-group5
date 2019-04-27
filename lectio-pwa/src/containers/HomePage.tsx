@@ -1,23 +1,26 @@
 import React, {Component, Fragment} from 'react';
 import {
-	Toolbar,
-	Typography,
 	AppBar,
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
+	DialogTitle,
 	Fab,
 	IconButton,
 	List,
-	Dialog,
-	DialogTitle,
-	DialogContent, DialogContentText, DialogActions, Button
+	Toolbar,
+	Typography
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SettingsIcon from '@material-ui/icons/Settings';
 import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
-import styles from './HomePage.module.sass';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import {IdbStoreType} from '../constants';
 
 const inlineStyles = {
 	appBar: {
@@ -63,7 +66,7 @@ class HomePage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const idb = Idb.getInstance();
-		idb.getMemo()
+		idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
 				this.setState({memoList: event.target.result});

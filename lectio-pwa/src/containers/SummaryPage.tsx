@@ -1,9 +1,13 @@
 import React, {Component, Fragment} from "react";
-import {AppBar, IconButton, CircularProgress, Toolbar, Typography} from "@material-ui/core";
+import {AppBar, IconButton, CircularProgress, Toolbar, Typography, Dialog, Button} from "@material-ui/core";
 import {ArrowBack} from "@material-ui/icons";
 import Idb from '../utils/Idb';
 import {IdbStoreType} from '../constants';
 import ContainerStyle from './Containers.module.sass';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogActions from '@material-ui/core/DialogActions';
 
 const inlineStyles = {
   toolbar: {
@@ -18,7 +22,16 @@ const inlineStyles = {
 
 const strings = {
   pageTitle: 'Summary',
-  transcribing: 'Generating a summary'
+  transcribing: 'Generating a summary',
+  ok: 'OK',
+  transcriptErrDialog: {
+    title: 'Cannot summarize',
+    body: 'Your memo does not have a transcript. This is probably because your device does not support it.'
+  },
+  transcriptNotLoadDialog: {
+    title: 'Cannot load transcript',
+    body: 'There was an error loading the transcript of this memo.'
+  }
 };
 
 class SummaryPage extends Component<any, any> {
@@ -27,36 +40,47 @@ class SummaryPage extends Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      isTranscribing: false
+      isSummarizing: false,
+      transcriptErrDialogOpen: false,
+      transcriptNotLoadDialogOpen: false,
+      text: ''
     }
   }
 
   componentDidMount(): void {
     /*
     if transcript is present:
-      show the saved transcript
+      send the transcript to Summarisation service
+      get the summary
+      display the summary
     else:
-      load the audio
-      transcribe the audio
-      save the transcript
-      show the generated transcript
+      display 'does not support summarisation'
      */
     const memoId = this.props.match.params.id;
     this.idb.getFromDB(IdbStoreType.transcript, memoId)
       .then((event) => {
+        // TODO: Send transcript to server
+        // this.setState({isSummarizing: true});
+
         // @ts-ignore
-        if (event.target.result === undefined) {
-          // TODO: Generate a transcript
-          this.setState({isTranscribing: true});
-        }
+        const transcript: MemoTranscript = event.target.result;
+        // If transcript exists, update the state
+        if (transcript !== undefined) this.setState({ text: transcript.transcript });
+        // else show an error
+        else this.setState({ transcriptErrDialogOpen: true });
       })
       .catch((event) => {
+        this.setState({ transcriptNotLoadDialogOpen: true });
         console.log(event.error);
       });
   }
 
   private handleBackBtn() {
     setTimeout(() => this.props.history.goBack(), 200);
+  }
+
+  private handleDialogOkBtn() {
+    this.props.history.goBack();
   }
 
   render() {
@@ -71,14 +95,37 @@ class SummaryPage extends Component<any, any> {
           </Toolbar>
         </AppBar>
         <div style={inlineStyles.contentArea}>
-          {this.state.isTranscribing &&
+          {this.state.isSummarizing &&
             <div className={ContainerStyle['loading-indicator']}>
               <CircularProgress />
               <p>{strings.transcribing}</p>
             </div>
           }
-          <p className={ContainerStyle.bodyText}></p>
+          {this.state.text !== '' && <p className={ContainerStyle.bodyText}>
+            DISPLAYING THE TRANSCRIPT FOR TESTING ONLY<br/><br/>
+            {this.state.text}
+          </p>}
         </div>
+
+        <Dialog open={this.state.transcriptErrDialogOpen}>
+          <DialogTitle>{strings.transcriptErrDialog.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{strings.transcriptErrDialog.body}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={() => this.handleDialogOkBtn()}>{strings.ok}</Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={this.state.transcriptNotLoadDialogOpen}>
+          <DialogTitle>{strings.transcriptNotLoadDialog.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>{strings.transcriptNotLoadDialog.body}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={() => this.handleDialogOkBtn()}>{strings.ok}</Button>
+          </DialogActions>
+        </Dialog>
       </Fragment>
     );
   }

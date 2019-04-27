@@ -3,17 +3,19 @@ import {
 	AppBar,
 	Button,
 	Chip,
-	Dialog, DialogActions, DialogContent, DialogContentText,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
 	DialogTitle,
-	Fab,
 	IconButton,
 	InputBase,
 	Slide,
-	Toolbar,
-	Typography
+	Toolbar
 } from '@material-ui/core';
-import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
-import { withRouter } from 'react-router-dom';
+import {Add as AddIcon, ArrowBack, Delete, ScatterPlot} from '@material-ui/icons';
+import {withRouter} from 'react-router-dom';
+import {IdbStoreType} from '../constants';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
@@ -77,7 +79,7 @@ class MemoPage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const memoId = this.props.match.params.id;
-		this.idb.getMemo(memoId)
+		this.idb.getFromDB(IdbStoreType.memo, memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memo: Memo = event.target.result;
@@ -93,7 +95,7 @@ class MemoPage extends Component<any, any> {
 				console.log(event);
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});
-		this.idb.getMemoAudio(memoId)
+		this.idb.getFromDB(IdbStoreType.memoAudio, memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memoAudio: MemoAudio = event.target.result;
@@ -114,7 +116,7 @@ class MemoPage extends Component<any, any> {
 				this.state.memoAudioId,
 				this.state.memoTags
 			);
-			this.idb.updateMemo(memo);
+			this.idb.updateToDB(IdbStoreType.memo, memo);
 		}
 	}
 
@@ -129,10 +131,10 @@ class MemoPage extends Component<any, any> {
 
 	private handleDeleteBtn() {
 		this.setState({ deleteMemo: true });
-		this.idb.deleteMemo(this.state.memoId)
+		this.idb.deleteFromDB(IdbStoreType.memo, this.state.memoId)
 			.then(() => {
-				this.idb.deleteMemoAudio(this.state.memoId);
-				// TODO: Delete memo transcript
+				this.idb.deleteFromDB(IdbStoreType.memoAudio, this.state.memoId);
+				this.idb.deleteFromDB(IdbStoreType.transcript, this.state.memoId);
 				this.props.history.replace('/');
 			})
 			.catch((event) => alert('Cannot delete memo'));
