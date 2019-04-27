@@ -176,6 +176,18 @@ class Idb {
 		r.onsuccess = (event: Event) => resolve(event);
 		r.onerror = (event: Event) => reject(event);
 	});
+
+	/**
+	 * Delete a specified item
+	 * @param {IdbObjectStore} objType - An object type to delete
+	 * @param {string} id - An ID of the object to delete
+	 */
+	public deleteFromDB = (objType: IdbStoreType, id: string) => new Promise((resolve, reject) => {
+		const s: IDBObjectStore = this.db.transaction(objType, 'readwrite').objectStore(objType);
+		let r: IDBRequest = s.delete(id);
+		r.onsuccess = ev => resolve(ev);
+		r.onerror = ev => reject(ev);
+	});
 }
 
 export default Idb;
