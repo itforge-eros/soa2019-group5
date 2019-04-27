@@ -1,3 +1,5 @@
+# Lectio Web Application
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -37,22 +39,27 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
+## Target Web Browsers
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Although we want to support as many web browsers as possible,
+Lectio web application utilises some new API's that are not available in some browsers.
+As a result, we can only guarantee some browsers that Lectio will run on.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Chrome 49 or later
+- Firefox 65 or later
+- Opera 36 or later (_by spec, not tested_)
+- Chrome for Android 49 or later
+- Firefox for Android 36 or later (_by spec, not tested_)
+- Opera for Android 36 or later (_by spec, not tested_)
+
+## Required Web Browser Features
+
+This list is used to specify the target web browsers above.
+
+- Web Speech API
+- MediaRecorder
+- IndexedDB
 
 ## Credits
 
 [Realtime-search with React](https://codepen.io/eladrin201/pen/MawMdB) by Allisan Betancourt
-
-## Remarks
-
-The web application is targeted for the following browsers:
-- Chrome 47 or later
-- Firefox 25 or later
-- Opera 36 or later
-- Chrome for Android 49 or later
-- Firefox for Android 25 or later
-- Opera for Android 36 or later
