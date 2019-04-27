@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
+import {IdbStoreType} from '../constants';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
@@ -129,10 +130,10 @@ class MemoPage extends Component<any, any> {
 
 	private handleDeleteBtn() {
 		this.setState({ deleteMemo: true });
-		this.idb.deleteMemo(this.state.memoId)
+		this.idb.deleteFromDB(IdbStoreType.memo, this.state.memoId)
 			.then(() => {
-				this.idb.deleteMemoAudio(this.state.memoId);
-				// TODO: Delete memo transcript
+				this.idb.deleteFromDB(IdbStoreType.memoAudio, this.state.memoId);
+				this.idb.deleteFromDB(IdbStoreType.transcript, this.state.memoId);
 				this.props.history.replace('/');
 			})
 			.catch((event) => alert('Cannot delete memo'));
