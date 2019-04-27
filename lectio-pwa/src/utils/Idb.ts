@@ -109,6 +109,7 @@ class Idb {
 
 	/**
 	 * Delete a memo
+	 * @deprecated Please switch to {@link deleteFromDB}
 	 * @param {string} id - A memo ID
 	 */
 	public deleteMemo = (id: string) => new Promise((resolve, reject) => {
@@ -145,6 +146,7 @@ class Idb {
 	/**
 	 * Delete a memo audio
 	 * @param {string} id - A memoAudio ID
+	 * @deprecated Please switch to {@link deleteFromDB}
 	 */
 	public deleteMemoAudio = (id: string) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio, 'readwrite').objectStore(IdbStoreType.memoAudio);
