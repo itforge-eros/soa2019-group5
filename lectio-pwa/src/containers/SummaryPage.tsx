@@ -59,16 +59,15 @@ class SummaryPage extends Component<any, any> {
     const memoId = this.props.match.params.id;
     this.idb.getFromDB(IdbStoreType.transcript, memoId)
       .then((event) => {
-        // @ts-ignore
-        if (event.target.result === undefined) {
-          // TODO: Send transcript to server
-          // this.setState({isSummarizing: true});
+        // TODO: Send transcript to server
+        // this.setState({isSummarizing: true});
 
-          // @ts-ignore
-          const transcript: MemoTranscript = event.target.result;
-          if (transcript !== undefined) this.setState({ text: transcript.transcript });
-          else this.setState({ transcriptErrDialogOpen: true });
-        }
+        // @ts-ignore
+        const transcript: MemoTranscript = event.target.result;
+        // If transcript exists, update the state
+        if (transcript !== undefined) this.setState({ text: transcript.transcript });
+        // else show an error
+        else this.setState({ transcriptErrDialogOpen: true });
       })
       .catch((event) => {
         this.setState({ transcriptNotLoadDialogOpen: true });
