@@ -3,17 +3,18 @@ import {
 	AppBar,
 	Button,
 	Chip,
-	Dialog, DialogActions, DialogContent, DialogContentText,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogContentText,
 	DialogTitle,
-	Fab,
 	IconButton,
 	InputBase,
 	Slide,
-	Toolbar,
-	Typography
+	Toolbar
 } from '@material-ui/core';
-import { Add as AddIcon, ArrowBack, Delete, ScatterPlot } from '@material-ui/icons';
-import { withRouter } from 'react-router-dom';
+import {Add as AddIcon, ArrowBack, Delete, ScatterPlot} from '@material-ui/icons';
+import {withRouter} from 'react-router-dom';
 import {IdbStoreType} from '../constants';
 import styles from './MemoPage.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
@@ -78,7 +79,7 @@ class MemoPage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const memoId = this.props.match.params.id;
-		this.idb.getMemo(memoId)
+		this.idb.getFromDB(IdbStoreType.memo, memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memo: Memo = event.target.result;
@@ -94,7 +95,7 @@ class MemoPage extends Component<any, any> {
 				console.log(event);
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});
-		this.idb.getMemoAudio(memoId)
+		this.idb.getFromDB(IdbStoreType.memoAudio, memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memoAudio: MemoAudio = event.target.result;

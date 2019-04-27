@@ -1,10 +1,11 @@
-import React, { Component, Fragment } from 'react';
-import { AppBar, Toolbar, IconButton, InputBase, List } from '@material-ui/core';
-import { ArrowBack, Tune } from '@material-ui/icons';
+import React, {Component, Fragment} from 'react';
+import {AppBar, IconButton, InputBase, List, Toolbar} from '@material-ui/core';
+import {ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
 import ContainerStyle from './Containers.module.sass';
+import {IdbStoreType} from '../constants';
 
 const inlineStyles = {
   toolbar: {
@@ -34,7 +35,7 @@ class SearchPage extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
-		this.idb.getMemo()
+		this.idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
 				this.setState({ memoList: event.target.result });

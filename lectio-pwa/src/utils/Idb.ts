@@ -85,36 +85,12 @@ class Idb {
 	});
 
 	/**
-	 * Get a specific memo or all memos
-	 * @param {string} id - A memo ID (leave blank to get all memos)
-	 */
-	public getMemo = (id?: number) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo).objectStore(IdbStoreType.memo);
-		let r: IDBRequest;
-		if (id) r = s.get(id); else r = s.getAll();
-		r.onsuccess = (event: Event) => resolve(event);
-		r.onerror = (event: Event) => reject(event);
-	});
-
-	/**
 	 * Update an existing memo
 	 * @param {Memo} memo - An updated Memo object
 	 */
 	public updateMemo = (memo: Memo) => new Promise((resolve, reject) => {
 		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
 		const r: IDBRequest = s.put(memo);
-		r.onsuccess = ev => resolve(ev);
-		r.onerror = ev => reject(ev);
-	});
-
-	/**
-	 * Delete a memo
-	 * @deprecated Please switch to {@link deleteFromDB}
-	 * @param {string} id - A memo ID
-	 */
-	public deleteMemo = (id: string) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memo, 'readwrite').objectStore(IdbStoreType.memo);
-		const r: IDBRequest = s.delete(id);
 		r.onsuccess = ev => resolve(ev);
 		r.onerror = ev => reject(ev);
 	});
@@ -132,42 +108,7 @@ class Idb {
 	});
 
 	/**
-	 * Get a specific tag or all tags
-	 * @param {string} id - A tag ID (leave blank to get all tags)
-	 */
-	public getTag = (id?: string) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.tag).objectStore(IdbStoreType.tag);
-		let r: IDBRequest;
-		if (id) r = s.get(id); else r = s.getAll();
-		r.onsuccess = (event: Event) => resolve(event);
-		r.onerror = (event: Event) => reject(event);
-	});
-
-	/**
-	 * Delete a memo audio
-	 * @param {string} id - A memoAudio ID
-	 * @deprecated Please switch to {@link deleteFromDB}
-	 */
-	public deleteMemoAudio = (id: string) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio, 'readwrite').objectStore(IdbStoreType.memoAudio);
-		const r: IDBRequest = s.delete(id);
-		r.onsuccess = ev => resolve(ev);
-		r.onerror = ev => reject(ev);
-	});
-
-	/**
-	 * Get a memo audio
-	 * @param id - A memoAudio ID
-	 */
-	public getMemoAudio = (id: string) => new Promise((resolve, reject) => {
-		const s: IDBObjectStore = this.db.transaction(IdbStoreType.memoAudio).objectStore(IdbStoreType.memoAudio);
-		let r: IDBRequest = s.get(id);
-		r.onsuccess = (event: Event) => resolve(event);
-		r.onerror = (event: Event) => reject(event);
-	});
-
-	/**
-	 * Get one or all object of a specific type
+	 * Get one or all objects of a specific type
 	 * @param {IDBObjectStore} objType - An object type to get
 	 * @param {string} id - An ID of the object to get
 	 */
