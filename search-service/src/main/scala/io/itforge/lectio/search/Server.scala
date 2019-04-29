@@ -9,7 +9,7 @@ import org.http4s.server.{Router, Server => Http4sServer}
 import org.http4s.syntax.kleisli._
 import io.circe.config.parser
 import io.circe.generic.auto._
-import io.itforge.lectio.search.auth.AuthService
+import io.itforge.lectio.search.auth.{AnonymousAuthService, AuthService}
 import io.itforge.lectio.search.config.SearchServiceConfig
 
 object Server extends IOApp {
@@ -20,8 +20,8 @@ object Server extends IOApp {
       client = ElasticClient(ElasticProperties(conf.elastic.uri))
       memoRepo = MemoRepositoryInterpreter[F](client, conf.elastic.memosIndex)
       memoService = MemoService[F](memoRepo)
-      authService = AuthService[F](conf.auth.publicKey)
-      services = MemoEndpoints.endpoints[F](memoService, authService)
+      authService = AnonymousAuthService[F]
+      services = MemoEndpoints.endpoints[F](memoService, authService.middleware)
       httpApp = Router("/" -> services).orNotFound
       server <- BlazeServerBuilder[F]
         .bindHttp(conf.server.port, conf.server.host)
