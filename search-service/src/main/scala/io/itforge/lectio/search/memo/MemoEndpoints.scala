@@ -31,17 +31,24 @@ class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
             :? Offset(offset)
             :? Limit(limit)
             :? Tags(tags)
-            :? Sort(sort) as user =>
-        for {
-          memos <- memoService.query(
-            query,
-            offset,
-            limit,
-            tags.getOrElse(Nil).toSet,
-            sort,
-            Some(user.userId.toString))
-          response <- Ok(memos.asJson)
-        } yield response
+            :? Sort(sort) as user => {
+        if (query == "*")
+          for {
+            memos <- memoService.findAll
+            response <- Ok(memos.asJson)
+          } yield response
+        else
+          for {
+            memos <- memoService.query(
+              query,
+              offset,
+              limit,
+              tags.getOrElse(Nil).toSet,
+              sort,
+              Some(user.userId.toString))
+            response <- Ok(memos.asJson)
+          } yield response
+      }
     }
 
   def endpoints(memo: MemoService[F], auth: AuthMiddleware[F, User]): HttpRoutes[F] =
