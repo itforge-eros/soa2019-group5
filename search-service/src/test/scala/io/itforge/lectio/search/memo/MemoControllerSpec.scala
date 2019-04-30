@@ -3,10 +3,11 @@ package io.itforge.lectio.search.memo
 import cats.effect.IO
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.itforge.lectio.search.auth.AuthService
+import io.itforge.lectio.search.auth.{AnonymousAuthService, AuthService}
 import org.http4s._
 import org.http4s.implicits._
 import org.mockito.MockitoSugar._
+import org.mockito.ArgumentMatchers._
 
 class MemoControllerSpec extends org.specs2.mutable.Specification with MemoData with AuthData {
 
@@ -40,14 +41,14 @@ class MemoControllerSpec extends org.specs2.mutable.Specification with MemoData 
 
   def send(request: Request[IO]): Response[IO] =
     new MemoEndpoints[IO]
-      .endpoints(memoService, AuthService[IO](publicKey))
+      .endpoints(memoService, AnonymousAuthService[IO].middleware)
       .orNotFound(request)
       .unsafeRunSync()
 
   private val memoService: MemoService[IO] = {
     val service = mock[MemoService[IO]]
     when(service.findAll).thenReturn(IO.pure(memos))
-    when(service.query("keyword", None, None, Set(), None, Some(userId)))
+    when(service.query("keyword", None, None, Set(), None, Some("Anonymous")))
       .thenReturn(IO.pure(memos))
 
     service
