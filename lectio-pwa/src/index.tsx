@@ -5,6 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Idb from "./utils/Idb";
 import ErrorPage from "./containers/ErrorPage";
+import {login} from './utils/rest';
+import {SESSION_STORE_TOKEN} from './constants';
 
 const idb = Idb.getInstance();
 
@@ -20,6 +22,14 @@ idb.openConnection
 				body="Cannot connect to application database" />,
 			document.getElementById('root'));
 	});
+
+login('admin', 'admin')
+	.then((res) => {
+		console.log(res);
+		// TODO: Store the token in sessionStorage
+		// sessionStorage.setItem(SESSION_STORE_TOKEN, 'token_here');
+	})
+	.catch((res) => console.log(res));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
