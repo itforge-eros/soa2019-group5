@@ -3,7 +3,7 @@
  */
 
 import Memo from '../model/Memo';
-import {API_ENP_MEMO, API_URL, AUTH_URL} from '../constants';
+import {API_ENP_MEMO, API_URL, AUTH_URL, SESSION_STORE_TOKEN} from '../constants';
 import * as Fmt from './fmt';
 
 const loginParams = {
@@ -24,9 +24,17 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
 		'Content-Type': 'application/x-www-form-urlencoded'
 	},
 	redirect: 'manual',
-	body: Fmt.objectToQueryParams({
-		...loginParams, username, password
-	})
+	body: Fmt.objectToQueryParams({ ...loginParams, username, password })
 });
 
-export const createMemo = (body: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {method: 'POST'});
+/**
+ * Create a new memo on the server
+ * @param memo
+ */
+export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+	method: 'POST',
+	headers: {
+		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+	},
+	body: JSON.stringify(memo)
+});
