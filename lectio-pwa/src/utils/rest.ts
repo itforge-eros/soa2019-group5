@@ -38,3 +38,11 @@ export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	},
 	body: JSON.stringify(memo)
 });
+
+export const updateMemo = (memoId: string, memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+	method: 'PUT',
+	headers: {
+		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+	},
+	body: JSON.stringify(memo)
+});
