@@ -155,3 +155,41 @@ exports.signin = async (req, res) => {
       break;
   }
 };
+
+exports.extra_signin = async (req, res) => {
+  if (req.body.username === undefined || req.body.password === undefined) {
+    return res.status(400).send(
+      JSON.stringify({
+        error: "invalid_request",
+        error_description:
+          "username and password fields are missing in the request."
+      })
+    );
+  }
+
+  const userQuery = datastore
+    .createQuery("users")
+    .filter("username", "=", req.body.username)
+    .filter("password", "=", req.body.password);
+
+  const [[user]] = await datastore.runQuery(userQuery);
+  if (!user) {
+    return Promise.reject(new Error("Invalid user credentials."));
+  }
+
+  const token = jwt.sign(
+    { username: user.username, user_id: user.user_id },
+    privateKey,
+    {
+      algorithm: "RS256",
+      expiresIn: JWT_LIFE_SPAN,
+      issuer: ISSUER
+    }
+  );
+
+  res.send({
+    access_token: token,
+    token_type: "JWT",
+    expires_in: JWT_LIFE_SPAN
+  });
+};
