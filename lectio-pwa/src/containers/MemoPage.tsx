@@ -17,6 +17,7 @@ import {Add as AddIcon, ArrowBack, Delete, ScatterPlot} from '@material-ui/icons
 import {withRouter} from 'react-router-dom';
 import {IdbStoreType} from '../constants';
 import styles from './MemoPage.module.sass';
+import containerStyles from './Containers.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
 import Memo from '../model/Memo';
@@ -170,7 +171,7 @@ class MemoPage extends Component<any, any> {
 						<IconButton onClick={() => this.handleBackBtn()} aria-label={strings.ariaBackBtn}>
 							<ArrowBack />
 						</IconButton>
-						<div className="grow"/>
+						<div className={containerStyles.grow} />
 						<IconButton onClick={() => this.handleDeleteBtn()} aria-label={strings.ariaDeleteBtn}>
 							<Delete />
 						</IconButton>
@@ -187,7 +188,7 @@ class MemoPage extends Component<any, any> {
 						           fullWidth />
 						<InputBase onChange={this.handleMemoBodyChange}
 						           value={this.state.memoBody}
-						           className="bodyText"
+						           className={containerStyles.bodyText}
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>

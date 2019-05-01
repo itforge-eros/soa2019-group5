@@ -23,3 +23,13 @@ export const secToHuman = (second: number) : string => {
 	const s = Math.floor(tempSec);
 	return `${m > 9 ? m : '0' + m}:${s > 9 ? s : '0' + s}`;
 };
+
+/**
+ * Create a query string from a given object
+ * @param body - An object whose values will be converted
+ */
+export const objectToQueryParams = (body: any) : string => {
+	let query = '';
+	for (let key in body) query += `${key}=${body[key]}&`;
+	return query.replace(/&$/g, '');
+};

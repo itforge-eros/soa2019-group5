@@ -19,3 +19,12 @@ it ('formats a second into mm:ss', () => {
 	const result = Fmt.secToHuman(61);
 	expect(result).toEqual('01:01');
 });
+
+it ('creates a query string', () => {
+	const result = Fmt.objectToQueryParams({
+		to: 'santa_claus',
+		from: 'nicki_minaj',
+		code: 'plug_in_hybrid'
+	});
+	expect(result).toEqual('to=santa_claus&from=nicki_minaj&code=plug_in_hybrid');
+});
