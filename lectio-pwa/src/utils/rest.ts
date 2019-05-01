@@ -44,10 +44,21 @@ export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
  * @param memoId - An ID of the memo to update
  * @param memo - New memo data
  */
-export const updateMemo = (memoId: string, memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+export const updateMemo = (memoId: string, memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
 	method: 'PUT',
 	headers: {
 		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 	},
 	body: JSON.stringify(memo)
+});
+
+/**
+ * Delete a specified memo from the server
+ * @param memoId
+ */
+export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
+	method: 'DELETE',
+	headers: {
+		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+	}
 });
