@@ -2,6 +2,7 @@ import React, {ChangeEvent, Component, Fragment} from 'react';
 import {AppBar, Button, Chip, IconButton, InputBase, Slide, Toolbar} from '@material-ui/core';
 import {Add as AddIcon, ArrowBack, Save} from '@material-ui/icons';
 import styles from './MemoPage.module.sass';
+import containerStyles from './Containers.module.sass';
 import RecordControl from "../components/RecordControl";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -170,7 +171,7 @@ class RecordPage extends Component<any, theState> {
 						<IconButton onClick={() => this.handleBackBtn()}>
 							<ArrowBack />
 						</IconButton>
-						<div className="grow"/>
+						<div className={containerStyles.grow} />
 						<IconButton onClick={this.handleSaveBtn}>
 							<Save />
 						</IconButton>
