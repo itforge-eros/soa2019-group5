@@ -39,6 +39,11 @@ export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	body: JSON.stringify(memo)
 });
 
+/**
+ * Update a specified memo on the server
+ * @param memoId - An ID of the memo to update
+ * @param memo - New memo data
+ */
 export const updateMemo = (memoId: string, memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	method: 'PUT',
 	headers: {
