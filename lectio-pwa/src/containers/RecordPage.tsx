@@ -185,7 +185,7 @@ class RecordPage extends Component<any, theState> {
 						           fullWidth />
 						<InputBase onChange={this.handleMemoBodyChange}
 						           placeholder="Note"
-						           className="bodyText"
+						           className={containerStyles.bodyText}
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>

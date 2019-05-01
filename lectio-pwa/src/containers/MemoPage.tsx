@@ -188,7 +188,7 @@ class MemoPage extends Component<any, any> {
 						           fullWidth />
 						<InputBase onChange={this.handleMemoBodyChange}
 						           value={this.state.memoBody}
-						           className="bodyText"
+						           className={containerStyles.bodyText}
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>
