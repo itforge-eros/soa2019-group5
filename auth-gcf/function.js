@@ -187,6 +187,9 @@ exports.extra_signin = async (req, res) => {
     }
   );
 
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Headers', 'Content-Type');
   res.send({
     access_token: token,
     token_type: "JWT",
