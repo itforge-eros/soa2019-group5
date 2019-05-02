@@ -6,7 +6,7 @@ export const SESSION_STORE_TOKEN: string = 'lectio-token';
 export const API_URL: string = 'http://api.lectio.itforge.io';
 export const API_ENP_MEMO: string = 'memos';
 
-export const AUTH_URL: string = 'https://asia-northeast1-kavinvin-211411.cloudfunctions.net/signin';
+export const AUTH_URL: string = 'https://asia-northeast1-kavinvin-211411.cloudfunctions.net/extra_signin';
 
 export enum IdbStoreType {
 	memo = 'memo',

@@ -21,10 +21,9 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
 	method: 'POST',
 	mode: 'cors',
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded'
+		'Content-Type': 'application/json'
 	},
-	redirect: 'manual',
-	body: Fmt.objectToQueryParams({ ...loginParams, username, password })
+	body: JSON.stringify({ username, password })
 });
 
 /**
