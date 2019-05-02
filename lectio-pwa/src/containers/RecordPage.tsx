@@ -69,7 +69,7 @@ class RecordPage extends Component<any, theState> {
 			blockPageLeave: true,
 			tagDialogOpen: false,
 			errorDialogOpen: false,
-			actionsLeftToProceed: 3 // save memo, audio, transcript
+			actionsLeftToProceed: 4 // save memo, audio, transcript, server
 		};
 		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
 		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
@@ -143,6 +143,15 @@ class RecordPage extends Component<any, theState> {
 						console.log(event.target);
 						this.setState({ errorDialogOpen: true });
 					});
+
+				// save memo to server
+				rest.updateMemo(this.state.memoId, memoToSave)
+					.then(() => {
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+					})
+					.catch(() => {
+						// TODO: Catch error
+					})
 			});
 		}
 	}

@@ -11,3 +11,13 @@ declare type MemoTranscript = {
 	transcript: string,
 	summary: string
 }
+
+declare type serverMemo = {
+	uuid: string,
+	title: string,
+	content: string,
+	summary: string,
+	tags: serverMemoTag
+};
+
+declare type serverMemoTag = Array<string>;
