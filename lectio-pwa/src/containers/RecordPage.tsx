@@ -11,6 +11,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import {Prompt} from "react-router-dom";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import {IdbStoreType} from '../constants';
 import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
@@ -108,6 +109,7 @@ class RecordPage extends Component<any, theState> {
 					transcript: rc.getTranscript(),
 					summary: ''
 				};
+
 				// save audio
 				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
@@ -159,6 +161,7 @@ class RecordPage extends Component<any, theState> {
 
 	private handleLeaveDialogYes() {
 		this.setState({ backDialogOpen: false, blockPageLeave: false });
+		rest.deleteMemo(this.state.memoId);
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
