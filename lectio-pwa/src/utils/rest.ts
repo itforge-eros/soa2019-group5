@@ -28,9 +28,9 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
 
 /**
  * Create a new memo on the server
- * @param memo
+ * @param {serverMemo} memo
  */
-export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+export const createMemo = (memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	method: 'POST',
 	headers: {
 		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
@@ -41,9 +41,9 @@ export const createMemo = (memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 /**
  * Update a specified memo on the server
  * @param memoId - An ID of the memo to update
- * @param memo - New memo data
+ * @param {serverMemo} memo - New memo data
  */
-export const updateMemo = (memoId: string, memo: Memo) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
+export const updateMemo = (memoId: string, memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
 	method: 'PUT',
 	headers: {
 		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`

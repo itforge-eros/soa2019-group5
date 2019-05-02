@@ -16,7 +16,7 @@ declare type serverMemo = {
 	uuid: string,
 	title: string,
 	content: string,
-	summary: string,
+	summary?: string | null,
 	tags: serverMemoTag
 };
 

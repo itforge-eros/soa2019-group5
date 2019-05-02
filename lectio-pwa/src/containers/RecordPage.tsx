@@ -110,6 +110,13 @@ class RecordPage extends Component<any, theState> {
 					summary: ''
 				};
 
+				const memoForServer: serverMemo = {
+					uuid: this.state.memoId,
+					title: finalMemoName,
+					content: this.state.memoBody,
+					tags: this.state.memoTags.map((tag) => tag.name),
+				};
+
 				// save audio
 				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
@@ -120,6 +127,7 @@ class RecordPage extends Component<any, theState> {
 						console.log(error.target);
 						this.setState({ errorDialogOpen: true });
 					});
+
 				// save memo
 				this.idb.saveToDB(IdbStoreType.memo, memoToSave)
 					.then(() => {
@@ -130,6 +138,7 @@ class RecordPage extends Component<any, theState> {
 						console.log(event.target);
 						this.setState({ errorDialogOpen: true });
 					});
+
 				// save transcript
 				this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
 					.then(() => {
@@ -145,7 +154,7 @@ class RecordPage extends Component<any, theState> {
 					});
 
 				// save memo to server
-				rest.updateMemo(this.state.memoId, memoToSave)
+				rest.updateMemo(this.state.memoId, memoForServer)
 					.then(() => {
 						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
 					})
