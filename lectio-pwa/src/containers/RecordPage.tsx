@@ -24,7 +24,8 @@ type theState = {
 	backDialogOpen: boolean,
 	blockPageLeave: boolean,
 	tagDialogOpen: boolean,
-	errorDialogOpen: boolean
+	errorDialogOpen: boolean,
+	actionsLeftToProceed: number
 }
 
 const inlineStyles = {
@@ -66,7 +67,8 @@ class RecordPage extends Component<any, theState> {
 			backDialogOpen: false,
 			blockPageLeave: true,
 			tagDialogOpen: false,
-			errorDialogOpen: false
+			errorDialogOpen: false,
+			actionsLeftToProceed: 3 // save memo, audio, transcript
 		};
 		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
 		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
@@ -106,28 +108,37 @@ class RecordPage extends Component<any, theState> {
 					transcript: rc.getTranscript(),
 					summary: ''
 				};
-
+				// save audio
 				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
-						this.idb.saveToDB(IdbStoreType.memo, memoToSave)
-							.then(() => {
-								this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
-									.then(() => {
-										this.setState({ blockPageLeave: false });
-										this.props.history.replace('/');
-									})
-									.catch((event: any) => {
-										console.log(event.target);
-										this.setState({ errorDialogOpen: true });
-									});
-							})
-							.catch((event: any) => {
-								console.log(event.target);
-								this.setState({ errorDialogOpen: true });
-							});
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+						this.goBackToHomePage();
 					})
 					.catch((error: any) => {
 						console.log(error.target);
+						this.setState({ errorDialogOpen: true });
+					});
+				// save memo
+				this.idb.saveToDB(IdbStoreType.memo, memoToSave)
+					.then(() => {
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+						this.goBackToHomePage();
+					})
+					.catch((event: any) => {
+						console.log(event.target);
+						this.setState({ errorDialogOpen: true });
+					});
+				// save transcript
+				this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
+					.then(() => {
+						this.setState((prev) => ({
+							actionsLeftToProceed: prev.actionsLeftToProceed - 1,
+							blockPageLeave: false
+						}));
+						this.goBackToHomePage();
+					})
+					.catch((event: any) => {
+						console.log(event.target);
 						this.setState({ errorDialogOpen: true });
 					});
 			});
@@ -161,6 +172,11 @@ class RecordPage extends Component<any, theState> {
 	private handleMemoBodyChange(event: ChangeEvent): void {
 		// @ts-ignore
 		this.setState({ memoBody: event.target.value });
+	}
+
+	private goBackToHomePage(): void {
+		if (this.state.actionsLeftToProceed === 0)
+			this.props.history.replace('/');
 	}
 
 	render() {
