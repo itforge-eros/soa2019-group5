@@ -32,8 +32,9 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
  */
 export const createMemo = (memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	method: 'POST',
+	mode: 'cors',
 	headers: {
-		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 	},
 	body: JSON.stringify(memo)
 });
@@ -45,8 +46,9 @@ export const createMemo = (memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO
  */
 export const updateMemo = (memoId: string, memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
 	method: 'PUT',
+	mode: 'cors',
 	headers: {
-		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 	},
 	body: JSON.stringify(memo)
 });
@@ -57,7 +59,8 @@ export const updateMemo = (memoId: string, memo: serverMemo) => fetch(`${API_URL
  */
 export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
 	method: 'DELETE',
+	mode: 'cors',
 	headers: {
-		'Authentication': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 	}
 });

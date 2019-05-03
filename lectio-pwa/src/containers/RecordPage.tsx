@@ -156,6 +156,7 @@ class RecordPage extends Component<any, theState> {
 				// save memo to server
 				rest.updateMemo(this.state.memoId, memoForServer)
 					.then(() => {
+						// maybe don't need to wait
 						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
 					})
 					.catch(() => {

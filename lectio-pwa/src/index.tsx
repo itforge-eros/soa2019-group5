@@ -25,9 +25,9 @@ idb.openConnection
 
 login('admin', 'admin')
 	.then((res) => {
+		console.log('Login complete');
 		console.log(res);
-		// TODO: Store the token in sessionStorage
-		// sessionStorage.setItem(SESSION_STORE_TOKEN, 'token_here');
+		sessionStorage.setItem(SESSION_STORE_TOKEN, 'token_here');
 	})
 	.catch((res) => console.log(res));
 
