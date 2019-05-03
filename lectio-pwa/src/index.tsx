@@ -29,7 +29,6 @@ login('admin', 'admin')
 		return res.json();
 	})
 	.then((jsonRes) => {
-		console.log(jsonRes);
 		sessionStorage.setItem(SESSION_STORE_TOKEN, jsonRes.access_token);
 	})
 	.catch((res) => console.log(res));

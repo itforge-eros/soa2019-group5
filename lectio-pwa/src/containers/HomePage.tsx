@@ -8,7 +8,7 @@ import {
 	DialogContentText,
 	DialogTitle,
 	Fab,
-	IconButton,
+	IconButton, LinearProgress,
 	List,
 	Toolbar,
 	Typography
@@ -61,7 +61,8 @@ class HomePage extends Component<any, any> {
 		super(props);
 		this.state = {
 			memoList: [],
-			errorDialogOpen: false
+			errorDialogOpen: false,
+			isLoadingMemos: true
 		}
 	}
 
@@ -70,20 +71,26 @@ class HomePage extends Component<any, any> {
 		idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
-				this.setState({memoList: event.target.result});
+				this.setState({memoList: event.target.result, isLoadingMemos: false});
 			})
 			.catch((error) => {
 				console.log(error);
-				this.setState({errorDialogOpen: true});
+				this.setState({errorDialogOpen: true, isLoadingMemos: false});
 			});
-		/* rest.getAllMemos()
+		// TODO: Fetch only on first visit of the session
+		rest.getAllMemos()
 			.then((response) => {
-				// save to state.memoList
+				// TODO: Save to state.memoList
+				console.log('Memos fetched');
+				console.log(response);
+				this.setState({isLoadingMemos: false});
 			})
 			.catch((error) => {
+				console.log('Memos not fetched');
 				console.log(error);
-				this.setState({errorDialogOpen: true});
-			}) */
+				this.setState({isLoadingMemos: false});
+				//this.setState({errorDialogOpen: true});
+			});
 	}
 
 	private handleFabClick(): void {
@@ -95,13 +102,15 @@ class HomePage extends Component<any, any> {
 	}
 
 	render() {
+		const memosToDisplay = this.state.memoList.concat().reverse(); // concat to prevent array mutation
 		return (
 			<Fragment>
 				<Header>
 					<Typography variant="h4" style={inlineStyles.title}>{strings.pageTitle}</Typography>
 				</Header>
+				{this.state.isLoadingMemos && <LinearProgress />}
 				<List>
-					{this.state.memoList.reverse().map((m: Memo) =>
+					{memosToDisplay.map((m: Memo) =>
 						<MemoListItem key={m.name} memo={m}/>
 					)}
 				</List>
