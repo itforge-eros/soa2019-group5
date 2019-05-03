@@ -111,7 +111,7 @@ class HomePage extends Component<any, any> {
 				{this.state.isLoadingMemos && <LinearProgress />}
 				<List>
 					{memosToDisplay.map((m: Memo) =>
-						<MemoListItem key={m.name} memo={m} schema='local' />
+						<MemoListItem key={m.id} memo={m} schema='local' />
 					)}
 				</List>
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>

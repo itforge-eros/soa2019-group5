@@ -35,7 +35,7 @@ class MemoListItem extends Component<theProp & RouteComponentProps<{}>, any> {
 			// @ts-ignore
 			this.props.memo.tags.map((t: MemoTag) => t.name) :
 			this.props.memo.tags;
-		
+
 		this.setState({ memoName, memoId, memoTags });
 	}
 
