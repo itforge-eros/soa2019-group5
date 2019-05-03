@@ -78,5 +78,33 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
 
 export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
 	const param_tags = tags === undefined ? '' : tags.toString();
-	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`)
+	//return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`)
+
+	// stub
+	return new Promise((resolve, reject) => {
+		resolve([
+			{
+				"title":"CNN with Python",
+				"content":"Computer Vision has become ubiquitous in our society, with applications in search, ...",
+				"summary":"This course is a deep dive into details of the deep learning architecture with a focus on learning.",
+				"tags":[
+					"science",
+					"programming"
+				],
+				"created_time":"2019-02-12T08:22:06.286Z",
+				"updated_time":"2019-02-12T08:22:06.286Z"
+			},
+			{
+				"title":"Markdown for dummy",
+				"content":"Markdown is a lightweight markup language with plain text formatting syntax.",
+				"summary":"Markdown is often used to format readme files, for writing messages in online discussion forums.",
+				"tags":[
+					"github",
+					"markdown"
+				],
+				"created_time":"2019-02-12T08:22:06.286Z",
+				"updated_time":"2019-02-12T08:22:06.286Z"
+			}
+		])
+	})
 };

@@ -37,14 +37,14 @@ class SearchPage extends Component<any, any> {
 	}
 
 	componentDidMount(): void {
-		this.idb.getFromDB(IdbStoreType.memo)
+		/*this.idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
 				this.setState({ memoList: event.target.result });
 			})
 			.catch((error) => {
 				console.log(error);
-			});
+			});*/
 	}
 
 	private handleBackBtn(): void {
@@ -53,6 +53,12 @@ class SearchPage extends Component<any, any> {
 
 	private handleSearchValueChange(event: any): void {
 		rest.searchMemos(event.target.value, [])
+			.then((result) => {
+				this.setState({memoList: result});
+			})
+			.catch((result) => {
+				// TODO: Handle error
+			});
 	}
 
 	render() {
