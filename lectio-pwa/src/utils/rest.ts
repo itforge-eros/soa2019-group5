@@ -27,6 +27,17 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
 });
 
 /**
+ * Get all memos from the server
+ */
+export const getAllMemos = () => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+	method: 'GET',
+	mode: 'cors',
+	headers: {
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+	}
+});
+
+/**
  * Create a new memo on the server
  * @param {serverMemo} memo?
  */

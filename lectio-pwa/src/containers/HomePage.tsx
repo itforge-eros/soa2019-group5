@@ -20,6 +20,7 @@ import Header from '../components/Header';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import {IdbStoreType} from '../constants';
 
 const inlineStyles = {
@@ -75,6 +76,14 @@ class HomePage extends Component<any, any> {
 				console.log(error);
 				this.setState({errorDialogOpen: true});
 			});
+		/* rest.getAllMemos()
+			.then((response) => {
+				// save to state.memoList
+			})
+			.catch((error) => {
+				console.log(error);
+				this.setState({errorDialogOpen: true});
+			}) */
 	}
 
 	private handleFabClick(): void {
