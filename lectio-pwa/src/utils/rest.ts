@@ -28,9 +28,9 @@ export const login = (username: string, password: string) => fetch(AUTH_URL, {
 
 /**
  * Create a new memo on the server
- * @param {serverMemo} memo
+ * @param {serverMemo} memo?
  */
-export const createMemo = (memo: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
+export const createMemo = (memo?: serverMemo) => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 	method: 'POST',
 	mode: 'cors',
 	headers: {

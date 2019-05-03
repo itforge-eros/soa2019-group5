@@ -80,6 +80,14 @@ class RecordPage extends Component<any, theState> {
 		this.handleTagClose = this.handleTagClose.bind(this);
 	}
 
+	/* componentDidMount(): void {
+		rest.createMemo()
+			.then((response) => {
+				this.setState({ memoId: response.headers['Location'] });
+			})
+			.catch();
+	} */
+
 	private handleSaveBtn(): void {
 		// Set a reference to RecordControl instance
 		let rc = this.recordControl.current;
