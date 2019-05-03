@@ -17,7 +17,7 @@ exports.create = async function(req, res) {
   });
   memo.save();
   res.status(201);
-  res.set({ Location: `/api/memos/${memo.uuid}` });
+  res.set({ Location: `/memos/${memo.uuid}` });
   res.end();
 };
 
