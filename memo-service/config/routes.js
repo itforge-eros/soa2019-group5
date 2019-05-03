@@ -6,18 +6,24 @@
 
 const fs = require('fs');
 const jwt = require('express-jwt');
+const cors = require('cors')
 
 const memo = require('../app/controllers/api/memo');
 /**
  * Read a publickey
  */
 const pubJWTKey = fs.readFileSync('public.pem');
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}
 
 /**
  * Expose
  */
 
 module.exports = function(app) {
+  app.use(cors())
   app.use(jwt({ secret: pubJWTKey }));
   app.get('/memos', memo.all);
   app.post('/memos', memo.create);
