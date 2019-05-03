@@ -27,14 +27,12 @@ spec:
               value: "http://elasticsearch-master"
             - name: AUTH_PUBLIC_KEY
               value: >-
-                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA
-                qt6NInZQ8Ty9wfprXhPxG16zV7Svd2DhJ3j6ZS/zfkTh
-                Seuo11fTcoxt8MaI5orORQDfRKLtwlYd9KnDR93YI6JF
-                yPDEzAoXkW9RRig2NiOHoOR368mu7NbA2R3F8jqIER42
-                R24/AKUTkU9LPjusKZBUcADImLg9698GM5125x2s4j2U
-                +T68jERRO4iEIPG9dVK98Y+vZ8XN29kb4AOKOtkO4ZFC
-                rN2R6GbpvACShgczMgxgb4q3BZnB/RVkRFv4sW0AdO5j
-                ie7WKpP8XHeT3eifdt77uhoLjUSvpqs6VLYAc9xEpxCm
-                zu63XNqVV7S8Qnzs05wyJk5LytdtEnnHXwIDAQAB
+                MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmzb9FAZrG3A2fW1q40RL
+                TaiJipCoxPiW3gWSwi0nyQbN5hnKJo4QfESOyL9eTWpu1lXCuRFaiiztOs4UJ6Hu
+                NmOmFVZEb9p9GmBgh/d1ORZTTS7EsgB911ai9uzThN9Je+Iz0BflqZitWq43DwmF
+                G34wTx9ltjBi/CCBWNSY+4I0M2wdqxIhukIDgFMITiTgXeNwDgZlYKDc/B0KxEV1
+                rS6q3XMcz7nrpyFj36E0/M7ciMglOZ0g4dhFGoW4IC+S1H5ullemq+jDxjMa3Dn3
+                btCm8zuNZdtLYhhso/D8CKmwvMKcyGRLcW6mpTG2wlnc9fQw9aMHSgwRvt/TxmSe
+                OQIDAQAB
           ports:
             - containerPort: 3000

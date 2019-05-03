@@ -157,6 +157,18 @@ exports.signin = async (req, res) => {
 };
 
 exports.extra_signin = async (req, res) => {
+  res.set('Access-Control-Allow-Origin', ['*']);
+  if (req.method === 'OPTIONS') {
+    // Send response to OPTIONS requests
+    res.set('Access-Control-Allow-Methods', 'GET');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+    res.set('Access-Control-Max-Age', '3600');
+    res.status(204).send('');
+    return
+  }
+  res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.set('Access-Control-Allow-Headers', ['Content-Type', 'Authorization']);
+
   if (req.body.username === undefined || req.body.password === undefined) {
     return res.status(400).send(
       JSON.stringify({
@@ -187,9 +199,6 @@ exports.extra_signin = async (req, res) => {
     }
   );
 
-  res.append('Access-Control-Allow-Origin', ['*']);
-  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  res.append('Access-Control-Allow-Headers', 'Content-Type');
   res.send({
     access_token: token,
     token_type: "JWT",
