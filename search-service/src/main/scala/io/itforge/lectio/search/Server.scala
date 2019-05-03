@@ -11,8 +11,16 @@ import io.itforge.lectio.search.memo.{MemoEndpoints, MemoRepositoryInterpreter, 
 import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.{Router, Server => Http4sServer}
 import org.http4s.syntax.kleisli._
+import org.http4s.server.middleware.{CORS, CORSConfig}
+import scala.concurrent.duration._
 
 object Server extends IOApp {
+
+  val corsConfig = CORSConfig(
+    anyOrigin = true,
+    anyMethod = true,
+    allowCredentials = true,
+    maxAge = 1.day.toSeconds)
 
   def createServer[F[_]: ContextShift: ConcurrentEffect: Timer]: Resource[F, Http4sServer[F]] =
     for {
@@ -22,7 +30,7 @@ object Server extends IOApp {
       memoService = MemoService[F](memoRepo)
       authService = AuthService[F](conf.auth.publicKey)
       services = MemoEndpoints.endpoints[F](memoService, authService.middleware)
-      httpApp = Router("/" -> services).orNotFound
+      httpApp = Router("/" -> CORS(services, corsConfig)).orNotFound
       server <- BlazeServerBuilder[F]
         .bindHttp(conf.server.port, conf.server.host)
         .withHttpApp(httpApp)
