@@ -82,8 +82,8 @@ class SearchPage extends Component<any, any> {
       	</AppBar>
 				<div className={ContainerStyle.contentArea}>
 	        <List>
-						{ this.state.memoList.map((m: Memo) =>
-							<MemoListItem memo={m} key={m.name} />
+						{ this.state.memoList.map((m: serverMemo) =>
+							<MemoListItem memo={m} key={m.uuid} schema='server' />
 						) }
 					</List>
 				</div>

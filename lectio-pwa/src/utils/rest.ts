@@ -84,6 +84,7 @@ export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
 	return new Promise((resolve, reject) => {
 		resolve([
 			{
+				"uuid": "abc",
 				"title":"CNN with Python",
 				"content":"Computer Vision has become ubiquitous in our society, with applications in search, ...",
 				"summary":"This course is a deep dive into details of the deep learning architecture with a focus on learning.",
@@ -95,6 +96,7 @@ export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
 				"updated_time":"2019-02-12T08:22:06.286Z"
 			},
 			{
+				"uuid": "def",
 				"title":"Markdown for dummy",
 				"content":"Markdown is a lightweight markup language with plain text formatting syntax.",
 				"summary":"Markdown is often used to format readme files, for writing messages in online discussion forums.",
