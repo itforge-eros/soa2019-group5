@@ -3,7 +3,7 @@
  */
 
 import Memo from '../model/Memo';
-import {API_ENP_MEMO, API_URL, AUTH_URL, SESSION_STORE_TOKEN} from '../constants';
+import {API_ENP_MEMO, API_ENP_SEARCH, API_URL, AUTH_URL, SESSION_STORE_TOKEN} from '../constants';
 import * as Fmt from './fmt';
 
 const loginParams = {
@@ -75,3 +75,8 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
 		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 	}
 });
+
+export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
+	const param_tags = tags === undefined ? '' : tags.toString();
+	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`)
+};

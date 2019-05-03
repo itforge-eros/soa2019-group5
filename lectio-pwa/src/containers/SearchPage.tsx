@@ -4,6 +4,7 @@ import {ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import ContainerStyle from './Containers.module.sass';
 import {IdbStoreType} from '../constants';
 
@@ -32,6 +33,7 @@ class SearchPage extends Component<any, any> {
 			memoList: []
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
+		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
 	}
 
 	componentDidMount(): void {
@@ -49,7 +51,9 @@ class SearchPage extends Component<any, any> {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
-	private handleSearchValueChange(): void {}
+	private handleSearchValueChange(event: any): void {
+		rest.searchMemos(event.target.value, [])
+	}
 
 	render() {
 		return (
