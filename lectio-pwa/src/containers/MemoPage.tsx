@@ -99,6 +99,8 @@ class MemoPage extends Component<any, any> {
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});*/
 
+		// TODO: Convert server memo tags to local memo tags
+
 		rest.getMemo(memoId)
 			.then((response) => response.json())
 			.then((jsonResponse: serverMemo) => {
@@ -106,7 +108,7 @@ class MemoPage extends Component<any, any> {
 					memoId: jsonResponse.uuid,
 					memoName: jsonResponse.title,
 					memoBody: jsonResponse.content,
-					memoTags: jsonResponse.tags,
+					memoTags: jsonResponse.tags.map((t: string): MemoTag => ({id: t, name: t})),
 					memoAudioId: jsonResponse.uuid,
 				});
 			})
@@ -213,8 +215,8 @@ class MemoPage extends Component<any, any> {
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>
-							{this.state.memoTags.map((tag: string) =>
-								<Chip key={tag} label={tag} className={styles.chip}/>
+							{this.state.memoTags.map((tag: MemoTag) =>
+								<Chip key={tag.id} label={tag.name} className={styles.chip}/>
 							)}
 							<Button onClick={this.handleTagOpen} aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
