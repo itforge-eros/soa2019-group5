@@ -143,9 +143,8 @@ class MemoPage extends Component<any, any> {
 				content: this.state.memoBody,
 				tags: this.state.memoTags.map((tag: MemoTag) => tag.name)
 			};
+
 			this.idb.updateToDB(IdbStoreType.memo, memoForLocal);
-			console.log(memoForServer);
-			console.log(JSON.stringify(memoForServer));
 			rest.updateMemo(this.state.memoId, memoForServer);
 		}
 	}
