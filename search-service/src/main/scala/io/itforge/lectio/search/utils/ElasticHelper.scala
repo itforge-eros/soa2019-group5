@@ -9,7 +9,7 @@ import com.sksamuel.elastic4s.http.ElasticClient
 import com.sksamuel.elastic4s.http.ElasticDsl._
 import com.sksamuel.elastic4s.searches.SearchRequest
 
-trait ElasticHelper {
+trait ElasticHelper extends CirceDateDecoder {
 
   implicit class ElasticClientHelper(client: ElasticClient) {
 

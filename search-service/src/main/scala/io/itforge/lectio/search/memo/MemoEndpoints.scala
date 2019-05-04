@@ -5,7 +5,7 @@ import cats.implicits._
 import io.circe.generic.auto._
 import io.circe.syntax._
 import io.itforge.lectio.search.auth.{AuthService, User}
-import io.itforge.lectio.search.utils.SearchParams
+import io.itforge.lectio.search.utils.{CirceDateDecoder, SearchParams}
 import org.http4s.{AuthedService, HttpRoutes}
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
@@ -14,7 +14,7 @@ import org.http4s.server.AuthMiddleware
 
 import scala.language.higherKinds
 
-class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] {
+class MemoEndpoints[F[_]: Effect] extends Http4sDsl[F] with CirceDateDecoder {
 
   def getAllMemosEndpoint(memoService: MemoService[F]): HttpRoutes[F] =
     HttpRoutes.of[F] {
