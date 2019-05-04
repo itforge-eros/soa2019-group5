@@ -1,10 +1,13 @@
 package io.itforge.lectio.search.memo
 
+import java.sql.Date
+
 import com.danielasfregola.randomdatagenerator.magnolia.RandomDataGenerator
+import io.itforge.lectio.search.utils.CirceDateDecoder
 import org.scalacheck.rng.Seed
 import org.scalacheck.{Arbitrary, Gen}
 
-trait MemoData extends RandomDataGenerator {
+trait MemoData extends RandomDataGenerator with CirceDateDecoder {
 
   override val seed: Seed = Seed(0)
 
@@ -20,7 +23,8 @@ trait MemoData extends RandomDataGenerator {
       content <- Gen.alphaStr.map(_.take(20))
       tags <- Gen.listOfN(5, Gen.alphaStr.map(_.take(5)))
       user_id <- Gen.uuid
-    } yield Memo(uuid, title, content, tags.toSet, user_id)
+      created_time <- Gen.const(format.parse("2019-05-02T12:56:10.845Z"))
+    } yield Memo(uuid, title, content, tags.toSet, user_id, created_time)
   }
 
 }

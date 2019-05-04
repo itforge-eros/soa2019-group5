@@ -4,12 +4,17 @@ import cats.effect.IO
 import io.circe.generic.auto._
 import io.circe.syntax._
 import io.itforge.lectio.search.auth.{AnonymousAuthService, AuthService}
+import io.itforge.lectio.search.utils.CirceDateDecoder
 import org.http4s._
 import org.http4s.implicits._
 import org.mockito.MockitoSugar._
 import org.mockito.ArgumentMatchers._
 
-class MemoControllerSpec extends org.specs2.mutable.Specification with MemoData with AuthData {
+class MemoControllerSpec
+    extends org.specs2.mutable.Specification
+    with MemoData
+    with AuthData
+    with CirceDateDecoder {
 
   "find all memos" >> {
     val request = Request[IO](Method.GET, Uri.uri("/all"))
