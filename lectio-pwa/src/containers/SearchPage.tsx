@@ -54,7 +54,7 @@ class SearchPage extends Component<any, any> {
 	private handleSearchValueChange(event: any): void {
 		rest.searchMemos(event.target.value, [])
 			.then((result) => {
-				this.setState({memoList: result});
+				this.setState({memoList: result.json()});
 			})
 			.catch((result) => {
 				// TODO: Handle error

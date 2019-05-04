@@ -104,8 +104,8 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
 
 export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
 	const param_tags = tags === undefined ? '' : tags.toString();
-	//return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`)
+	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`);
 
 	// stub
-	return new Promise(resolve => resolve(mockData));
+	// return new Promise(resolve => resolve(mockData));
 };
