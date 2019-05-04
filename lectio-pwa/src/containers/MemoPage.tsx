@@ -71,7 +71,8 @@ class MemoPage extends Component<any, any> {
 			deleteMemo: false,
 			errorDialogOpen: false,
 			errorType: '',
-			isLoadingMemo: true
+			isLoadingMemo: true,
+			isDeletingMemo: false
 		};
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
@@ -161,14 +162,21 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleDeleteBtn() {
-		this.setState({ deleteMemo: true });
-		this.idb.deleteFromDB(IdbStoreType.memo, this.state.memoId)
+		this.setState({ deleteMemo: true, isDeletingMemo: true });
+		rest.deleteMemo(this.state.memoId)
 			.then(() => {
-				this.idb.deleteFromDB(IdbStoreType.memoAudio, this.state.memoId);
-				this.idb.deleteFromDB(IdbStoreType.transcript, this.state.memoId);
-				this.props.history.replace('/');
+				this.idb.deleteFromDB(IdbStoreType.memo, this.state.memoId)
+					.then(() => {
+						this.idb.deleteFromDB(IdbStoreType.memoAudio, this.state.memoId);
+						this.idb.deleteFromDB(IdbStoreType.transcript, this.state.memoId);
+						this.props.history.replace('/');
+					})
+					.catch((event) => alert('Cannot delete memo'));
 			})
-			.catch((event) => alert('Cannot delete memo'));
+			.catch(() => {
+				this.setState({isDeletingMemo: false});
+				alert('Cannot delete memo');
+			});
 	}
 
 	private handleTagOpen() {
@@ -203,7 +211,8 @@ class MemoPage extends Component<any, any> {
 							<ArrowBack />
 						</IconButton>
 						<div className={containerStyles.grow} />
-						<IconButton onClick={() => this.handleDeleteBtn()} aria-label={strings.ariaDeleteBtn}>
+						<IconButton onClick={() => this.handleDeleteBtn()} aria-label={strings.ariaDeleteBtn}
+						            disabled={this.state.isDeletingMemo}>
 							<Delete />
 						</IconButton>
 						<IconButton onClick={() => this.handleSummaryBtn()} aria-label={strings.ariaSummaryBtn}>
@@ -213,7 +222,7 @@ class MemoPage extends Component<any, any> {
 				</AppBar>
 
 				<div className={styles.contentArea}>
-					{this.state.isLoadingMemo && <LinearProgress />}
+					{(this.state.isLoadingMemo || this.state.isDeletingMemo) && <LinearProgress />}
 					<div className={styles.textArea}>
 						<InputBase onChange={this.handleMemoNameChange}
 						           value={this.state.memoName}
