@@ -237,9 +237,10 @@ class MemoPage extends Component<any, any> {
 							{this.state.memoTags.map((tag: MemoTag) =>
 								<Chip key={tag.id} label={tag.name} className={styles.chip}/>
 							)}
-							<Button onClick={this.handleTagOpen} aria-label={strings.ariaTagAdd}>
+							{this.state.isLoadingMemo && <Button onClick={this.handleTagOpen}
+							        aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
-							</Button>
+							</Button>}
 						</div>
 					</div>
 					{this.state.memoAudioBlob && <PlaybackControl audioBlob={this.state.memoAudioBlob} />}
