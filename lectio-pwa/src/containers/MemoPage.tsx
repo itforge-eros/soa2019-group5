@@ -200,6 +200,7 @@ class MemoPage extends Component<any, any> {
 						</IconButton>
 					</Toolbar>
 				</AppBar>
+
 				<div className={styles.contentArea}>
 					<div className={styles.textArea}>
 						<InputBase onChange={this.handleMemoNameChange}
@@ -212,8 +213,8 @@ class MemoPage extends Component<any, any> {
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>
-							{this.state.memoTags.map((tag: any) =>
-								<Chip key={tag.name} label={tag.name} className={styles.chip}/>
+							{this.state.memoTags.map((tag: string) =>
+								<Chip key={tag} label={tag} className={styles.chip}/>
 							)}
 							<Button onClick={this.handleTagOpen} aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
@@ -222,9 +223,11 @@ class MemoPage extends Component<any, any> {
 					</div>
 					{this.state.memoAudioBlob && <PlaybackControl audioBlob={this.state.memoAudioBlob} />}
 				</div>
+
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
+
 				{this.state.errorType && <Dialog open={this.state.errorDialogOpen}>
 					<DialogTitle>{strings.errorDialog[this.state.errorType].title}</DialogTitle>
 					<DialogContent>
