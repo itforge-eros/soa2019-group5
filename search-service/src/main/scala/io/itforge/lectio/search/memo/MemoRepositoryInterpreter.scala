@@ -43,8 +43,7 @@ class MemoRepositoryInterpreter[F[_]: Monad: LiftIO](client: ElasticClient, inde
         }
         .start(offset)
         .limit(limit)
-      //      TODO: Fix 500 sorting error in ElasticSearch
-      //        .sortBy(sortBy)
+        .sortBy(sortBy)
     }
 
 }
