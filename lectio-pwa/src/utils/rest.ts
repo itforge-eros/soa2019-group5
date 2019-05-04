@@ -97,7 +97,8 @@ export const updateMemo = (memoId: string, memo: serverMemo) => fetch(`${API_URL
 	method: 'PUT',
 	mode: 'cors',
 	headers: {
-		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`,
+		'Content-Type': 'application/json'
 	},
 	body: JSON.stringify(memo)
 });

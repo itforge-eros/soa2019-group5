@@ -99,8 +99,6 @@ class MemoPage extends Component<any, any> {
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});*/
 
-		// TODO: Convert server memo tags to local memo tags
-
 		rest.getMemo(memoId)
 			.then((response) => response.json())
 			.then((jsonResponse: serverMemo) => {
@@ -108,6 +106,7 @@ class MemoPage extends Component<any, any> {
 					memoId: jsonResponse.uuid,
 					memoName: jsonResponse.title,
 					memoBody: jsonResponse.content,
+					// Convert server memo tags to local memo tags
 					memoTags: jsonResponse.tags.map((t: string): MemoTag => ({id: t, name: t})),
 					memoAudioId: jsonResponse.uuid,
 				});
@@ -131,14 +130,23 @@ class MemoPage extends Component<any, any> {
 
 	componentWillUnmount(): void {
 		if (!this.state.deleteMemo) {
-			const memo = new Memo(
+			const memoForLocal = new Memo(
 				this.state.memoId,
 				this.state.memoName,
 				this.state.memoBody,
 				this.state.memoAudioId,
 				this.state.memoTags
 			);
-			this.idb.updateToDB(IdbStoreType.memo, memo);
+			const memoForServer: serverMemo = {
+				uuid: this.state.memoId,
+				title: this.state.memoName,
+				content: this.state.memoBody,
+				tags: this.state.memoTags.map((tag: MemoTag) => tag.name)
+			};
+			this.idb.updateToDB(IdbStoreType.memo, memoForLocal);
+			console.log(memoForServer);
+			console.log(JSON.stringify(memoForServer));
+			rest.updateMemo(this.state.memoId, memoForServer);
 		}
 	}
 
