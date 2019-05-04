@@ -179,7 +179,8 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleErrorOk(): void {
-		this.props.history.goBack();
+		// this.props.history.goBack();
+		this.setState({errorDialogOpen: false});
 	}
 
 	render() {
