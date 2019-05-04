@@ -99,7 +99,21 @@ class MemoPage extends Component<any, any> {
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});*/
 
-
+		rest.getMemo(memoId)
+			.then((response) => response.json())
+			.then((jsonResponse: serverMemo) => {
+				this.setState({
+					memoId: jsonResponse.uuid,
+					memoName: jsonResponse.title,
+					memoBody: jsonResponse.content,
+					memoTags: jsonResponse.tags,
+					memoAudioId: jsonResponse.uuid,
+				});
+			})
+			.catch((response) => {
+				console.error(response);
+				this.setState({errorDialogOpen: true, errorType: 'memoError'});
+			});
 
 		this.idb.getFromDB(IdbStoreType.memoAudio, memoId)
 			.then((event) => {
