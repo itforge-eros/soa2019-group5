@@ -21,6 +21,7 @@ exports.create = async function(req, res) {
     uuid: uuid(),
     user_id: req.user.user_id,
     created_time: Date.now(),
+    updated_time: Date.now(),
     title: req.body.title,
     content: req.body.content,
     summary: req.body.summary,
