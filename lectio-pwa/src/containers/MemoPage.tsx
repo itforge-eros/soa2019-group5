@@ -9,7 +9,7 @@ import {
 	DialogContentText,
 	DialogTitle,
 	IconButton,
-	InputBase,
+	InputBase, LinearProgress,
 	Slide,
 	Toolbar
 } from '@material-ui/core';
@@ -70,7 +70,8 @@ class MemoPage extends Component<any, any> {
 			tagDialogOpen: false,
 			deleteMemo: false,
 			errorDialogOpen: false,
-			errorType: ''
+			errorType: '',
+			isLoadingMemo: true
 		};
 		this.handleMemoNameChange = this.handleMemoNameChange.bind(this);
 		this.handleMemoBodyChange = this.handleMemoBodyChange.bind(this);
@@ -103,6 +104,7 @@ class MemoPage extends Component<any, any> {
 			.then((response) => response.json())
 			.then((jsonResponse: serverMemo) => {
 				this.setState({
+					isLoadingMemo: false,
 					memoId: jsonResponse.uuid,
 					memoName: jsonResponse.title,
 					memoBody: jsonResponse.content,
@@ -211,6 +213,7 @@ class MemoPage extends Component<any, any> {
 				</AppBar>
 
 				<div className={styles.contentArea}>
+					{this.state.isLoadingMemo && <LinearProgress />}
 					<div className={styles.textArea}>
 						<InputBase onChange={this.handleMemoNameChange}
 						           value={this.state.memoName}
