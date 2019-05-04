@@ -28,6 +28,7 @@ exports.create = async function(req, res) {
     tags: req.body.tags
   });
 
+  memo.save()
   res.status(201);
   res.set({ Location: `/memos/${memo.uuid}` });
   res.send(memo)
