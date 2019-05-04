@@ -64,6 +64,18 @@ export const getAllMemos = () => fetch(`${API_URL}/${API_ENP_MEMO}`, {
 });
 
 /**
+ * Get a memo from the server
+ * @param memoId
+ */
+export const getMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/${memoId}`, {
+	method: 'GET',
+	mode: 'cors',
+	headers: {
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+	}
+});
+
+/**
  * Create a new memo on the server
  * @param {serverMemo} memo?
  */

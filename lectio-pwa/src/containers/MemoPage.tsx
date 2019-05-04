@@ -20,6 +20,7 @@ import styles from './MemoPage.module.sass';
 import containerStyles from './Containers.module.sass';
 import PlaybackControl from "../components/PlaybackControl";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import Memo from '../model/Memo';
 import TagSelectionPage from './TagSelectionPage';
 import MemoAudio from '../model/MemoAudio';
@@ -80,7 +81,8 @@ class MemoPage extends Component<any, any> {
 
 	componentDidMount(): void {
 		const memoId = this.props.match.params.id;
-		this.idb.getFromDB(IdbStoreType.memo, memoId)
+
+		/*this.idb.getFromDB(IdbStoreType.memo, memoId)
 			.then((event) => {
 				// @ts-ignore
 				const memo: Memo = event.target.result;
@@ -93,9 +95,12 @@ class MemoPage extends Component<any, any> {
 				});
 			})
 			.catch((event) => {
-				console.log(event);
+				console.error(event);
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
-			});
+			});*/
+
+
+
 		this.idb.getFromDB(IdbStoreType.memoAudio, memoId)
 			.then((event) => {
 				// @ts-ignore
@@ -103,7 +108,7 @@ class MemoPage extends Component<any, any> {
 				this.setState({ memoAudioBlob: memoAudio.blob });
 			})
 			.catch((event) => {
-				console.log(event);
+				console.error(event);
 				this.setState({errorDialogOpen: true, errorType: 'audioError'});
 			});
 	}
