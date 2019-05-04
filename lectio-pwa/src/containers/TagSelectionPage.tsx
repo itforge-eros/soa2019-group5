@@ -67,7 +67,11 @@ class TagSelectionPage extends Component<theProp, theState> {
 	}
 
 	private handleCreateTag(event: React.MouseEvent) {
-		const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
+		// for local schema
+		// const tagId = this.state.searchValue.trim().replace(/\s/g, '-').toLowerCase();
+
+		// for server schema
+		const tagId = this.state.searchValue.trim();
 		const tagName = this.state.searchValue.trim();
 		const tagToSave: MemoTag = { id: tagId, name: tagName };
 		this.idb.saveToDB(IdbStoreType.tag, tagToSave)
@@ -136,7 +140,7 @@ class TagSelectionPage extends Component<theProp, theState> {
 								<ListItemText primary={tag.name} />
 								<ListItemSecondaryAction>
 									<Checkbox
-										defaultChecked={currentTags.includes(tag.id)}
+										defaultChecked={currentTags.includes(tag.id) || currentTags.includes(tag.id.toLowerCase())}
 										value={tag.id}
 										onChange={this.handleTagToggle}
 									/>
