@@ -237,7 +237,7 @@ class MemoPage extends Component<any, any> {
 							{this.state.memoTags.map((tag: MemoTag) =>
 								<Chip key={tag.id} label={tag.name} className={styles.chip}/>
 							)}
-							{this.state.isLoadingMemo && <Button onClick={this.handleTagOpen}
+							{!this.state.isLoadingMemo && <Button onClick={this.handleTagOpen}
 							        aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
 							</Button>}
