@@ -141,6 +141,7 @@ jobs:
             gcloud --quiet container clusters get-credentials ${GCLOUD_CLUSTER_NAME} --zone asia-southeast1-a
             kubectl set image -n default deployment memo memo=asia.gcr.io/${GCLOUD_PROJECT_ID}/memo-service:${CIRCLE_SHA1}
             kubectl set image -n default deployment search search=asia.gcr.io/${GCLOUD_PROJECT_ID}/search-service:${CIRCLE_SHA1}
+            kubectl set image -n default deployment frontend frontend=asia.gcr.io/${GCLOUD_PROJECT_ID}/lectio-pwa:${CIRCLE_SHA1}
 workflows:
   version: 2
   deploy:
