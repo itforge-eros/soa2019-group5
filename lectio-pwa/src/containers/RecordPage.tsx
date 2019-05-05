@@ -11,6 +11,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import {Prompt} from "react-router-dom";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import {IdbStoreType} from '../constants';
 import Memo from '../model/Memo';
 import MemoAudio from '../model/MemoAudio';
@@ -24,7 +25,8 @@ type theState = {
 	backDialogOpen: boolean,
 	blockPageLeave: boolean,
 	tagDialogOpen: boolean,
-	errorDialogOpen: boolean
+	errorDialogOpen: boolean,
+	actionsLeftToProceed: number
 }
 
 const inlineStyles = {
@@ -66,7 +68,8 @@ class RecordPage extends Component<any, theState> {
 			backDialogOpen: false,
 			blockPageLeave: true,
 			tagDialogOpen: false,
-			errorDialogOpen: false
+			errorDialogOpen: false,
+			actionsLeftToProceed: 4 // save memo, audio, transcript, server
 		};
 		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
 		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
@@ -76,6 +79,14 @@ class RecordPage extends Component<any, theState> {
 		this.handleTagOpen = this.handleTagOpen.bind(this);
 		this.handleTagClose = this.handleTagClose.bind(this);
 	}
+
+	/* componentDidMount(): void {
+		rest.createMemo()
+			.then((response) => {
+				this.setState({ memoId: response.headers['Location'] });
+			})
+			.catch();
+	} */
 
 	private handleSaveBtn(): void {
 		// Set a reference to RecordControl instance
@@ -107,29 +118,58 @@ class RecordPage extends Component<any, theState> {
 					summary: ''
 				};
 
+				const memoForServer: serverMemo = {
+					uuid: this.state.memoId,
+					title: finalMemoName,
+					content: this.state.memoBody,
+					tags: this.state.memoTags.map((tag) => tag.name),
+				};
+
+				// save audio
 				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
 					.then(() => {
-						this.idb.saveToDB(IdbStoreType.memo, memoToSave)
-							.then(() => {
-								this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
-									.then(() => {
-										this.setState({ blockPageLeave: false });
-										this.props.history.replace('/');
-									})
-									.catch((event: any) => {
-										console.log(event.target);
-										this.setState({ errorDialogOpen: true });
-									});
-							})
-							.catch((event: any) => {
-								console.log(event.target);
-								this.setState({ errorDialogOpen: true });
-							});
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+						this.goBackToHomePage();
 					})
 					.catch((error: any) => {
 						console.log(error.target);
 						this.setState({ errorDialogOpen: true });
 					});
+
+				// save memo
+				this.idb.saveToDB(IdbStoreType.memo, memoToSave)
+					.then(() => {
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+						this.goBackToHomePage();
+					})
+					.catch((event: any) => {
+						console.log(event.target);
+						this.setState({ errorDialogOpen: true });
+					});
+
+				// save transcript
+				this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
+					.then(() => {
+						this.setState((prev) => ({
+							actionsLeftToProceed: prev.actionsLeftToProceed - 1,
+							blockPageLeave: false
+						}));
+						this.goBackToHomePage();
+					})
+					.catch((event: any) => {
+						console.log(event.target);
+						this.setState({ errorDialogOpen: true });
+					});
+
+				// save memo to server
+				rest.updateMemo(this.state.memoId, memoForServer)
+					.then(() => {
+						// maybe don't need to wait
+						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+					})
+					.catch(() => {
+						// TODO: Catch error
+					})
 			});
 		}
 	}
@@ -148,6 +188,7 @@ class RecordPage extends Component<any, theState> {
 
 	private handleLeaveDialogYes() {
 		this.setState({ backDialogOpen: false, blockPageLeave: false });
+		rest.deleteMemo(this.state.memoId);
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
@@ -161,6 +202,11 @@ class RecordPage extends Component<any, theState> {
 	private handleMemoBodyChange(event: ChangeEvent): void {
 		// @ts-ignore
 		this.setState({ memoBody: event.target.value });
+	}
+
+	private goBackToHomePage(): void {
+		if (this.state.actionsLeftToProceed === 0)
+			this.props.history.replace('/');
 	}
 
 	render() {

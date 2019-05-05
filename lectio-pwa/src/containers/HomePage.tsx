@@ -8,19 +8,16 @@ import {
 	DialogContentText,
 	DialogTitle,
 	Fab,
-	IconButton,
+	IconButton, LinearProgress,
 	List,
 	Toolbar,
 	Typography
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import SettingsIcon from '@material-ui/icons/Settings';
-import SearchIcon from '@material-ui/icons/Search';
 import Header from '../components/Header';
 import MemoListItem from '../components/MemoListItem';
-import Memo from "../model/Memo";
-import Idb from '../utils/Idb';
-import {IdbStoreType} from '../constants';
+import * as rest from '../utils/rest';
+import {IdbStoreType, SESSION_STORE_TOKEN} from '../constants';
+import {Refresh as RefreshIcon, Search as SearchIcon, Add as AddIcon} from '@material-ui/icons';
 
 const inlineStyles = {
 	appBar: {
@@ -60,21 +57,33 @@ class HomePage extends Component<any, any> {
 		super(props);
 		this.state = {
 			memoList: [],
-			errorDialogOpen: false
+			errorDialogOpen: false,
+			isLoadingMemos: true,
+			tokenExists: false
 		}
 	}
 
+	componentWillMount(): void {
+		// just set it, not currently using it though
+		if (sessionStorage.getItem(SESSION_STORE_TOKEN))
+			this.setState({tokenExists: true});
+	}
+
 	componentDidMount(): void {
-		const idb = Idb.getInstance();
+		// uncomment to pull from local DB
+		/* const idb = Idb.getInstance();
 		idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
-				this.setState({memoList: event.target.result});
+				this.setState({memoList: event.target.result, isLoadingMemos: false});
 			})
 			.catch((error) => {
-				console.log(error);
-				this.setState({errorDialogOpen: true});
-			});
+				console.error(error);
+				this.setState({errorDialogOpen: true, isLoadingMemos: false});
+			}); */
+
+		// TODO: Fetch only on first visit of the session (needs to save to DB first)
+		this.fetchMemosFromServer();
 	}
 
 	private handleFabClick(): void {
@@ -85,38 +94,69 @@ class HomePage extends Component<any, any> {
 		setTimeout(() => this.props.history.push('/search'), 180);
 	}
 
+	private handleRefreshClick(): void {
+		this.setState({isLoadingMemos: true});
+		this.fetchMemosFromServer();
+	}
+
+	private fetchMemosFromServer(): void {
+		rest.getAllMemos()
+			.then((response) => {
+				return response.json();
+			})
+			.then((jsonResponse) => {
+				this.setState({isLoadingMemos: false, memoList: jsonResponse});
+			})
+			.catch((error) => {
+				console.error('Memos not fetched');
+				console.error(error);
+				this.setState({isLoadingMemos: false});
+				this.setState({errorDialogOpen: true});
+			});
+	}
+
 	render() {
+		const memosToDisplay = this.state.memoList.concat().reverse(); // concat to prevent array mutation
+
 		return (
 			<Fragment>
 				<Header>
 					<Typography variant="h4" style={inlineStyles.title}>{strings.pageTitle}</Typography>
 				</Header>
+				{this.state.isLoadingMemos && <LinearProgress />}
+
 				<List>
-					{this.state.memoList.reverse().map((m: Memo) =>
-						<MemoListItem key={m.name} memo={m}/>
+					{memosToDisplay.map((m: serverMemo) =>
+						<MemoListItem key={m.uuid} memo={m} schema='server' />
 					)}
 				</List>
+
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
 					<Toolbar style={inlineStyles.toolbar}>
-						<IconButton color="inherit" aria-label={strings.ariaSettingBtn}>
-							<SettingsIcon/>
+						<IconButton color="inherit" aria-label={strings.ariaSettingBtn}
+						            onClick={() => this.handleRefreshClick()}>
+							<RefreshIcon/>
 						</IconButton>
 						<Fab color="primary" aria-label={strings.ariaRecordBtn} style={inlineStyles.fab}
 						     onClick={() => this.handleFabClick()}>
 							<AddIcon/>
 						</Fab>
-						<IconButton color="inherit" aria-label={strings.ariaSearchBtn} onClick={() => this.handleSearchClick()}>
+						<IconButton color="inherit" aria-label={strings.ariaSearchBtn}
+						            onClick={() => this.handleSearchClick()}>
 							<SearchIcon/>
 						</IconButton>
 					</Toolbar>
 				</AppBar>
+
 				<Dialog open={this.state.errorDialogOpen}>
 					<DialogTitle>{strings.errorDialogTitle}</DialogTitle>
 					<DialogContent>
 						<DialogContentText>{strings.errorDialogContent}</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" autoFocus onClick={() => location.reload()}>{strings.errorDialogReload}</Button>
+						<Button color="primary" autoFocus onClick={() => location.reload()}>
+							{strings.errorDialogReload}
+						</Button>
 					</DialogActions>
 				</Dialog>
 			</Fragment>

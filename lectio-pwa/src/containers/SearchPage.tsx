@@ -4,6 +4,7 @@ import {ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import Memo from "../model/Memo";
 import Idb from '../utils/Idb';
+import * as rest from '../utils/rest';
 import ContainerStyle from './Containers.module.sass';
 import {IdbStoreType} from '../constants';
 
@@ -32,24 +33,33 @@ class SearchPage extends Component<any, any> {
 			memoList: []
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
+		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
 	}
 
 	componentDidMount(): void {
-		this.idb.getFromDB(IdbStoreType.memo)
+		/*this.idb.getFromDB(IdbStoreType.memo)
 			.then((event) => {
 				// @ts-ignore
 				this.setState({ memoList: event.target.result });
 			})
 			.catch((error) => {
 				console.log(error);
-			});
+			});*/
 	}
 
 	private handleBackBtn(): void {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
-	private handleSearchValueChange(): void {}
+	private handleSearchValueChange(event: any): void {
+		rest.searchMemos(event.target.value, [])
+			.then((result) => {
+				this.setState({memoList: result.json()});
+			})
+			.catch((result) => {
+				// TODO: Handle error
+			});
+	}
 
 	render() {
 		return (
@@ -72,8 +82,8 @@ class SearchPage extends Component<any, any> {
       	</AppBar>
 				<div className={ContainerStyle.contentArea}>
 	        <List>
-						{ this.state.memoList.map((m: Memo) =>
-							<MemoListItem memo={m} key={m.name} />
+						{ this.state.memoList.map((m: serverMemo) =>
+							<MemoListItem memo={m} key={m.uuid} schema='server' />
 						) }
 					</List>
 				</div>
