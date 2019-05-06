@@ -18,21 +18,21 @@ const token = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwi
 describe('Memo Integration Test', () => {
   test('Unauthorize when no token found', done => {
     request(app)
-      .get(`/api/memos`)
+      .get(`/memos`)
       .expect(401)
       .end(done);
   });
-  test('When database is empty, GET /api/memos must return an empty list', done => {
+  test('When database is empty, GET /memos must return an empty list', done => {
     request(app)
-      .get('/api/memos')
+      .get('/memos')
       .set('Authorization', `Bearer ${token}`)
       .expect(200)
       .expect(response => expect(response.body).toEqual([]))
       .end(done);
   });
-  test('POST /api/memos should redirect to resource of newly created Memo', done => {
+  test('POST /memos should redirect to resource of newly created Memo', done => {
     request(app)
-      .post('/api/memos')
+      .post('/memos')
       .set('Authorization', `Bearer ${token}`)
       .send({})
       .expect(201)
