@@ -26,6 +26,7 @@ const strings = {
 
 class SearchPage extends Component<any, any> {
 	idb = Idb.getInstance();
+	searchTimeout = setTimeout(() => {}, 0);
 
 	constructor(props: any) {
 		super(props);
@@ -41,7 +42,16 @@ class SearchPage extends Component<any, any> {
 	}
 
 	private handleSearchValueChange(event: any): void {
-		rest.searchMemos(event.target.value, [])
+		// https://schier.co/blog/2014/12/08/wait-for-user-to-stop-typing-using-javascript.html
+		clearTimeout(this.searchTimeout);
+		const keyword = event.target.value;
+		this.searchTimeout = setTimeout(() => {
+			this.searchMemos(keyword, []);
+		}, 500);
+	}
+
+	private searchMemos(keyword: string, tags: serverMemoTag): void {
+		rest.searchMemos(keyword, [])
 			.then((result) => result.json())
 			.then((jsonResult: Array<serverMemo>) => {
 				this.setState({
