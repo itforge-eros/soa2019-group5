@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders ErrorPage successfully 1`] = `
+<div
+  className="MuiGrid-container-1 MuiGrid-direction-xs-column-4 MuiGrid-align-items-xs-center-9 MuiGrid-justify-xs-center-18"
+>
+  <h1>
+    Sample Error
+  </h1>
+  <p>
+    This is a sample error
+  </p>
+</div>
+`;

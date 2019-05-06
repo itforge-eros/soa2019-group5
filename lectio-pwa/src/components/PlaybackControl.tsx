@@ -36,6 +36,7 @@ class PlaybackControl extends Component<theProp, any> {
 	}
 
 	componentDidMount(): void {
+		// Initiate waveSurfer
 		this.waveSurfer = WaveSurfer.create({
 			container: '#waveform',
 			waveColor: '#eee',
@@ -48,6 +49,8 @@ class PlaybackControl extends Component<theProp, any> {
 		});
 		this.waveSurfer.loadBlob(this.props.audioBlob);
 		this.waveSurfer.on('finish', () => this.setState({ isPlaying: false }));
+
+		// Update recording length every second
 		setInterval(() => {
 			const time = this.waveSurfer.getCurrentTime();
 			this.setState({ currentTime: secToHuman(time) });

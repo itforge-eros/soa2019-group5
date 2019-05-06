@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { ListItem, ListItemText } from "@material-ui/core";
-import {RouteComponentProps, withRouter} from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { listWithCommas } from '../utils/fmt';
 import Memo from '../model/Memo';
 
 type theProp = {
 	memo: Memo | serverMemo,
-	history: any,
-	selected?: boolean,
+	history: any, // required by Router
+	selected?: boolean, // UI stuff, is this item selected?
 	schema: 'local' | 'server'
 };
 
@@ -29,8 +29,10 @@ class MemoListItem extends Component<theProp & RouteComponentProps<{}>, any> {
 
 		// @ts-ignore
 		const memoName = isLocal ? this.props.memo.name : this.props.memo.title;
+
 		// @ts-ignore
 		const memoId = isLocal ? this.props.memo.id : this.props.memo.uuid;
+
 		const memoTags: Array<string> = isLocal ?
 			// @ts-ignore
 			this.props.memo.tags.map((t: MemoTag) => t.name) :

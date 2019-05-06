@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Features
 
-**v0.2.0**
+**v1.0.0**
 
 - Set a memo's name and content
 - Start/pause recording of a new memo
@@ -14,12 +14,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - Delete a memo
 - Update a memo's name, content and tags
 - Play/pause a memo's recording
+- Search for memos by a keyword and tags
+- Launch offline (but no content is cached)
+- Memos are saved to cloud (except for audio)
 
 **Planned**
 
 - View a memo's summary
-- Search for memos
-- Save data to cloud
 
 ## Target Web Browsers
 
@@ -41,6 +42,7 @@ This list is used to specify the target web browsers above.
 - Web Speech API
 - MediaRecorder
 - IndexedDB
+- Fetch API
 
 ## Available Scripts for Development
 

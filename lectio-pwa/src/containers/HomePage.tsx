@@ -59,15 +59,8 @@ class HomePage extends Component<any, any> {
 		this.state = {
 			memoList: [],
 			errorDialogOpen: false,
-			isLoadingMemos: true,
-			tokenExists: false
+			isLoadingMemos: true
 		}
-	}
-
-	componentWillMount(): void {
-		// just set it, not currently using it though
-		if (sessionStorage.getItem(SESSION_STORE_TOKEN))
-			this.setState({tokenExists: true});
 	}
 
 	componentDidMount(): void {
@@ -102,9 +95,7 @@ class HomePage extends Component<any, any> {
 
 	private fetchMemosFromServer(): void {
 		rest.getAllMemos()
-			.then((response) => {
-				return response.json();
-			})
+			.then((response) => response.json())
 			.then((jsonResponse) => {
 				// Fetch again when receiving 401 code
 				if (jsonResponse.error_code === 401)
@@ -112,8 +103,7 @@ class HomePage extends Component<any, any> {
 				
 				this.setState({
 					isLoadingMemos: false,
-					memoList: jsonResponse.error_code ?
-						[] : jsonResponse
+					memoList: jsonResponse.error_code ? [] : jsonResponse
 				});
 			})
 			.catch((error) => {
@@ -125,32 +115,39 @@ class HomePage extends Component<any, any> {
 	}
 
 	render() {
-		const memosToDisplay = this.state.memoList.concat().reverse(); // concat to prevent array mutation
+		// Order from new to old, concat to prevent array mutation
+		const memosToDisplay = this.state.memoList.concat().reverse();
 
 		return (
 			<Fragment>
 				<Header>
-					<Typography variant="h4" style={inlineStyles.title}>{strings.pageTitle}</Typography>
+					<Typography variant="h4" style={inlineStyles.title}>
+						{strings.pageTitle}
+					</Typography>
 				</Header>
 				{this.state.isLoadingMemos && <LinearProgress />}
 
 				<List className={styles.list}>
-					{memosToDisplay.map((m: serverMemo) =>
+					{ memosToDisplay.map((m: serverMemo) =>
 						<MemoListItem key={m.uuid} memo={m} schema='server' />
-					)}
+					) }
 				</List>
 
 				<AppBar position="fixed" color="default" style={inlineStyles.appBar}>
 					<Toolbar style={inlineStyles.toolbar}>
-						<IconButton color="inherit" aria-label={strings.ariaSettingBtn}
+						<IconButton color="inherit"
+						            aria-label={strings.ariaSettingBtn}
 						            onClick={() => this.handleRefreshClick()}>
 							<RefreshIcon/>
 						</IconButton>
-						<Fab color="primary" aria-label={strings.ariaRecordBtn} style={inlineStyles.fab}
+						<Fab color="primary"
+						     aria-label={strings.ariaRecordBtn}
+						     style={inlineStyles.fab}
 						     onClick={() => this.handleFabClick()}>
 							<AddIcon/>
 						</Fab>
-						<IconButton color="inherit" aria-label={strings.ariaSearchBtn}
+						<IconButton color="inherit"
+						            aria-label={strings.ariaSearchBtn}
 						            onClick={() => this.handleSearchClick()}>
 							<SearchIcon/>
 						</IconButton>

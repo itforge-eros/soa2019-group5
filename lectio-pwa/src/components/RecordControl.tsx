@@ -6,7 +6,7 @@ import styles from './RecordControl.module.sass';
 import {secToHuman} from '../utils/fmt';
 
 type State = {
-	recording: boolean,
+	recording: boolean, // is it currently recording
 	supportsRecording: boolean, // this will be false at first
 	hasError: boolean, // so this is needed to work in conjunction with supportsRecording
 	elapsedTime: number,
@@ -57,9 +57,10 @@ class RecordControl extends Component<any, State> {
 				this.stopwatch = new ElapsedTime();
 
 				// Set up and start speech recognition if supported
-				if (this.SpeechRecognition !== undefined) this.initSpeechRecognizer();
+				if (this.SpeechRecognition !== undefined)
+					this.initSpeechRecognizer();
 
-				// Start recording
+				// Start recording and stopwatch
 				// @ts-ignore
 				this.mediaRecorder.start();
 				this.stopwatch.start();
@@ -72,8 +73,8 @@ class RecordControl extends Component<any, State> {
 				}, 1000);
 			})
 			.catch((error) => {
-				console.log('Error initiating recorder');
-				console.log(error.toString());
+				console.error('Error initiating recorder');
+				console.error(error.toString());
 				alert(error.toString());
 				this.setState({ supportsRecording: false, hasError: true });
 			});
@@ -81,7 +82,8 @@ class RecordControl extends Component<any, State> {
 
 	componentWillUnmount() {
 		if (this.mediaRecorder) {
-			if (this.mediaRecorder.state === 'recording') this.mediaRecorder.stop();
+			if (this.mediaRecorder.state === 'recording')
+				this.mediaRecorder.stop();
 		}
 		if (this.recognition) this.recognition.stop();
 		if (this.elapsedInterval) clearInterval(this.elapsedInterval);
@@ -138,11 +140,12 @@ class RecordControl extends Component<any, State> {
 	}
 
 	/**
-	 * Stops recording and returns an audio blob as a callback param
+	 * Stop recording and return an audio blob as a callback param
 	 * @param cb - callback
 	 */
 	public getRecording(...cb: Array<Function>): void {
-		this.stopwatch.pause();
+		if (this.state.recording)
+			this.stopwatch.pause();
 		if (this.mediaRecorder) {
 			this.mediaRecorder.stop();
 			this.mediaRecorder.ondataavailable = (blobEvent: any) => {

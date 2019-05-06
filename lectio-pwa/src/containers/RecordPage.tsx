@@ -151,7 +151,6 @@ class RecordPage extends Component<any, theState> {
 
 	private handleLeaveDialogYes() {
 		this.setState({ backDialogOpen: false, blockPageLeave: false });
-		rest.deleteMemo(this.state.memoId);
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
@@ -254,8 +253,12 @@ class RecordPage extends Component<any, theState> {
 						<DialogContentText>{strings.leaveContent}</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" onClick={this.handleLeaveDialogYes}>{strings.leaveYes}</Button>
-						<Button color="primary" onClick={this.handleLeaveDialogNo}>{strings.leaveNo}</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogYes}>
+							{strings.leaveYes}
+						</Button>
+						<Button color="primary" onClick={this.handleLeaveDialogNo}>
+							{strings.leaveNo}
+						</Button>
 					</DialogActions>
 				</Dialog>
 				<Dialog open={this.state.errorDialogOpen}>
