@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders Header successfully 1`] = `
+<div
+  className="header"
+/>
+`;
+
+exports[`renders Header with child successfully 1`] = `
+<div
+  className="header"
+>
+  Hello
+</div>
+`;
