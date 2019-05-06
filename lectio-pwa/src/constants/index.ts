@@ -3,7 +3,7 @@ export const DB_VERSION: number = 7;
 
 export const SESSION_STORE_TOKEN: string = 'lectio-token';
 
-export const API_URL: string = 'http://api.lectio.itforge.io';
+export const API_URL: string = 'https://api.lectio.itforge.io';
 export const API_ENP_MEMO: string = 'memos';
 export const API_ENP_SEARCH: string = 'search';
 
