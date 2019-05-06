@@ -13,7 +13,7 @@ declare type MemoTranscript = {
 }
 
 declare type serverMemo = {
-	uuid: string,
+	uuid?: string,
 	title: string,
 	content: string,
 	summary?: string | null,

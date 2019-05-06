@@ -83,7 +83,8 @@ export const createMemo = (memo?: serverMemo) => fetch(`${API_URL}/${API_ENP_MEM
 	method: 'POST',
 	mode: 'cors',
 	headers: {
-		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`,
+		'Content-Type': 'application/json'
 	},
 	body: JSON.stringify(memo)
 });

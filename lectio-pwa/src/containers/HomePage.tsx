@@ -18,6 +18,7 @@ import MemoListItem from '../components/MemoListItem';
 import * as rest from '../utils/rest';
 import {IdbStoreType, SESSION_STORE_TOKEN} from '../constants';
 import {Refresh as RefreshIcon, Search as SearchIcon, Add as AddIcon} from '@material-ui/icons';
+import styles from './HomePage.module.sass';
 
 const inlineStyles = {
 	appBar: {
@@ -105,7 +106,15 @@ class HomePage extends Component<any, any> {
 				return response.json();
 			})
 			.then((jsonResponse) => {
-				this.setState({isLoadingMemos: false, memoList: jsonResponse});
+				// Fetch again when receiving 401 code
+				if (jsonResponse.error_code === 401)
+					setTimeout(() => this.fetchMemosFromServer(), 300);
+				
+				this.setState({
+					isLoadingMemos: false,
+					memoList: jsonResponse.error_code ?
+						[] : jsonResponse
+				});
 			})
 			.catch((error) => {
 				console.error('Memos not fetched');
@@ -125,7 +134,7 @@ class HomePage extends Component<any, any> {
 				</Header>
 				{this.state.isLoadingMemos && <LinearProgress />}
 
-				<List>
+				<List className={styles.list}>
 					{memosToDisplay.map((m: serverMemo) =>
 						<MemoListItem key={m.uuid} memo={m} schema='server' />
 					)}

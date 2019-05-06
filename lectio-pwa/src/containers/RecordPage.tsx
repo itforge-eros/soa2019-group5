@@ -61,7 +61,7 @@ class RecordPage extends Component<any, theState> {
 		super(props);
 		this.recordControl = React.createRef();
 		this.state = {
-			memoId: new Date().getTime().toString(),
+			memoId: '', //new Date().getTime().toString(),
 			memoName: this.defaultMemoName,
 			memoBody: '',
 			memoTags: [],
@@ -69,7 +69,7 @@ class RecordPage extends Component<any, theState> {
 			blockPageLeave: true,
 			tagDialogOpen: false,
 			errorDialogOpen: false,
-			actionsLeftToProceed: 4 // save memo, audio, transcript, server
+			actionsLeftToProceed: 3 // save memo, audio, transcript
 		};
 		this.handleLeaveDialogNo = this.handleLeaveDialogNo.bind(this);
 		this.handleLeaveDialogYes = this.handleLeaveDialogYes.bind(this);
@@ -79,14 +79,6 @@ class RecordPage extends Component<any, theState> {
 		this.handleTagOpen = this.handleTagOpen.bind(this);
 		this.handleTagClose = this.handleTagClose.bind(this);
 	}
-
-	/* componentDidMount(): void {
-		rest.createMemo()
-			.then((response) => {
-				this.setState({ memoId: response.headers['Location'] });
-			})
-			.catch();
-	} */
 
 	private handleSaveBtn(): void {
 		// Set a reference to RecordControl instance
@@ -98,74 +90,45 @@ class RecordPage extends Component<any, theState> {
 					this.state.memoName.trim() === '' ?
 						this.defaultMemoName : this.state.memoName.trim();
 
-				const memoToSave: Memo = new Memo(
-					this.state.memoId,
-					finalMemoName,
-					this.state.memoBody,
-					this.state.memoId,
-					this.state.memoTags
-				);
-
-				const memoAudioToSave: MemoAudio = new MemoAudio(
-					this.state.memoId,
-					blobEvent.data
-				);
-
-				const memoTranscript: MemoTranscript = {
-					id: this.state.memoId,
-					// @ts-ignore
-					transcript: rc.getTranscript(),
-					summary: ''
-				};
-
 				const memoForServer: serverMemo = {
-					uuid: this.state.memoId,
 					title: finalMemoName,
 					content: this.state.memoBody,
 					tags: this.state.memoTags.map((tag) => tag.name),
 				};
 
-				// save audio
-				this.idb.saveToDB(IdbStoreType.memoAudio, memoAudioToSave)
-					.then(() => {
-						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
-						this.goBackToHomePage();
-					})
-					.catch((error: any) => {
-						console.log(error.target);
-						this.setState({ errorDialogOpen: true });
-					});
-
-				// save memo
-				this.idb.saveToDB(IdbStoreType.memo, memoToSave)
-					.then(() => {
-						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
-						this.goBackToHomePage();
-					})
-					.catch((event: any) => {
-						console.log(event.target);
-						this.setState({ errorDialogOpen: true });
-					});
-
-				// save transcript
-				this.idb.saveToDB(IdbStoreType.transcript, memoTranscript)
-					.then(() => {
-						this.setState((prev) => ({
-							actionsLeftToProceed: prev.actionsLeftToProceed - 1,
-							blockPageLeave: false
-						}));
-						this.goBackToHomePage();
-					})
-					.catch((event: any) => {
-						console.log(event.target);
-						this.setState({ errorDialogOpen: true });
-					});
-
 				// save memo to server
-				rest.updateMemo(this.state.memoId, memoForServer)
-					.then(() => {
-						// maybe don't need to wait
-						this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+				rest.createMemo(memoForServer)
+					.then((response) => response.json())
+					.then((jsonResponse: serverMemo) => {
+						// @ts-ignore
+						this.setState({memoId: jsonResponse.uuid});
+
+						// An ID is now received, so save the rest to local DB
+
+						const memoToSave: Memo = new Memo(
+							this.state.memoId,
+							finalMemoName,
+							this.state.memoBody,
+							this.state.memoId,
+							this.state.memoTags
+						);
+						const memoAudioToSave: MemoAudio = new MemoAudio(
+							this.state.memoId,
+							blobEvent.data
+						);
+						const memoTranscript: MemoTranscript = {
+							id: this.state.memoId,
+							// @ts-ignore
+							transcript: rc.getTranscript(),
+							summary: ''
+						};
+
+						// save memo
+						this.saveMemoToDB(memoToSave);
+						// save transcript
+						this.saveTranscriptToDB(memoTranscript);
+						// save audio
+						this.saveAudioToDB(memoAudioToSave);
 					})
 					.catch(() => {
 						// TODO: Catch error
@@ -205,8 +168,48 @@ class RecordPage extends Component<any, theState> {
 	}
 
 	private goBackToHomePage(): void {
+		// Go home when all required actions are done
 		if (this.state.actionsLeftToProceed === 0)
 			this.props.history.replace('/');
+	}
+
+	private saveMemoToDB(memo: Memo): void {
+		this.idb.saveToDB(IdbStoreType.memo, memo)
+			.then(() => {
+				this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+				this.goBackToHomePage();
+			})
+			.catch((event: any) => {
+				console.log(event.target);
+				this.setState({ errorDialogOpen: true });
+			});
+	}
+
+	private saveTranscriptToDB(transcript: MemoTranscript): void {
+		this.idb.saveToDB(IdbStoreType.transcript, transcript)
+			.then(() => {
+				this.setState((prev) => ({
+					actionsLeftToProceed: prev.actionsLeftToProceed - 1,
+					blockPageLeave: false
+				}));
+				this.goBackToHomePage();
+			})
+			.catch((event: any) => {
+				console.log(event.target);
+				this.setState({ errorDialogOpen: true });
+			});
+	}
+
+	private saveAudioToDB(audio: MemoAudio): void {
+		this.idb.saveToDB(IdbStoreType.memoAudio, audio)
+			.then(() => {
+				this.setState((prev) => ({ actionsLeftToProceed: prev.actionsLeftToProceed - 1 }));
+				this.goBackToHomePage();
+			})
+			.catch((error: any) => {
+				console.log(error.target);
+				this.setState({ errorDialogOpen: true });
+			});
 	}
 
 	render() {
