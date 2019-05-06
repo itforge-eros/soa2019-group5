@@ -7,7 +7,7 @@ class Memo {
 	public name: string;
 	public content: string;
 	public audioId: string;
-	public tags: Array<any>;
+	public tags: Array<MemoTag>;
 
 	constructor(id: string, name: string, content: string, audioId: string, tags: Array<any>) {
 		this.id = id;
