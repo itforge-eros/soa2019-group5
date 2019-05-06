@@ -134,6 +134,9 @@ class RecordControl extends Component<any, State> {
 			const msg = event.results[event.results.length - 1][0].transcript;
 			this.setState((prev: any) => ({ transcript: prev.transcript.concat(msg + ' ') }));
 		};
+		this.recognition.onerror = (error) => {
+			this.setState({ supportsTranscription: false });
+		};
 
 		this.recognition.start();
 		this.setState({ supportsTranscription: true });
