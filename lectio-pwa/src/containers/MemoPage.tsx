@@ -101,6 +101,7 @@ class MemoPage extends Component<any, any> {
 				this.setState({errorDialogOpen: true, errorType: 'memoError'});
 			});*/
 
+		// Get memo from server
 		rest.getMemo(memoId)
 			.then((response) => response.json())
 			.then((jsonResponse: serverMemo) => {
@@ -116,9 +117,13 @@ class MemoPage extends Component<any, any> {
 			})
 			.catch((response) => {
 				console.error(response);
-				this.setState({errorDialogOpen: true, errorType: 'memoError'});
+				this.setState({
+					errorDialogOpen: true,
+					errorType: 'memoError'
+				});
 			});
 
+		// Load audio
 		this.idb.getFromDB(IdbStoreType.memoAudio, memoId)
 			.then((event) => {
 				// @ts-ignore
@@ -127,11 +132,15 @@ class MemoPage extends Component<any, any> {
 			})
 			.catch((event) => {
 				console.error(event);
-				this.setState({errorDialogOpen: true, errorType: 'audioError'});
+				this.setState({
+					errorDialogOpen: true,
+					errorType: 'audioError'
+				});
 			});
 	}
 
 	componentWillUnmount(): void {
+		// Save when leaving this page
 		if (!this.state.deleteMemo) {
 			const memoForLocal = new Memo(
 				this.state.memoId,
@@ -163,18 +172,22 @@ class MemoPage extends Component<any, any> {
 
 	private handleDeleteBtn() {
 		this.setState({ deleteMemo: true, isDeletingMemo: true });
+
+		// Delete from server first
 		rest.deleteMemo(this.state.memoId)
 			.then(() => {
+				// Then delete local memo
 				this.idb.deleteFromDB(IdbStoreType.memo, this.state.memoId)
 					.then(() => {
+						// and audio, and transcript
 						this.idb.deleteFromDB(IdbStoreType.memoAudio, this.state.memoId);
 						this.idb.deleteFromDB(IdbStoreType.transcript, this.state.memoId);
 						this.props.history.replace('/');
 					})
-					.catch((event) => alert('Cannot delete memo'));
+					.catch(() => alert('Cannot delete memo'));
 			})
 			.catch(() => {
-				this.setState({isDeletingMemo: false});
+				this.setState({ isDeletingMemo: false });
 				alert('Cannot delete memo');
 			});
 	}
@@ -184,6 +197,7 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleTagClose(newTags: Array<MemoTag>) {
+		// Update current tags with selected tags
 		this.setState({ tagDialogOpen: false, memoTags: newTags });
 	}
 
@@ -198,8 +212,7 @@ class MemoPage extends Component<any, any> {
 	}
 
 	private handleErrorOk(): void {
-		// this.props.history.goBack();
-		this.setState({errorDialogOpen: false});
+		this.setState({ errorDialogOpen: false });
 	}
 
 	render() {
@@ -207,22 +220,25 @@ class MemoPage extends Component<any, any> {
 			<Fragment>
 				<AppBar position="fixed" color="default" elevation={0}>
 					<Toolbar style={inlineStyles.toolbar}>
-						<IconButton onClick={() => this.handleBackBtn()} aria-label={strings.ariaBackBtn}>
+						<IconButton onClick={() => this.handleBackBtn()}
+						            aria-label={strings.ariaBackBtn}>
 							<ArrowBack />
 						</IconButton>
 						<div className={containerStyles.grow} />
-						<IconButton onClick={() => this.handleDeleteBtn()} aria-label={strings.ariaDeleteBtn}
+						<IconButton onClick={() => this.handleDeleteBtn()}
+						            aria-label={strings.ariaDeleteBtn}
 						            disabled={this.state.isDeletingMemo}>
 							<Delete />
 						</IconButton>
-						<IconButton onClick={() => this.handleSummaryBtn()} aria-label={strings.ariaSummaryBtn}>
+						<IconButton onClick={() => this.handleSummaryBtn()}
+						            aria-label={strings.ariaSummaryBtn}>
 							<ScatterPlot />
 						</IconButton>
 					</Toolbar>
 				</AppBar>
 
 				<div className={styles.contentArea}>
-					{(this.state.isLoadingMemo || this.state.isDeletingMemo) && <LinearProgress />}
+					{ (this.state.isLoadingMemo || this.state.isDeletingMemo) && <LinearProgress /> }
 					<div className={styles.textArea}>
 						<InputBase onChange={this.handleMemoNameChange}
 						           value={this.state.memoName}
@@ -234,29 +250,36 @@ class MemoPage extends Component<any, any> {
 						           style={inlineStyles.memoBody}
 						           multiline fullWidth />
 						<div className={styles.chipWrap}>
-							{this.state.memoTags.map((tag: MemoTag) =>
+							{ this.state.memoTags.map((tag: MemoTag) =>
 								<Chip key={tag.id} label={tag.name} className={styles.chip}/>
-							)}
-							{!this.state.isLoadingMemo && <Button onClick={this.handleTagOpen}
+							) }
+							{ !this.state.isLoadingMemo &&
+							<Button onClick={this.handleTagOpen}
 							        aria-label={strings.ariaTagAdd}>
 								<AddIcon fontSize="small" />
-							</Button>}
+							</Button> }
 						</div>
 					</div>
-					{this.state.memoAudioBlob && <PlaybackControl audioBlob={this.state.memoAudioBlob} />}
+					{ this.state.memoAudioBlob && <PlaybackControl audioBlob={this.state.memoAudioBlob} />}
 				</div>
 
 				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
 					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.memoTags} />
 				</Dialog>
 
-				{this.state.errorType && <Dialog open={this.state.errorDialogOpen}>
-					<DialogTitle>{strings.errorDialog[this.state.errorType].title}</DialogTitle>
+				{ this.state.errorType && <Dialog open={this.state.errorDialogOpen }>
+					<DialogTitle>
+						{strings.errorDialog[this.state.errorType].title}
+					</DialogTitle>
 					<DialogContent>
-						<DialogContentText>{strings.errorDialog[this.state.errorType].content}</DialogContentText>
+						<DialogContentText>
+							{strings.errorDialog[this.state.errorType].content}
+						</DialogContentText>
 					</DialogContent>
 					<DialogActions>
-						<Button color="primary" autoFocus onClick={this.handleErrorOk}>{'OK'}</Button>
+						<Button color="primary"
+						        autoFocus
+						        onClick={this.handleErrorOk}>{'OK'}</Button>
 					</DialogActions>
 				</Dialog>}
 			</Fragment>
