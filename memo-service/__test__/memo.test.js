@@ -30,12 +30,22 @@ describe('Memo Integration Test', () => {
       .expect(response => expect(response.body).toEqual([]))
       .end(done);
   });
+  let id = undefined
   test('POST /memos should redirect to resource of newly created Memo', done => {
     request(app)
       .post('/memos')
       .set('Authorization', `Bearer ${token}`)
       .send({})
       .expect(201)
+      .expect(response => {id = response.body.uuid })
+      .end(done);
+  });
+  test('PUT /memos', done => {
+    request(app)
+      .put(`/memos/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({title: "test"})
+      .expect(response => expect(response.body.title).toEqual("test"))
       .end(done);
   });
 });
