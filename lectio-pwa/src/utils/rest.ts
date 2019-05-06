@@ -2,41 +2,7 @@
  * API connectors
  */
 
-import Memo from '../model/Memo';
 import {API_ENP_MEMO, API_ENP_SEARCH, API_URL, AUTH_URL, SESSION_STORE_TOKEN} from '../constants';
-import * as Fmt from './fmt';
-
-const mockData = [
-	{
-		"uuid": "abc",
-		"title":"CNN with Python",
-		"content":"Computer Vision has become ubiquitous in our society, with applications in search, ...",
-		"summary":"This course is a deep dive into details of the deep learning architecture with a focus on learning.",
-		"tags":[
-			"science",
-			"programming"
-		],
-		"created_time":"2019-02-12T08:22:06.286Z",
-		"updated_time":"2019-02-12T08:22:06.286Z"
-	}, {
-		"uuid": "def",
-		"title":"Markdown for dummy",
-		"content":"Markdown is a lightweight markup language with plain text formatting syntax.",
-		"summary":"Markdown is often used to format readme files, for writing messages in online discussion forums.",
-		"tags":[
-			"github",
-			"markdown"
-		],
-		"created_time":"2019-02-12T08:22:06.286Z",
-		"updated_time":"2019-02-12T08:22:06.286Z"
-	}
-];
-
-const loginParams = {
-	response_type: 'token',
-	redirect_url: 'https://google.com',
-	client_id: 'lectio-pwa'
-};
 
 /**
  * Send a login request and retrieve a token. Please store it in sessionStorage.
@@ -132,7 +98,4 @@ export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
 			'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
 		}
 	});
-
-	// stub
-	// return new Promise(resolve => resolve(mockData));
 };
