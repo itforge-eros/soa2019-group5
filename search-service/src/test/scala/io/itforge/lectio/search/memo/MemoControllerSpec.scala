@@ -18,11 +18,11 @@ class MemoControllerSpec
 
   "find all memos" >> {
     val request = Request[IO](Method.GET, Uri.uri("/all"))
-    "return 200" >> {
+    "should return 200" >> {
       val status = send(request).status
       status must beEqualTo(Status.Ok)
     }
-    "return correct json" >> {
+    "should return correct json" >> {
       val json = send(request).as[String].unsafeRunSync()
       json must beEqualTo(memos.asJson.noSpaces)
     }
@@ -34,26 +34,31 @@ class MemoControllerSpec
         Method.GET,
         Uri.uri("/search/keyword"),
         headers = Headers(Header("Authorization", bearerToken)))
-    "return 200" >> {
+    "should return 200" >> {
       val status = send(request).status
       status must beEqualTo(Status.Ok)
     }
-    "return correct json" >> {
+    "should return correct json" >> {
       val json = send(request).as[String].unsafeRunSync()
       json must beEqualTo(memos.asJson.noSpaces)
+    }
+    "should return 401 when no Authentication header presented" >> {
+      val noAuthRequest = Request[IO](Method.GET, Uri.uri("/search/keyword"))
+      val status = send(noAuthRequest).status
+      status must beEqualTo(Status.Unauthorized)
     }
   }
 
   def send(request: Request[IO]): Response[IO] =
     new MemoEndpoints[IO]
-      .endpoints(memoService, AnonymousAuthService[IO].middleware)
+      .endpoints(memoService, AuthService[IO](publicKey).middleware)
       .orNotFound(request)
       .unsafeRunSync()
 
   private val memoService: MemoService[IO] = {
     val service = mock[MemoService[IO]]
     when(service.findAll).thenReturn(IO.pure(memos))
-    when(service.query("keyword", None, None, Set(), None, Some("Anonymous")))
+    when(service.query("keyword", None, None, Set(), None, Some(userId)))
       .thenReturn(IO.pure(memos))
 
     service
