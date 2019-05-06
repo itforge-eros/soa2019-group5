@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Features
 
-**v1.0.0**
+**v1.0.2**
 
 - Set a memo's name and content
 - Start/pause recording of a new memo

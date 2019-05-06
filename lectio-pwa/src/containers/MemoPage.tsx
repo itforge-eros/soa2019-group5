@@ -230,10 +230,6 @@ class MemoPage extends Component<any, any> {
 						            disabled={this.state.isDeletingMemo}>
 							<Delete />
 						</IconButton>
-						<IconButton onClick={() => this.handleSummaryBtn()}
-						            aria-label={strings.ariaSummaryBtn}>
-							<ScatterPlot />
-						</IconButton>
 					</Toolbar>
 				</AppBar>
 
