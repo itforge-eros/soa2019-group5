@@ -81,4 +81,6 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 
 ## Credits
 
-[Realtime-search with React](https://codepen.io/eladrin201/pen/MawMdB) by Allisan Betancourt
+[Realtime-search with React](https://codepen.io/eladrin201/pen/MawMdB). Allisan Betancourt
+
+[Wait for User to Stop Typing, Using JavaScript](https://schier.co/blog/2014/12/08/wait-for-user-to-stop-typing-using-javascript.html). Gregory Schier

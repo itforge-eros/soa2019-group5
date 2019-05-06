@@ -116,9 +116,21 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
 	}
 });
 
+/**
+ * Search for memos by a keyword and tags
+ * @param {string} keyword
+ * @param {serverMemoTag} tags?
+ */
 export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
-	const param_tags = tags === undefined ? '' : tags.toString();
-	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}?${param_tags}`);
+	const param_tags = tags === undefined || tags.length === 0 ? '' : '?tags=' + tags.toString();
+
+	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}${param_tags}`, {
+		method: 'GET',
+		mode: 'cors',
+		headers: {
+			'Authorization': `Bearer ${sessionStorage.getItem(SESSION_STORE_TOKEN)}`
+		}
+	});
 
 	// stub
 	// return new Promise(resolve => resolve(mockData));

@@ -26,6 +26,7 @@ const strings = {
 
 class SearchPage extends Component<any, any> {
 	idb = Idb.getInstance();
+	searchTimeout = setTimeout(() => {}, 0);
 
 	constructor(props: any) {
 		super(props);
@@ -36,25 +37,27 @@ class SearchPage extends Component<any, any> {
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
 	}
 
-	componentDidMount(): void {
-		/*this.idb.getFromDB(IdbStoreType.memo)
-			.then((event) => {
-				// @ts-ignore
-				this.setState({ memoList: event.target.result });
-			})
-			.catch((error) => {
-				console.log(error);
-			});*/
-	}
-
 	private handleBackBtn(): void {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleSearchValueChange(event: any): void {
-		rest.searchMemos(event.target.value, [])
-			.then((result) => {
-				this.setState({memoList: result.json()});
+		// https://schier.co/blog/2014/12/08/wait-for-user-to-stop-typing-using-javascript.html
+		clearTimeout(this.searchTimeout);
+		const keyword = event.target.value;
+		this.searchTimeout = setTimeout(() => {
+			this.searchMemos(keyword, []);
+		}, 500);
+	}
+
+	private searchMemos(keyword: string, tags: serverMemoTag): void {
+		rest.searchMemos(keyword, [])
+			.then((result) => result.json())
+			.then((jsonResult: Array<serverMemo>) => {
+				this.setState({
+					// @ts-ignore
+					memoList: jsonResult.error_code ? [] : jsonResult
+				})
 			})
 			.catch((result) => {
 				// TODO: Handle error
