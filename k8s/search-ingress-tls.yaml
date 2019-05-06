@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: search-ingress-tls
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    certmanager.k8s.io/issuer: "letsencrypt-prod"
+    certmanager.k8s.io/acme-challenge-type: http01
+
+spec:
+  tls:
+    - hosts:
+        - api.lectio.itforge.io
+      secretName: api-lectio-itforge-io-tls
+  rules:
+    - host: api.lectio.itforge.io
+      http:
+        paths:
+          - path: /search
+            backend:
+              serviceName: search-service
+              servicePort: http
+          - path: /all
+            backend:
+              serviceName: search-service
+              servicePort: http
