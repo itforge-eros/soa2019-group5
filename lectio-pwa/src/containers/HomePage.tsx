@@ -116,7 +116,9 @@ class HomePage extends Component<any, any> {
 	}
 
 	render() {
-		const memosToDisplay = this.state.memoList.concat().reverse(); // concat to prevent array mutation
+		const memosToDisplay = this.state.memoList ?
+			this.state.memoList.concat().reverse() : // concat to prevent array mutation
+			[] ;
 
 		return (
 			<Fragment>
