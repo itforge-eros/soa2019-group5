@@ -4,6 +4,4 @@
 
 * :white_check_mark: [Memo service](https://github.com/itforge-eros/soa2019-group5/tree/master/memo-service)
 * :white_check_mark: [Search service](https://github.com/itforge-eros/soa2019-group5/tree/master/search-service)
-* Summary Service
-* :white_check_mark: Web App (v0.2.0)
-* Authentication service
+* :white_check_mark: Web App (v1.0.0)
