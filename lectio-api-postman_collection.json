@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "fee511ec-170a-439e-9701-f57ab0f823d1",
+		"name": "Lectio API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authenticate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "29a2e92d-b3ca-4969-9f64-5e840068c55f",
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.environment.set(\"jwt_token\", response.access_token);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"test\",\n\t\"password\": \"test\"\n}"
+				},
+				"url": {
+					"raw": "https://asia-northeast1-kavinvin-211411.cloudfunctions.net/extra_signin",
+					"protocol": "https",
+					"host": [
+						"asia-northeast1-kavinvin-211411",
+						"cloudfunctions",
+						"net"
+					],
+					"path": [
+						"extra_signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Memo must send redirect",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Must return generated uuid as string\", function () {",
+							"    pm.expect(jsonData.uuid).to.be.a(\"string\")",
+							"});",
+							"",
+							"pm.environment.set(\"memo_uuid\", jsonData.uuid);",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Some Title\",\n    \"content\": \"The fox chase a cat\",\n    \"tags\": [\n        \"test\"\n    ],\n    \"user_id\": \"ASDFASDFAS\"\n}"
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/memos",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"memos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Must be able to get created memo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Must return generated uuid as string\", function () {",
+							"    pm.expect(jsonData.uuid).to.be.a(\"string\")",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/memos/{{memo_uuid}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"memos",
+						"{{memo_uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Must be able to search for created memo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Body matches string\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"cat\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/search/cat",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"search",
+						"cat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Must not be able to search for non-existed memo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response search result must be empty\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.eql([]);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/search/avengers",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"search",
+						"avengers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Must be able to delete memo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/memos/{{memo_uuid}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"memos",
+						"{{memo_uuid}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Must not be able to get deleted memo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aa1674c7-629f-461c-8627-aeb9620b4aba",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJ1c2VyX2lkIjoiYmY3ODk2MDQtYWIwMS00YjQwLThlNmMtYTU0OTQ3ZmMyMDQ0IiwiaWF0IjoxNTU3MTUyNjI3LCJleHAiOjE1NTg5NTI2MjcsImlzcyI6ImxlY3Rpby1pc3N1ZXIifQ.WWcKTJhrIjwcjfD715-3RAcLCeiqD_ZgRtEyj_hMcCYsbifj6avZ950WTF0I1IpsrekSJgbGTTFKTwELeJDKJuKaADZYHrNydhlLMlU_EEDqnv7-C6ohdiXSjVCWVIiZK8btXiQmuUSVRZbWjI9x7cbZdLKU-7n-WImHDaGq6LpvPMgkn1XBk0Le8imuFtFuJoWxDm0FUh4jknOH5o1VFMhVtWEMPNepa8Puar9SupnDg87dB3Y05qW36fHv1peSxq3bEEcvPwd2NXIUK7BCJObP98zHvROcLsMAtu_vMbYjfYzJC4YBAqjUOn-Dpcld0HCfAK0qR7SgOnJ69mVUow"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.lectio.itforge.io/memos/{{memo_uuid}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"lectio",
+						"itforge",
+						"io"
+					],
+					"path": [
+						"memos",
+						"{{memo_uuid}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
