@@ -119,9 +119,9 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
 /**
  * Search for memos by a keyword and tags
  * @param {string} keyword
- * @param {serverMemoTag} tags?
+ * @param {Array<MemoTag>} tags?
  */
-export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
+export const searchMemos = (keyword: string, tags?: Array<MemoTag>) => {
 	const param_tags = tags === undefined || tags.length === 0 ? '' : '?tags=' + tags.toString();
 
 	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}${param_tags}`, {

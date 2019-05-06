@@ -1,12 +1,10 @@
 import React, {Component, Fragment} from 'react';
-import {AppBar, IconButton, InputBase, List, Toolbar} from '@material-ui/core';
+import {AppBar, Dialog, IconButton, InputBase, List, Slide, Toolbar} from '@material-ui/core';
 import {ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
-import Memo from "../model/Memo";
-import Idb from '../utils/Idb';
 import * as rest from '../utils/rest';
 import ContainerStyle from './Containers.module.sass';
-import {IdbStoreType} from '../constants';
+import TagSelectionPage from './TagSelectionPage';
 
 const inlineStyles = {
   toolbar: {
@@ -24,17 +22,21 @@ const strings = {
 	searchBar: 'Type to search for memos'
 };
 
+const Transition = (props: any) => <Slide direction="up" {...props} />;
+
 class SearchPage extends Component<any, any> {
-	idb = Idb.getInstance();
-	searchTimeout = setTimeout(() => {}, 0);
+	private searchTimeout = setTimeout(() => {}, 0);
 
 	constructor(props: any) {
 		super(props);
 		this.state = {
-			memoList: []
+			memoList: [],
+			tags: [],
+			tagDialogOpen: false
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
+		this.handleTagClose = this.handleTagClose.bind(this);
 	}
 
 	private handleBackBtn(): void {
@@ -45,13 +47,22 @@ class SearchPage extends Component<any, any> {
 		// https://schier.co/blog/2014/12/08/wait-for-user-to-stop-typing-using-javascript.html
 		clearTimeout(this.searchTimeout);
 		const keyword = event.target.value;
+		const tags: Array<MemoTag> = this.state.tags.map((t: MemoTag) => t.name);
 		this.searchTimeout = setTimeout(() => {
-			this.searchMemos(keyword, []);
+			this.searchMemos(keyword, tags);
 		}, 500);
 	}
 
-	private searchMemos(keyword: string, tags: serverMemoTag): void {
-		rest.searchMemos(keyword, [])
+	private handleTagBtn(): void {
+		this.setState({tagDialogOpen: true});
+	}
+
+	private handleTagClose(newTags: Array<MemoTag>): void {
+		this.setState({tagDialogOpen: false, tags: newTags});
+	}
+
+	private searchMemos(keyword: string, tags: Array<MemoTag>): void {
+		rest.searchMemos(keyword, tags)
 			.then((result) => result.json())
 			.then((jsonResult: Array<serverMemo>) => {
 				this.setState({
@@ -78,7 +89,7 @@ class SearchPage extends Component<any, any> {
               value={this.state.searchValue}
               style={inlineStyles.searchBar}
             />
-            <IconButton>
+            <IconButton onClick={() => this.handleTagBtn()}>
             	<Tune />
             </IconButton>
           </Toolbar>
@@ -90,6 +101,10 @@ class SearchPage extends Component<any, any> {
 						) }
 					</List>
 				</div>
+
+				<Dialog fullScreen open={this.state.tagDialogOpen} TransitionComponent={Transition}>
+					<TagSelectionPage onClose={this.handleTagClose} currentTags={this.state.tags} />
+				</Dialog>
 			</Fragment>
 		)
 	}
