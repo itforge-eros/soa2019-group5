@@ -1,15 +1,27 @@
 import React, {Component, Fragment} from 'react';
-import {AppBar, Dialog, IconButton, InputBase, LinearProgress, List, Slide, Toolbar} from '@material-ui/core';
-import {ArrowBack, Tune} from '@material-ui/icons';
+import {
+	AppBar,
+	Button,
+	Chip,
+	Dialog,
+	IconButton,
+	InputBase,
+	LinearProgress,
+	List,
+	Slide,
+	Toolbar
+} from '@material-ui/core';
+import {Add as AddIcon, ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import * as rest from '../utils/rest';
 import ContainerStyle from './Containers.module.sass';
+import styles from './SearchPage.module.sass';
 import TagSelectionPage from './TagSelectionPage';
 
 const inlineStyles = {
   toolbar: {
     paddingLeft: '8px',
-    paddingRight: '16px',
+    paddingRight: '8px',
     backgroundColor: '#fff'
   },
   searchBar: {
@@ -105,6 +117,13 @@ class SearchPage extends Component<any, any> {
 
 				<div className={ContainerStyle.contentArea}>
 					{this.state.isLoading && <LinearProgress />}
+
+					{ this.state.tags.length > 0 && <div className={styles.chipWrap}>
+						{ this.state.tags.map((tag: MemoTag) =>
+							<Chip key={tag.id} label={tag.name} className={styles.chip}/>
+						) }
+					</div> }
+
 	        <List>
 						{ this.state.memoList.map((m: serverMemo) =>
 							<MemoListItem memo={m} key={m.uuid} schema='server' />
