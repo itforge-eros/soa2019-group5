@@ -121,10 +121,11 @@ export const deleteMemo = (memoId: string) => fetch(`${API_URL}/${API_ENP_MEMO}/
  * @param {string} keyword
  * @param {Array<MemoTag>} tags?
  */
-export const searchMemos = (keyword: string, tags?: Array<MemoTag>) => {
-	const param_tags = tags === undefined || tags.length === 0 ? '' : '?tags=' + tags.toString();
+export const searchMemos = (keyword: string, tags?: serverMemoTag) => {
+	const param_tags = tags === undefined || tags.length === 0 ? '' : 'tags=' + tags.toString();
+	const separator = keyword && keyword.length > 0 ? '?' : '';
 
-	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}${param_tags}`, {
+	return fetch(`${API_URL}/${API_ENP_SEARCH}/${keyword}${separator}${param_tags}`, {
 		method: 'GET',
 		mode: 'cors',
 		headers: {

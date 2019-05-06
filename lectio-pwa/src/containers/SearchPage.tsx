@@ -32,7 +32,8 @@ class SearchPage extends Component<any, any> {
 		this.state = {
 			memoList: [],
 			tags: [],
-			tagDialogOpen: false
+			tagDialogOpen: false,
+			keyword: ''
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
@@ -46,8 +47,9 @@ class SearchPage extends Component<any, any> {
 	private handleSearchValueChange(event: any): void {
 		// https://schier.co/blog/2014/12/08/wait-for-user-to-stop-typing-using-javascript.html
 		clearTimeout(this.searchTimeout);
+		this.setState({keyword: event.target.value});
 		const keyword = event.target.value;
-		const tags: Array<MemoTag> = this.state.tags.map((t: MemoTag) => t.name);
+		const tags: serverMemoTag = this.state.tags.map((t: MemoTag) => t.name);
 		this.searchTimeout = setTimeout(() => {
 			this.searchMemos(keyword, tags);
 		}, 500);
@@ -59,9 +61,13 @@ class SearchPage extends Component<any, any> {
 
 	private handleTagClose(newTags: Array<MemoTag>): void {
 		this.setState({tagDialogOpen: false, tags: newTags});
+		const tags: serverMemoTag = newTags.map((t: MemoTag) => t.name);
+		console.log(tags);
+		clearTimeout(this.searchTimeout);
+		this.searchMemos(this.state.keyword, tags);
 	}
 
-	private searchMemos(keyword: string, tags: Array<MemoTag>): void {
+	private searchMemos(keyword: string, tags: serverMemoTag): void {
 		rest.searchMemos(keyword, tags)
 			.then((result) => result.json())
 			.then((jsonResult: Array<serverMemo>) => {
