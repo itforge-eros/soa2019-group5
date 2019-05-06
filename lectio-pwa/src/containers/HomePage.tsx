@@ -106,7 +106,15 @@ class HomePage extends Component<any, any> {
 				return response.json();
 			})
 			.then((jsonResponse) => {
-				this.setState({isLoadingMemos: false, memoList: jsonResponse});
+				// Fetch again when receiving 401 code
+				if (jsonResponse.error_code === 401)
+					setTimeout(() => this.fetchMemosFromServer(), 300);
+				
+				this.setState({
+					isLoadingMemos: false,
+					memoList: jsonResponse.error_code ?
+						[] : jsonResponse
+				});
 			})
 			.catch((error) => {
 				console.error('Memos not fetched');
@@ -117,9 +125,7 @@ class HomePage extends Component<any, any> {
 	}
 
 	render() {
-		const memosToDisplay = this.state.memoList ?
-			this.state.memoList.concat().reverse() : // concat to prevent array mutation
-			[] ;
+		const memosToDisplay = this.state.memoList.concat().reverse(); // concat to prevent array mutation
 
 		return (
 			<Fragment>
