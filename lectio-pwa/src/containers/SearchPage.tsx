@@ -36,25 +36,18 @@ class SearchPage extends Component<any, any> {
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
 	}
 
-	componentDidMount(): void {
-		/*this.idb.getFromDB(IdbStoreType.memo)
-			.then((event) => {
-				// @ts-ignore
-				this.setState({ memoList: event.target.result });
-			})
-			.catch((error) => {
-				console.log(error);
-			});*/
-	}
-
 	private handleBackBtn(): void {
 		setTimeout(() => this.props.history.goBack(), 180);
 	}
 
 	private handleSearchValueChange(event: any): void {
 		rest.searchMemos(event.target.value, [])
-			.then((result) => {
-				this.setState({memoList: result.json()});
+			.then((result) => result.json())
+			.then((jsonResult: Array<serverMemo>) => {
+				this.setState({
+					// @ts-ignore
+					memoList: jsonResult.error_code ? [] : jsonResult
+				})
 			})
 			.catch((result) => {
 				// TODO: Handle error
