@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {AppBar, Dialog, IconButton, InputBase, List, Slide, Toolbar} from '@material-ui/core';
+import {AppBar, Dialog, IconButton, InputBase, LinearProgress, List, Slide, Toolbar} from '@material-ui/core';
 import {ArrowBack, Tune} from '@material-ui/icons';
 import MemoListItem from '../components/MemoListItem';
 import * as rest from '../utils/rest';
@@ -33,7 +33,8 @@ class SearchPage extends Component<any, any> {
 			memoList: [],
 			tags: [],
 			tagDialogOpen: false,
-			keyword: ''
+			keyword: '',
+			isLoading: false
 		};
 		this.handleBackBtn = this.handleBackBtn.bind(this);
 		this.handleSearchValueChange = this.handleSearchValueChange.bind(this);
@@ -62,22 +63,23 @@ class SearchPage extends Component<any, any> {
 	private handleTagClose(newTags: Array<MemoTag>): void {
 		this.setState({tagDialogOpen: false, tags: newTags});
 		const tags: serverMemoTag = newTags.map((t: MemoTag) => t.name);
-		console.log(tags);
-		clearTimeout(this.searchTimeout);
 		this.searchMemos(this.state.keyword, tags);
 	}
 
 	private searchMemos(keyword: string, tags: serverMemoTag): void {
+		this.setState({isLoading: true});
 		rest.searchMemos(keyword, tags)
 			.then((result) => result.json())
 			.then((jsonResult: Array<serverMemo>) => {
 				this.setState({
+					isLoading: false,
 					// @ts-ignore
 					memoList: jsonResult.error_code ? [] : jsonResult
 				})
 			})
 			.catch((result) => {
 				// TODO: Handle error
+				this.setState({isLoading: false});
 			});
 	}
 
@@ -100,7 +102,9 @@ class SearchPage extends Component<any, any> {
             </IconButton>
           </Toolbar>
       	</AppBar>
+
 				<div className={ContainerStyle.contentArea}>
+					{this.state.isLoading && <LinearProgress />}
 	        <List>
 						{ this.state.memoList.map((m: serverMemo) =>
 							<MemoListItem memo={m} key={m.uuid} schema='server' />
