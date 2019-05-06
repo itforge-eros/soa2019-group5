@@ -144,7 +144,8 @@ class RecordControl extends Component<any, State> {
 	 * @param cb - callback
 	 */
 	public getRecording(...cb: Array<Function>): void {
-		this.stopwatch.pause();
+		if (this.state.recording)
+			this.stopwatch.pause();
 		if (this.mediaRecorder) {
 			this.mediaRecorder.stop();
 			this.mediaRecorder.ondataavailable = (blobEvent: any) => {
